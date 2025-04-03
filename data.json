@@ -102,8 +102,6 @@
             "confirm_role_request": "Are you sure you want to request the role: {role}?",
             "login_required": "Please log in to perform this action.",
             "error_occurred": "An error occurred. Please try again.",
-            "recipe_liked": "Recipe liked!",
-            "recipe_unliked": "Recipe unliked.",
             "login_to_like": "Please log in to like recipes.",
             "error": "An error occurred.",
             "recipe_not_found": "Recipe not found or invalid ID.",
@@ -129,7 +127,8 @@
             "recipe_created": "Recipe created successfully!",
             "recipe_updated": "Recipe updated successfully!",
             "error_saving_recipe": "Error saving the recipe. Could not write to file.",
-            "permission_denied": "You do not have permission for this action."
+            "permission_denied": "You do not have permission for this action.",
+            "no_comments" : "No comments yet."
         }
     },
     "fr": {
@@ -175,7 +174,7 @@
             "validate": "Valider",
             "validating": "Validation...",
             "update_password": "M.à.j. Mot de passe",
-            "remove_user": "Supprimer Utilisateur",
+            "remove_user": "Supprimer l'utilisateur",
             "search": "Rechercher",
             "remove_recipe": "Supprimer Recette",
             "modify_recipe": "Modifier Recette",
@@ -186,7 +185,7 @@
             "request_translator": "Demander Rôle Traducteur",
             "request_chef": "Demander Rôle Chef",
             "save_changes": "Sauvegarder",
-            "save_translation": "Sauvegarder Traduction",
+            "save_translation": "Sauvegarder la traduction",
             "cancel": "Annuler",
             "add_ingredient": "Ajouter Ingrédient",
             "add_ingredient_fr": "Ajouter Ingrédient (Français)",
@@ -235,8 +234,6 @@
             "confirm_role_request": "Êtes-vous sûr de vouloir demander le rôle : {role} ?",
             "login_required": "Veuillez vous connecter pour effectuer cette action.",
             "error_occurred": "Une erreur est survenue. Veuillez réessayer.",
-            "recipe_liked": "Recette aimée !",
-            "recipe_unliked": "Mention 'J'aime' retirée.",
             "login_to_like": "Veuillez vous connecter pour aimer les recettes.",
             "error": "Une erreur s'est produite.",
             "recipe_not_found": "Recette non trouvée ou ID invalide.",
@@ -262,7 +259,8 @@
             "recipe_created": "Recette créée avec succès !",
             "recipe_updated": "Recette mise à jour avec succès !",
             "error_saving_recipe": "Erreur lors de la sauvegarde de la recette. Impossible d'écrire dans le fichier.",
-            "permission_denied": "Vous n'avez pas la permission pour cette action."
+            "permission_denied": "Vous n'avez pas la permission pour cette action.",
+            "no_comments" : "Aucun commentaire."
         }
     }
 }

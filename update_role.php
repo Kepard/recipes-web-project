@@ -4,8 +4,8 @@ session_start();
 
 // Verifier si l'utilisateur est authentifie
 if (!isset($_SESSION['username'])) {
-    echo json_encode(['success' => false, 'message' => 'Not logged in']);
-    exit;
+    header('HTTP/1.1 403 Forbidden');
+    die();
 }
 
 // Recuperer le username et le nouveau role depuis la requete POST 

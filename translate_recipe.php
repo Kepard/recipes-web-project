@@ -56,9 +56,8 @@ $isChef = $currentRole === 'Chef';
 $allowed = $isTranslator || ($isChef && $isAuthor) || $isAdmin;
 
 if (!$allowed) {
-    $_SESSION['flash_message'] = ['type' => 'error', 'text' => 'You do not have permission to translate this recipe.'];
-    header('Location: recipe.php?id=' . $recipeId);
-    exit;
+    header('HTTP/1.1 403 Forbidden');
+    die();
 }
 
 // --- Helper function to split quantity (value and unit/label) ---

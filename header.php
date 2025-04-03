@@ -97,7 +97,7 @@
 
 <script>
 // Global variable for translation data
-let i18nData;
+let datafile;
 let currentLang = localStorage.getItem("lang") || "fr";
 let currentTranslations; // To store translations for the current language
 
@@ -166,8 +166,8 @@ function showMessage(message, type = 'info') { // Default type 'info' if needed
 $(document).ready(function () {
     // --- Initialization ---
     $.getJSON("data.json", function (data) {
-        i18nData = data; // Store all translations
-        let translations = i18nData[currentLang];
+        datafile = data; // Store all translations
+        let translations = datafile[currentLang];
 
         // 1. Translate static elements
         translatePage(translations);
@@ -191,7 +191,7 @@ $(document).ready(function () {
     $("#changeLang").click(function () {
         currentLang = (currentLang === "en") ? "fr" : "en";
         localStorage.setItem("lang", currentLang);
-        let translations = i18nData[currentLang];
+        let translations = datafile[currentLang];
 
         translatePage(translations); // Re-translate static parts
 
@@ -283,8 +283,10 @@ $(document).ready(function () {
                 if (response.success) {
                     if (action === 'login') {
                         // Login success message is good, but reload handles the UI update
-                        // showMessage(response.message, 'success'); // Optional: show message before reload
-                        window.location.reload(); // Reload to update header and content
+                        showMessage(response.message, 'success'); // Optional: show message before reload
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1500); // 1.5 second delay before reloading
                     }
                     // No specific action needed for signup success here, handled by validate-signup handler
                 } else {

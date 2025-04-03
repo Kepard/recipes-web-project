@@ -196,7 +196,6 @@ nav {
 .button-secondary {
     background-color: #4d6175;
     color: #ffffff;
-    border: 1px solid #D4AF37;
 }
 .button-secondary:hover:not(:disabled) {
     background-color: #5a7086;
@@ -571,19 +570,14 @@ label {
 #users-table th, #users-table td,
 #recipes-table th, #recipes-table td {
     padding: 12px 15px;
-    border: 1px solid #6a849f; /* MODIFIED: Slightly more visible border */
+    border: 1px solid #000000; /* MODIFIED: Slightly more visible border */
     text-align: left;
     vertical-align: middle;
 }
 
-#users-table th, #recipes-table th {
-    background-color: #243b52;
+#users-table tr, #recipes-table tr {
+    background-color: #1f3040c2;
     font-weight: bold;
-}
-
-#users-table tr:nth-child(even),
-#recipes-table tr:nth-child(even) {
-    background-color: #1f3040;
 }
 
 #users-table td:last-child,

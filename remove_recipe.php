@@ -4,7 +4,7 @@ session_start();
 // Check if user is logged in and is an administrator
 if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'Administrateur') {
     header('HTTP/1.1 403 Forbidden');
-    die(json_encode(['success' => false, 'message' => 'Permission denied']));
+    die();
 }
 
 // Get recipe ID from URL

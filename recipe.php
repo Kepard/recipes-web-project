@@ -11,6 +11,22 @@ $recipeId = isset($_GET['id']) ? filter_var($_GET['id'], FILTER_VALIDATE_INT) : 
 $currentUsername = $_SESSION['username'] ?? null;
 $currentRole = $_SESSION['role'] ?? null;
 
+// Load recipes
+$recipesFile = 'recipes.json';
+$recipes = json_decode(file_get_contents($recipesFile), true);
+
+foreach ($recipes as &$recipe) {
+    if (isset($recipe['id']) && $recipe['id'] == $recipeId && $currentRole != 'Administrateur') {
+        if ($recipe['validated'] == 0) {
+            $content = "<div class='message error'> You do not have permission to access this page.</div>";
+            $title = "Unvalidated Recipe";
+            include 'header.php';
+            exit;
+        }
+        break;
+    }
+}
+
 // Basic HTML structure - content will be dynamically generated
 $content = '<div class="recipe-details" id="recipe-container"><p>Loading recipe...</p></div>';
 
@@ -72,6 +88,7 @@ function initializePageContent(translations, lang) {
         let roleActionsHTML = '<div class="role-actions">';
         if (isAdmin) {
             roleActionsHTML += `<a href="modify_recipe.php?id=${recipe.id}" class="button button-primary admin-button" data-translate="buttons.modify_recipe">${translations.buttons?.modify_recipe || 'Modify'}</a>`;
+            roleActionsHTML += `<a href="translate_recipe.php?id=${recipe.id}" class="button button-secondary action-button" data-translate="buttons.translate_recipe">${translations.buttons?.translate_recipe || 'Translate'}</a>`;
             roleActionsHTML += `<a href="remove_recipe.php?id=${recipe.id}" class="button button-danger admin-button" onclick="return confirm('${translations.messages?.confirm_remove_recipe || 'Are you sure you want to remove this recipe?'}');" data-translate="buttons.remove_recipe">${translations.buttons?.remove_recipe || 'Remove'}</a>`;
         } else if (isChef && isAuthor) {
             roleActionsHTML += `<a href="modify_recipe.php?id=${recipe.id}" class="button button-primary action-button" data-translate="buttons.modify_recipe">${translations.buttons?.modify_recipe || 'Modify'}</a>`;

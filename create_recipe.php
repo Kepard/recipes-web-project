@@ -4,12 +4,12 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Check if the user is logged in and has the role of Chef or Admin
-$allowed = isset($_SESSION['role']) && ($_SESSION['role'] === 'Chef' || $_SESSION['role'] === 'Administrateur');
-if (!$allowed) {
+// Check if the user is logged in and has the role of Chef
+if (!isset($_SESSION['role']) || ($_SESSION['role'] != 'Chef')) {
     // Redirect non-chefs/admins
-    header("Location: index.php");
-    // echo "<p class='message error'>You do not have permission to access this page.</p>"; // Alternative message
+    $content = "<div class='message error'> You do not have permission to access this page.</div>";
+    $title = "Create Recipe";
+    include 'header.php';
     exit;
 }
 
@@ -117,7 +117,6 @@ if (isset($_SESSION['form_error'])) {
     $formError = '<p class="message error">' . htmlspecialchars($_SESSION['form_error']) . '</p>';
     unset($_SESSION['form_error']); // Clear the message after displaying
 }
-
 
 // HTML form for creating a new recipe
 // Use data-translate attributes for labels/placeholders if needed
@@ -235,6 +234,7 @@ $content = '
     </form>
 </div>
 ';
+
 
 $title = "Create Recipe";
 include 'header.php';

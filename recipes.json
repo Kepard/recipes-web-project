@@ -126,7 +126,7 @@
                 "imageurl": ""
             }
         ],
-        "validated": 1
+        "validated": 0
     },
     {
         "id": 2,
@@ -157,19 +157,19 @@
         ],
         "ingredientsFR": [
             {
-                "quantity": "1 sad",
-                "name": "dsa",
-                "type": "sadadasd"
+                "quantity": "1 lb",
+                "name": "asperge",
+                "type": "Produit"
             },
             {
-                "quantity": "1\/2 demi zeub",
-                "name": "trankil",
-                "type": "carotte"
+                "quantity": "1\/2 cuillere",
+                "name": "huile d&#039;olive",
+                "type": "Condiments"
             },
             {
-                "quantity": "1\/2 demi zem",
-                "name": "asd",
-                "type": "acs"
+                "quantity": "1\/2 cuillere",
+                "name": "sel",
+                "type": "Baking"
             }
         ],
         "steps": [
@@ -816,20 +816,994 @@
             {
                 "quantity": "1",
                 "name": "Pelmen",
-                "type": "meat"
+                "type": "Meat"
+            },
+            {
+                "quantity": "1",
+                "name": "Salt",
+                "type": "Condiments"
             }
         ],
-        "ingredientsFR": [],
-        "steps": [
-            "bake mf"
+        "ingredientsFR": [
+            {
+                "quantity": "1",
+                "name": "Pelmennie",
+                "type": "Viande"
+            }
         ],
-        "stepsFR": [],
+        "steps": [
+            "Bake bro"
+        ],
+        "stepsFR": [
+            "Cuisine"
+        ],
         "timers": [
             "15"
         ],
         "imageURL": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/d\/df\/Pelmeni_Russian.jpg\/640px-Pelmeni_Russian.jpg",
         "originalURL": "",
         "likes": [],
+        "comments": [],
+        "validated": 1
+    },
+    {
+        "id": 10,
+        "name": "Borscht",
+        "nameFR": "Bortsch",
+        "Author": "chef",
+        "Without": [],
+        "ingredients": [
+            {
+                "quantity": "3 medium",
+                "name": "beets, peeled and grated",
+                "type": "Produce"
+            },
+            {
+                "quantity": "1\/2 head",
+                "name": "cabbage, shredded",
+                "type": "Produce"
+            },
+            {
+                "quantity": "2 large",
+                "name": "potatoes, peeled and diced",
+                "type": "Produce"
+            },
+            {
+                "quantity": "1 large",
+                "name": "carrot, grated",
+                "type": "Produce"
+            },
+            {
+                "quantity": "1 large",
+                "name": "onion, chopped",
+                "type": "Produce"
+            },
+            {
+                "quantity": "6 cups",
+                "name": "beef or vegetable broth",
+                "type": "Misc"
+            },
+            {
+                "quantity": "2 tbsp",
+                "name": "tomato paste",
+                "type": "Condiments"
+            },
+            {
+                "quantity": "1 tbsp",
+                "name": "vinegar",
+                "type": "Condiments"
+            },
+            {
+                "quantity": "to taste",
+                "name": "salt and pepper",
+                "type": "Condiments"
+            },
+            {
+                "quantity": "for serving",
+                "name": "sour cream and fresh dill",
+                "type": "Dairy\/Produce"
+            }
+        ],
+        "ingredientsFR": [
+            {
+                "quantity": "3 moyennes",
+                "name": "betteraves, pel\u00e9es et r\u00e2p\u00e9es",
+                "type": "L\u00e9gume"
+            },
+            {
+                "quantity": "1\/2",
+                "name": "chou, \u00e9minc\u00e9",
+                "type": "L\u00e9gume"
+            },
+            {
+                "quantity": "2 grosses",
+                "name": "pommes de terre, pel\u00e9es et en d\u00e9s",
+                "type": "L\u00e9gume"
+            },
+            {
+                "quantity": "1 grosse",
+                "name": "carotte, r\u00e2p\u00e9e",
+                "type": "L\u00e9gume"
+            },
+            {
+                "quantity": "1 gros",
+                "name": "oignon, hach\u00e9",
+                "type": "L\u00e9gume"
+            },
+            {
+                "quantity": "1.5 litre",
+                "name": "bouillon de boeuf ou l\u00e9gumes",
+                "type": "Divers"
+            },
+            {
+                "quantity": "2 c. \u00e0 soupe",
+                "name": "concentr\u00e9 de tomate",
+                "type": "Condiments"
+            },
+            {
+                "quantity": "1 c. \u00e0 soupe",
+                "name": "vinaigre",
+                "type": "Condiments"
+            },
+            {
+                "quantity": "au go\u00fbt",
+                "name": "sel et poivre",
+                "type": "Condiments"
+            },
+            {
+                "quantity": "pour servir",
+                "name": "cr\u00e8me aigre et aneth frais",
+                "type": "Laitier\/L\u00e9gume"
+            }
+        ],
+        "steps": [
+            "In a large pot, saut\u00e9 onions and carrots until softened.",
+            "Add broth, potatoes, and cabbage. Bring to a boil, then simmer until potatoes are tender.",
+            "Add grated beets, tomato paste, and vinegar. Simmer for another 10-15 minutes.",
+            "Season with salt and pepper to taste.",
+            "Serve hot, garnished with a dollop of sour cream and fresh dill."
+        ],
+        "stepsFR": [
+            "Dans une grande marmite, faire revenir les oignons et les carottes jusqu'\u00e0 ce qu'ils soient tendres.",
+            "Ajouter le bouillon, les pommes de terre et le chou. Porter \u00e0 \u00e9bullition, puis laisser mijoter jusqu'\u00e0 ce que les pommes de terre soient tendres.",
+            "Ajouter les betteraves r\u00e2p\u00e9es, le concentr\u00e9 de tomate et le vinaigre. Laisser mijoter encore 10-15 minutes.",
+            "Assaisonner avec sel et poivre au go\u00fbt.",
+            "Servir chaud, garni d'une cuiller\u00e9e de cr\u00e8me aigre et d'aneth frais."
+        ],
+        "timers": [
+            "5",
+            "20",
+            "15",
+            "1",
+            "0"
+        ],
+        "imageURL": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/a\/a7\/Borscht_served.jpg\/640px-Borscht_served.jpg",
+        "originalURL": "#",
+        "likes": [],
+        "comments": [],
+        "validated": 1
+    },
+    {
+        "id": 11,
+        "name": "Blini (Russian Pancakes)",
+        "nameFR": "Blinis (Cr\u00eapes Russes)",
+        "Author": "admin",
+        "Without": [
+            "Vegetarian"
+        ],
+        "ingredients": [
+            {
+                "quantity": "1 cup",
+                "name": "all-purpose flour",
+                "type": "Baking"
+            },
+            {
+                "quantity": "1 cup",
+                "name": "milk, warm",
+                "type": "Dairy"
+            },
+            {
+                "quantity": "1",
+                "name": "egg",
+                "type": "Dairy"
+            },
+            {
+                "quantity": "1 tsp",
+                "name": "active dry yeast",
+                "type": "Baking"
+            },
+            {
+                "quantity": "1 tbsp",
+                "name": "sugar",
+                "type": "Baking"
+            },
+            {
+                "quantity": "1\/2 tsp",
+                "name": "salt",
+                "type": "Baking"
+            },
+            {
+                "quantity": "2 tbsp",
+                "name": "melted butter",
+                "type": "Dairy"
+            }
+        ],
+        "ingredientsFR": [
+            {
+                "quantity": "1 tasse",
+                "name": "farine tout usage",
+                "type": "Aide culinaire"
+            },
+            {
+                "quantity": "1 tasse",
+                "name": "lait, ti\u00e8de",
+                "type": "Laitier"
+            },
+            {
+                "quantity": "1",
+                "name": "oeuf",
+                "type": "Laitier"
+            },
+            {
+                "quantity": "1 c. \u00e0 caf\u00e9",
+                "name": "levure s\u00e8che active",
+                "type": "Aide culinaire"
+            },
+            {
+                "quantity": "1 c. \u00e0 soupe",
+                "name": "sucre",
+                "type": "Aide culinaire"
+            },
+            {
+                "quantity": "1\/2 c. \u00e0 caf\u00e9",
+                "name": "sel",
+                "type": "Aide culinaire"
+            },
+            {
+                "quantity": "2 c. \u00e0 soupe",
+                "name": "beurre fondu",
+                "type": "Laitier"
+            }
+        ],
+        "steps": [
+            "Dissolve yeast and sugar in warm milk. Let stand for 10 minutes until foamy.",
+            "In a bowl, whisk together flour and salt.",
+            "Add the yeast mixture, egg, and melted butter to the flour. Whisk until smooth.",
+            "Cover the bowl and let the batter rise in a warm place for about 1 hour.",
+            "Heat a lightly oiled griddle or frying pan over medium heat.",
+            "Pour or scoop the batter onto the griddle, using approximately 1\/4 cup for each blin.",
+            "Cook for about 2 minutes per side, or until golden brown. Serve warm with desired toppings (sour cream, caviar, smoked salmon, jam)."
+        ],
+        "stepsFR": [
+            "Dissoudre la levure et le sucre dans le lait ti\u00e8de. Laisser reposer 10 minutes jusqu'\u00e0 ce que \u00e7a mousse.",
+            "Dans un bol, m\u00e9langer la farine et le sel.",
+            "Ajouter le m\u00e9lange de levure, l'oeuf et le beurre fondu \u00e0 la farine. M\u00e9langer jusqu'\u00e0 consistance lisse.",
+            "Couvrir le bol et laisser la p\u00e2te lever dans un endroit chaud pendant environ 1 heure.",
+            "Chauffer une plaque ou une po\u00eale l\u00e9g\u00e8rement huil\u00e9e \u00e0 feu moyen.",
+            "Verser ou d\u00e9poser la p\u00e2te sur la plaque, en utilisant environ 1\/4 tasse par blin.",
+            "Cuire environ 2 minutes de chaque c\u00f4t\u00e9, ou jusqu'\u00e0 ce qu'ils soient dor\u00e9s. Servir chaud avec les garnitures d\u00e9sir\u00e9es (cr\u00e8me aigre, caviar, saumon fum\u00e9, confiture)."
+        ],
+        "timers": [
+            "10",
+            "1",
+            "1",
+            "60",
+            "2",
+            "2",
+            "2"
+        ],
+        "imageURL": "https:\/\/ascania-pack.com\/assets\/media\/honey-pancakes_1_largeThumb.jpg",
+        "originalURL": "#",
+        "likes": [
+            "admin"
+        ],
+        "comments": [],
+        "validated": 1
+    },
+    {
+        "id": 12,
+        "name": "Beef Stroganoff",
+        "nameFR": "Boeuf Stroganoff",
+        "Author": "Unknown",
+        "Without": [],
+        "ingredients": [
+            {
+                "quantity": "1 lb",
+                "name": "beef sirloin, thinly sliced",
+                "type": "Meat"
+            },
+            {
+                "quantity": "8 oz",
+                "name": "mushrooms, sliced",
+                "type": "Produce"
+            },
+            {
+                "quantity": "1 large",
+                "name": "onion, chopped",
+                "type": "Produce"
+            },
+            {
+                "quantity": "2 cloves",
+                "name": "garlic, minced",
+                "type": "Produce"
+            },
+            {
+                "quantity": "1\/4 cup",
+                "name": "butter",
+                "type": "Dairy"
+            },
+            {
+                "quantity": "2 tbsp",
+                "name": "all-purpose flour",
+                "type": "Baking"
+            },
+            {
+                "quantity": "1 cup",
+                "name": "beef broth",
+                "type": "Misc"
+            },
+            {
+                "quantity": "1\/2 cup",
+                "name": "sour cream",
+                "type": "Dairy"
+            },
+            {
+                "quantity": "1 tbsp",
+                "name": "Dijon mustard",
+                "type": "Condiments"
+            },
+            {
+                "quantity": "to taste",
+                "name": "salt and pepper",
+                "type": "Condiments"
+            },
+            {
+                "quantity": "for serving",
+                "name": "egg noodles or rice",
+                "type": "Misc"
+            }
+        ],
+        "ingredientsFR": [
+            {
+                "quantity": "500g",
+                "name": "filet de boeuf, \u00e9minc\u00e9 finement",
+                "type": "Viande"
+            },
+            {
+                "quantity": "225g",
+                "name": "champignons, \u00e9minc\u00e9s",
+                "type": "L\u00e9gume"
+            },
+            {
+                "quantity": "1 gros",
+                "name": "oignon, hach\u00e9",
+                "type": "L\u00e9gume"
+            },
+            {
+                "quantity": "2 gousses",
+                "name": "ail, hach\u00e9es",
+                "type": "L\u00e9gume"
+            },
+            {
+                "quantity": "60g",
+                "name": "beurre",
+                "type": "Laitier"
+            },
+            {
+                "quantity": "2 c. \u00e0 soupe",
+                "name": "farine tout usage",
+                "type": "Aide culinaire"
+            },
+            {
+                "quantity": "250ml",
+                "name": "bouillon de boeuf",
+                "type": "Divers"
+            },
+            {
+                "quantity": "125ml",
+                "name": "cr\u00e8me aigre",
+                "type": "Laitier"
+            },
+            {
+                "quantity": "1 c. \u00e0 soupe",
+                "name": "moutarde de Dijon",
+                "type": "Condiments"
+            },
+            {
+                "quantity": "au go\u00fbt",
+                "name": "sel et poivre",
+                "type": "Condiments"
+            },
+            {
+                "quantity": "pour servir",
+                "name": "nouilles aux oeufs ou riz",
+                "type": "Divers"
+            }
+        ],
+        "steps": [
+            "Season beef strips with salt and pepper.",
+            "In a large skillet, melt half the butter over medium-high heat. Brown the beef in batches; remove and set aside.",
+            "Melt remaining butter in the skillet. Add onions and mushrooms, cook until softened and browned.",
+            "Add garlic and cook for 1 minute more.",
+            "Sprinkle flour over the vegetables and cook, stirring, for 1 minute.",
+            "Gradually whisk in beef broth until smooth. Bring to a simmer, scraping up any browned bits.",
+            "Reduce heat to low. Stir in sour cream and Dijon mustard. Do not boil.",
+            "Return beef to the skillet and heat through.",
+            "Serve immediately over cooked egg noodles or rice."
+        ],
+        "stepsFR": [
+            "Assaisonner les lani\u00e8res de boeuf avec sel et poivre.",
+            "Dans une grande po\u00eale, faire fondre la moiti\u00e9 du beurre \u00e0 feu moyen-vif. Faire dorer le boeuf en plusieurs fois; retirer et r\u00e9server.",
+            "Faire fondre le reste du beurre dans la po\u00eale. Ajouter les oignons et les champignons, cuire jusqu'\u00e0 ce qu'ils soient tendres et dor\u00e9s.",
+            "Ajouter l'ail et cuire 1 minute de plus.",
+            "Saupoudrer la farine sur les l\u00e9gumes et cuire en remuant pendant 1 minute.",
+            "Incorporer graduellement le bouillon de boeuf au fouet jusqu'\u00e0 consistance lisse. Porter \u00e0 fr\u00e9missement en grattant les sucs.",
+            "R\u00e9duire le feu \u00e0 doux. Incorporer la cr\u00e8me aigre et la moutarde de Dijon. Ne pas faire bouillir.",
+            "Remettre le boeuf dans la po\u00eale et r\u00e9chauffer.",
+            "Servir imm\u00e9diatement sur des nouilles aux oeufs cuites ou du riz."
+        ],
+        "timers": [
+            "1",
+            "5",
+            "8",
+            "1",
+            "1",
+            "3",
+            "2",
+            "2",
+            "0"
+        ],
+        "imageURL": "https:\/\/img.cuisineaz.com\/660x660\/2022\/07\/05\/i184567-boeuf-stroganoff.jpeg",
+        "originalURL": "#",
+        "likes": [],
+        "comments": [],
+        "validated": 1
+    },
+    {
+        "id": 13,
+        "name": "Olivier Salad (Salat Olivye)",
+        "nameFR": "",
+        "Author": "chef",
+        "Without": [],
+        "ingredients": [
+            {
+                "quantity": "3 medium",
+                "name": "potatoes, boiled and diced",
+                "type": "Produce"
+            },
+            {
+                "quantity": "2 medium",
+                "name": "carrots, boiled and diced",
+                "type": "Produce"
+            },
+            {
+                "quantity": "4",
+                "name": "hard-boiled eggs, diced",
+                "type": "Dairy"
+            },
+            {
+                "quantity": "3",
+                "name": "dill pickles, diced",
+                "type": "Produce"
+            },
+            {
+                "quantity": "1 cup",
+                "name": "cooked peas (canned or frozen)",
+                "type": "Produce"
+            },
+            {
+                "quantity": "8 oz",
+                "name": "cooked chicken or ham, diced",
+                "type": "Meat"
+            },
+            {
+                "quantity": "1\/2",
+                "name": "onion, finely chopped (optional)",
+                "type": "Produce"
+            },
+            {
+                "quantity": "1 cup",
+                "name": "mayonnaise",
+                "type": "Condiments"
+            },
+            {
+                "quantity": "to taste",
+                "name": "salt and pepper",
+                "type": "Condiments"
+            }
+        ],
+        "ingredientsFR": [],
+        "steps": [
+            "Ensure all boiled ingredients (potatoes, carrots, eggs) are completely cooled.",
+            "In a large bowl, combine diced potatoes, carrots, eggs, pickles, peas, and chicken\/ham.",
+            "Add chopped onion, if using.",
+            "Gently fold in the mayonnaise until all ingredients are coated.",
+            "Season with salt and pepper to taste.",
+            "Chill the salad in the refrigerator for at least 30 minutes before serving."
+        ],
+        "stepsFR": [],
+        "timers": [
+            "0",
+            "5",
+            "1",
+            "2",
+            "1",
+            "30"
+        ],
+        "imageURL": "https:\/\/img1.russianfood.com\/dycontent\/images_upl\/371\/big_370825.jpg",
+        "originalURL": "#",
+        "likes": [
+            "admin"
+        ],
+        "comments": [],
+        "validated": 1
+    },
+    {
+        "id": 14,
+        "name": "Shashlik (Russian Skewers)",
+        "nameFR": "",
+        "Author": "admin",
+        "Without": [
+            "NoMilk"
+        ],
+        "ingredients": [
+            {
+                "quantity": "2 lbs",
+                "name": "lamb shoulder or pork loin, cut into 1.5-inch cubes",
+                "type": "Meat"
+            },
+            {
+                "quantity": "2 large",
+                "name": "onions, cut into thick rings or wedges",
+                "type": "Produce"
+            },
+            {
+                "quantity": "1\/2 cup",
+                "name": "vinegar (white or cider)",
+                "type": "Condiments"
+            },
+            {
+                "quantity": "1\/4 cup",
+                "name": "vegetable oil",
+                "type": "Condiments"
+            },
+            {
+                "quantity": "1 tbsp",
+                "name": "coriander seeds, crushed",
+                "type": "Condiments"
+            },
+            {
+                "quantity": "1 tsp",
+                "name": "black pepper, coarse",
+                "type": "Condiments"
+            },
+            {
+                "quantity": "1 tsp",
+                "name": "salt",
+                "type": "Condiments"
+            },
+            {
+                "quantity": "Optional",
+                "name": "bay leaves",
+                "type": "Condiments"
+            }
+        ],
+        "ingredientsFR": [],
+        "steps": [
+            "In a large non-reactive bowl, combine meat cubes and onion rings.",
+            "In a separate small bowl, whisk together vinegar, oil, coriander, pepper, salt, and bay leaves (if using).",
+            "Pour the marinade over the meat and onions. Toss well to coat.",
+            "Cover the bowl and refrigerate for at least 4 hours, or preferably overnight, tossing occasionally.",
+            "Preheat grill to medium-high heat.",
+            "Thread the marinated meat and onion pieces onto metal or soaked wooden skewers.",
+            "Grill the skewers for 10-15 minutes, turning occasionally, until the meat is cooked through and slightly charred.",
+            "Serve hot."
+        ],
+        "stepsFR": [],
+        "timers": [
+            "5",
+            "2",
+            "2",
+            "240",
+            "5",
+            "5",
+            "12",
+            "0"
+        ],
+        "imageURL": "https:\/\/butteroverbae.com\/wp-content\/uploads\/2023\/07\/chicken-shashlik-dry-recipe-card.jpg",
+        "originalURL": "#",
+        "likes": [],
+        "comments": [
+            {
+                "id": 1,
+                "date": "2025-04-03 10:09:08",
+                "author": "admin",
+                "content": "Good job!",
+                "imageurl": null
+            }
+        ],
+        "validated": 1
+    },
+    {
+        "id": 15,
+        "name": "Syrniki (Cheese Pancakes)",
+        "nameFR": "",
+        "Author": "chef",
+        "Without": [
+            "Vegetarian"
+        ],
+        "ingredients": [
+            {
+                "quantity": "500g (about 2 cups)",
+                "name": "tvorog (farmer's cheese or quark), drained",
+                "type": "Dairy"
+            },
+            {
+                "quantity": "1",
+                "name": "large egg",
+                "type": "Dairy"
+            },
+            {
+                "quantity": "3-4 tbsp",
+                "name": "all-purpose flour, plus more for dusting",
+                "type": "Baking"
+            },
+            {
+                "quantity": "2-3 tbsp",
+                "name": "sugar",
+                "type": "Baking"
+            },
+            {
+                "quantity": "1 tsp",
+                "name": "vanilla extract",
+                "type": "Baking"
+            },
+            {
+                "quantity": "pinch",
+                "name": "salt",
+                "type": "Baking"
+            },
+            {
+                "quantity": "for frying",
+                "name": "vegetable oil or butter",
+                "type": "Condiments\/Dairy"
+            }
+        ],
+        "ingredientsFR": [],
+        "steps": [
+            "In a bowl, combine tvorog, egg, sugar, vanilla extract, and salt. Mix well.",
+            "Gradually add flour, mixing until a soft dough forms. It might be slightly sticky.",
+            "Dust your hands and a work surface with flour.",
+            "Take spoonfuls of the dough, roll into balls, then flatten into small, thick pancakes (about 1\/2 inch thick).",
+            "Heat oil or butter in a frying pan over medium heat.",
+            "Carefully place syrniki in the hot pan (do not overcrowd).",
+            "Fry for 3-5 minutes per side, until golden brown and cooked through.",
+            "Serve warm with sour cream, jam, honey, or fresh berries."
+        ],
+        "stepsFR": [],
+        "timers": [
+            "3",
+            "2",
+            "1",
+            "5",
+            "2",
+            "2",
+            "4",
+            "0"
+        ],
+        "imageURL": "https:\/\/www.havocinthekitchen.com\/wp-content\/uploads\/2022\/02\/Syrniki-2-1.jpg",
+        "originalURL": "#",
+        "likes": [
+            "admin",
+            "chef"
+        ],
+        "comments": [],
+        "validated": 1
+    },
+    {
+        "id": 16,
+        "name": "Okroshka (Cold Soup)",
+        "nameFR": "",
+        "Author": "Unknown",
+        "Without": [],
+        "ingredients": [
+            {
+                "quantity": "2 medium",
+                "name": "potatoes, boiled and diced",
+                "type": "Produce"
+            },
+            {
+                "quantity": "3",
+                "name": "hard-boiled eggs, diced",
+                "type": "Dairy"
+            },
+            {
+                "quantity": "2 medium",
+                "name": "cucumbers, diced",
+                "type": "Produce"
+            },
+            {
+                "quantity": "4-5",
+                "name": "radishes, thinly sliced or diced",
+                "type": "Produce"
+            },
+            {
+                "quantity": "1\/2 bunch",
+                "name": "green onions, chopped",
+                "type": "Produce"
+            },
+            {
+                "quantity": "1\/2 bunch",
+                "name": "fresh dill, chopped",
+                "type": "Produce"
+            },
+            {
+                "quantity": "8 oz",
+                "name": "cooked ham or bologna, diced (optional)",
+                "type": "Meat"
+            },
+            {
+                "quantity": "4 cups",
+                "name": "kvass or kefir",
+                "type": "Drinks\/Dairy"
+            },
+            {
+                "quantity": "to taste",
+                "name": "salt",
+                "type": "Condiments"
+            },
+            {
+                "quantity": "for serving",
+                "name": "sour cream, mustard (optional)",
+                "type": "Dairy\/Condiments"
+            }
+        ],
+        "ingredientsFR": [],
+        "steps": [
+            "Ensure potatoes and eggs are cooked and cooled completely.",
+            "In a large bowl or pot, combine diced potatoes, eggs, cucumbers, radishes, green onions, dill, and cooked meat (if using).",
+            "Gently mix the solid ingredients.",
+            "Just before serving, pour cold kvass or kefir over the ingredients.",
+            "Stir well and season with salt to taste.",
+            "Ladle into bowls and serve immediately. Offer sour cream and mustard on the side if desired."
+        ],
+        "stepsFR": [],
+        "timers": [
+            "0",
+            "5",
+            "1",
+            "2",
+            "1",
+            "0"
+        ],
+        "imageURL": "https:\/\/www.mariaushakova.com\/wp-content\/uploads\/2020\/07\/Okroshka-740-735x735.jpg",
+        "originalURL": "#",
+        "likes": [],
+        "comments": [],
+        "validated": 1
+    },
+    {
+        "id": 17,
+        "name": "Pirozhki (Stuffed Buns)",
+        "nameFR": "",
+        "Author": "admin",
+        "Without": [],
+        "ingredients": [
+            {
+                "quantity": "For Dough:",
+                "name": "basic yeast dough recipe (flour, yeast, water\/milk, sugar, salt, oil\/butter)",
+                "type": "Baking"
+            },
+            {
+                "quantity": "For Filling:",
+                "name": "cooked cabbage, seasoned ground meat, mashed potatoes, mushrooms, etc.",
+                "type": "Misc"
+            },
+            {
+                "quantity": "1",
+                "name": "egg, beaten (for egg wash)",
+                "type": "Dairy"
+            }
+        ],
+        "ingredientsFR": [],
+        "steps": [
+            "Prepare your preferred yeast dough and let it rise.",
+            "Prepare your chosen filling and let it cool.",
+            "Punch down the risen dough and divide into small, equal portions.",
+            "Roll out each portion into a small circle.",
+            "Place a spoonful of filling in the center of each circle.",
+            "Fold the dough over the filling, pinching the edges firmly to seal, forming an oval or round bun.",
+            "Place pirozhki seam-side down on a baking sheet (for baking) or prepare for frying.",
+            "If baking, let rise again for 20-30 minutes, brush with egg wash, and bake at 375\u00b0F (190\u00b0C) until golden brown (15-20 min).",
+            "If frying, heat oil in a pan and fry pirozhki until golden brown on both sides."
+        ],
+        "stepsFR": [],
+        "timers": [
+            "60",
+            "30",
+            "10",
+            "5",
+            "5",
+            "5",
+            "5",
+            "25",
+            "10"
+        ],
+        "imageURL": "https:\/\/img1.russianfood.com\/dycontent\/images_upl\/467\/big_466730.jpg",
+        "originalURL": "#",
+        "likes": [
+            "admin"
+        ],
+        "comments": [],
+        "validated": 1
+    },
+    {
+        "id": 18,
+        "name": "Solyanka (Meat Soup)",
+        "nameFR": "",
+        "Author": "chef",
+        "Without": [],
+        "ingredients": [
+            {
+                "quantity": "8 oz",
+                "name": "mixed cooked meats (ham, sausage, beef), chopped",
+                "type": "Meat"
+            },
+            {
+                "quantity": "1 large",
+                "name": "onion, chopped",
+                "type": "Produce"
+            },
+            {
+                "quantity": "2",
+                "name": "dill pickles, chopped",
+                "type": "Produce"
+            },
+            {
+                "quantity": "2 tbsp",
+                "name": "capers, rinsed",
+                "type": "Condiments"
+            },
+            {
+                "quantity": "1\/2 cup",
+                "name": "pitted olives (green or black), sliced",
+                "type": "Produce"
+            },
+            {
+                "quantity": "2 tbsp",
+                "name": "tomato paste",
+                "type": "Condiments"
+            },
+            {
+                "quantity": "6 cups",
+                "name": "beef or chicken broth",
+                "type": "Misc"
+            },
+            {
+                "quantity": "1 tbsp",
+                "name": "butter or oil",
+                "type": "Dairy\/Condiments"
+            },
+            {
+                "quantity": "for serving",
+                "name": "lemon slices, sour cream, fresh dill",
+                "type": "Produce\/Dairy"
+            }
+        ],
+        "ingredientsFR": [],
+        "steps": [
+            "In a large pot or Dutch oven, melt butter\/oil over medium heat. Saut\u00e9 onions until translucent.",
+            "Add the chopped mixed meats and cook for a few minutes.",
+            "Stir in the chopped pickles, capers, olives, and tomato paste. Cook for 2 minutes, stirring constantly.",
+            "Pour in the broth and bring the soup to a boil.",
+            "Reduce heat and simmer gently for 15-20 minutes to allow flavors to meld.",
+            "Season with salt and pepper if necessary (be mindful of salty ingredients).",
+            "Serve hot, garnished with lemon slices, a dollop of sour cream, and fresh dill."
+        ],
+        "stepsFR": [],
+        "timers": [
+            "5",
+            "3",
+            "2",
+            "2",
+            "20",
+            "1",
+            "0"
+        ],
+        "imageURL": "https:\/\/cdn.lifehacker.ru\/wp-content\/uploads\/2020\/06\/6_1592925463-scaled.jpg",
+        "originalURL": "#",
+        "likes": [],
+        "comments": [],
+        "validated": 1
+    },
+    {
+        "id": 19,
+        "name": "Kulebyaka (Salmon Pie)",
+        "nameFR": "",
+        "Author": "Unknown",
+        "Without": [],
+        "ingredients": [
+            {
+                "quantity": "1 sheet",
+                "name": "puff pastry or rich yeast dough",
+                "type": "Baking"
+            },
+            {
+                "quantity": "1 lb",
+                "name": "salmon fillet, skinless",
+                "type": "Meat"
+            },
+            {
+                "quantity": "1 cup",
+                "name": "cooked rice or buckwheat",
+                "type": "Misc"
+            },
+            {
+                "quantity": "3",
+                "name": "hard-boiled eggs, sliced",
+                "type": "Dairy"
+            },
+            {
+                "quantity": "8 oz",
+                "name": "mushrooms, sliced and saut\u00e9ed",
+                "type": "Produce"
+            },
+            {
+                "quantity": "1",
+                "name": "onion, finely chopped and saut\u00e9ed",
+                "type": "Produce"
+            },
+            {
+                "quantity": "2 tbsp",
+                "name": "fresh dill, chopped",
+                "type": "Produce"
+            },
+            {
+                "quantity": "1",
+                "name": "egg, beaten (for egg wash)",
+                "type": "Dairy"
+            },
+            {
+                "quantity": "to taste",
+                "name": "salt and pepper",
+                "type": "Condiments"
+            }
+        ],
+        "ingredientsFR": [],
+        "steps": [
+            "Preheat oven to 400\u00b0F (200\u00b0C). Season salmon fillet with salt and pepper.",
+            "Roll out the pastry dough into a large rectangle on a lightly floured surface.",
+            "Place half of the cooked rice\/buckwheat mixture down the center third of the dough.",
+            "Layer sliced eggs over the rice.",
+            "Place the salmon fillet on top of the eggs.",
+            "Mix saut\u00e9ed mushrooms, onions, and dill. Spread this mixture over the salmon.",
+            "Top with the remaining rice\/buckwheat.",
+            "Fold the sides of the dough over the filling, overlapping slightly. Trim excess dough. Pinch ends to seal.",
+            "Carefully transfer the pie to a baking sheet, seam-side down. Cut a few slits in the top for steam to escape.",
+            "Brush the entire surface with the beaten egg wash.",
+            "Bake for 25-35 minutes, or until the pastry is golden brown and puffed, and the salmon is cooked through.",
+            "Let rest for a few minutes before slicing and serving."
+        ],
+        "stepsFR": [],
+        "timers": [
+            "1",
+            "5",
+            "2",
+            "1",
+            "1",
+            "2",
+            "1",
+            "5",
+            "2",
+            "1",
+            "30",
+            "5"
+        ],
+        "imageURL": "https:\/\/img.taste.com.au\/PigbcPTP\/taste\/2016\/11\/kulebyaka-48834-1.jpeg",
+        "originalURL": "#",
+        "likes": [
+            "chef"
+        ],
         "comments": [],
         "validated": 1
     }

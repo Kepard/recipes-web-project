@@ -111,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         "originalURL" => $originalURL,
         "likes" => $recipeToModify['likes'] ?? [], // Preserve existing likes
         "comments" => $recipeToModify['comments'] ?? [], // Preserve existing comments
-        "validated" => 0 // Reset validation status when modified (Admin needs to re-validate)
+        "validated" => ($isAdmin) ? 1 : 0 // Default validation to 0, but if the admin modifies the recipe its automatically validated
     ];
 
     // Save updated recipes back to the JSON file with locking

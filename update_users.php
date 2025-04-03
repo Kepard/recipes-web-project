@@ -4,8 +4,8 @@ session_start();
 
 // Verification de droits admin
 if ($_SESSION['role'] !== 'Administrateur') {
-    // Si le role != Administrateur, return JSON erreur et arreter l'execution (die)
-    die(json_encode(['error' => 'Permission denied']));
+    header('HTTP/1.1 403 Forbidden');
+    die();
 }
 
 // Charger les utilisateurs depuis le json

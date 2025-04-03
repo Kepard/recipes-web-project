@@ -11,7 +11,7 @@ if (!isset($_SESSION['username'])) {
     // exit;
     $content = '
     <div class="profile-container">
-        <p class="message info" data-translate="messages.login_to_view_profile">Please log in to view your profile.</p>
+        <div class="message error" data-translate="messages.login_to_view_profile">Please log in to view your profile.</div>
     </div>
     ';
     $title = "Profile";

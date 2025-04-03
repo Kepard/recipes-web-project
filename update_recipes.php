@@ -4,8 +4,8 @@ session_start();
 
 // Verification de droits admin
 if ($_SESSION['role'] !== 'Administrateur') {
-        // Si le role != Administrateur, arreter l'execution (die)
-    die('Access denied');
+    header('HTTP/1.1 403 Forbidden');
+    die();
 }
 
 // Recuperer le id de la recette depuis la requete POST 
