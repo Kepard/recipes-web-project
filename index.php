@@ -40,11 +40,9 @@ function initializePageContent(translations, lang) {
     // Load recipes using AJAX with cache busting
     $.getJSON("recipes.json?v=" + Date.now(), function (recipes) {
 
-         // ... success logic ...
-         console.log("Recipes loaded successfully."); // Message de succès pour le debug
+        console.log("Recipes loaded successfully."); // Message de succès pour le debug
         loadingMessage.hide();
         displayRecipes(allRecipes, lang);
-        // ...
 
         // Ensure recipes is an array
         allRecipes = Array.isArray(recipes) ? recipes : Object.values(recipes);
@@ -52,12 +50,6 @@ function initializePageContent(translations, lang) {
         displayRecipes(allRecipes, lang); // Display all validated recipes initially
         setupSearch(); // Setup search functionality
         setupLikeButtons(); // Setup like button listeners
-    }).fail(function() {
-         // !!! CETTE PARTIE EST IMPORTANTE POUR LE DEBUG !!!
-         console.error("Failed to load recipes.json:", textStatus, errorThrown);
-        loadingMessage.hide(); // Cache le message "Loading..."
-        // Affiche un message d'erreur clair dans la grille
-        gridContainer.html(`<p class="message error">${translations.messages?.error_loading_recipes || 'Failed to load recipes.'} Status: ${textStatus}</p>`);
     });
 };
 
@@ -229,14 +221,7 @@ function setupLikeButtons() {
                          }
                      }
 
-                } else {
-                    // Show specific error message from server or a default one
-                    showMessage(response.message || currentTranslations.messages?.error_occurred || "An error occurred", 'error');
                 }
-            },
-            error: function() {
-                // Handle communication errors
-                showMessage(currentTranslations.messages?.error_occurred || "An error occurred while liking.", 'error');
             },
             complete: function() {
                  // Re-enable button after request completes (success or error)

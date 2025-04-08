@@ -29,7 +29,28 @@
             "no_ingredients": "No ingredients listed.",
             "no_steps": "No steps provided.",
             "invalid_step": "Invalid step data",
-            "unknown_ingredient": "Unknown Ingredient"
+            "unknown_ingredient": "Unknown Ingredient",
+            "translate_recipe_title_base": "Translate Recipe",
+            "original_english": "Original (English)",
+            "translation_french": "Translation (Français)",
+            "create_recipe_title": "Create a New Recipe",
+            "recipe_name_en_req": "Recipe Name (English): *",
+            "recipe_name_fr": "Recipe Name (French):",
+            "no_gluten": "No Gluten",
+            "no_milk": "No Milk",
+            "vegetarian": "Vegetarian",
+            "vegan": "Vegan",
+            "ingredients_en_req": "Ingredients (English): *",
+            "ingredients_fr": "Ingredients (French):",
+            "steps_en_req": "Steps (English): *",
+            "steps_fr": "Steps (French):",
+            "timers_req": "Timers (in minutes, one per step): *",
+            "image_url": "Image URL:",
+            "original_url": "Original Recipe URL:",
+            "required_fields_note": "* Required fields",
+            "chef_pending_recipes_title": "My Recipes Pending Validation",
+            "status": "Status",
+            "pending_validation": "Pending Validation"
         },
         "buttons": {
             "login": "Log In",
@@ -76,7 +97,16 @@
             "translate_unit": "Unit/Label (e.g., cup)",
             "translate_ing_name": "Ingredient Name",
             "translate_ing_type": "Type",
-            "translate_step": "Translate step {n}"
+            "translate_step": "Translate step {n}",
+            "translate_name": "Translate name here...",
+            "translate_step_n": "Translate step {n}",
+            "ingredient_type_en": "Type (e.g., Meat)",
+            "quantity_fr": "Quantité",
+            "ingredient_name_fr": "Nom ingrédient",
+            "ingredient_type_fr": "Type (e.g., Viande)",
+            "step_1": "Step 1",
+            "step_1_fr": "Étape 1",
+            "timer_1": "Timer for Step 1"
         },
         "roles": {
             "Administrateur": "Administrator",
@@ -128,7 +158,19 @@
             "recipe_updated": "Recipe updated successfully!",
             "error_saving_recipe": "Error saving the recipe. Could not write to file.",
             "permission_denied": "You do not have permission for this action.",
-            "no_comments" : "No comments yet."
+            "no_comments" : "No comments yet.",
+            "translator_readonly_hint": "Read-only: Field already translated or English source is missing.",
+            "translator_edit_hint": "Edit only empty fields where English source exists.",
+            "no_en_ingredients": "No English ingredients found.",
+            "no_en_steps": "No English steps found.",
+            "cannot_translate_no_source": "Cannot translate without English source.",
+            "translation_saving_error": "Error saving translation. Could not write to file.", 
+            "translation_mismatch_error": "{type} count mismatch. No changes saved.", 
+            "translation_processing_complete": "Translation processing complete!" ,
+            "missing_fields_create": "Please fill in all required fields (Name, Ingredients, Steps, Timers).",
+            "no_pending_recipes": "You have no recipes currently awaiting validation.",
+            "error_loading_pending_recipes": "Could not load pending recipes."
+
         }
     },
     "fr": {
@@ -161,7 +203,29 @@
             "no_ingredients": "Aucun ingrédient listé.",
             "no_steps": "Aucune étape fournie.",
             "invalid_step": "Donnée d'étape invalide",
-            "unknown_ingredient": "Ingrédient inconnu"
+            "unknown_ingredient": "Ingrédient inconnu",
+            "translate_recipe_title_base": "Traduire la Recette", 
+            "original_english": "Original (Anglais)",
+            "translation_french": "Traduction (Français)",
+            "create_recipe_title": "Créer une Nouvelle Recette",
+            "recipe_name_en_req": "Nom Recette (Anglais) : *",
+            "recipe_name_fr": "Nom Recette (Français) :",
+            "no_gluten": "Sans Gluten",
+            "no_milk": "Sans Lait",
+            "vegetarian": "Végétarien",
+            "vegan": "Végan",
+            "ingredients_en_req": "Ingrédients (Anglais) : *",
+            "ingredients_fr": "Ingrédients (Français) :",
+            "steps_en_req": "Étapes (Anglais) : *",
+            "steps_fr": "Étapes (Français) :",
+            "timers_req": "Minuteries (en minutes, une par étape) : *",
+            "image_url": "URL de l'Image :",
+            "original_url": "URL Recette Originale :",
+            "required_fields_note": "* Champs requis",
+            "chef_pending_recipes_title": "Mes Recettes en Attente de Validation",
+            "status": "Statut",
+            "pending_validation": "En attente de validation"
+  
         },
         "buttons": {
             "login": "Se connecter",
@@ -208,7 +272,16 @@
             "translate_unit": "Unité/Label (ex: tasse)",
             "translate_ing_name": "Nom ingrédient",
             "translate_ing_type": "Type",
-            "translate_step": "Traduire étape {n}"
+            "translate_step": "Traduire étape {n}",
+            "translate_name": "Traduire le nom ici...",
+            "translate_step_n": "Traduire l'étape {n}" ,
+            "ingredient_type_en": "Type (ex: Meat)", 
+            "quantity_fr": "Quantité",
+            "ingredient_name_fr": "Nom ingrédient",
+            "ingredient_type_fr": "Type (ex: Viande)",
+            "step_1": "Step 1", 
+            "step_1_fr": "Étape 1",
+            "timer_1": "Minuterie Étape 1" 
         },
         "roles": {
             "Administrateur": "Administrateur",
@@ -260,7 +333,18 @@
             "recipe_updated": "Recette mise à jour avec succès !",
             "error_saving_recipe": "Erreur lors de la sauvegarde de la recette. Impossible d'écrire dans le fichier.",
             "permission_denied": "Vous n'avez pas la permission pour cette action.",
-            "no_comments" : "Aucun commentaire."
+            "no_comments" : "Aucun commentaire.",
+            "translator_readonly_hint": "Lecture seule : Champ déjà traduit ou source anglaise manquante.",
+            "translator_edit_hint": "Modifier seulement les champs vides si la source anglaise existe.",
+            "no_en_ingredients": "Aucun ingrédient anglais trouvé.",
+            "no_en_steps": "Aucune étape anglaise trouvée.",
+            "cannot_translate_no_source": "Impossible de traduire sans source anglaise.",
+            "translation_saving_error": "Erreur lors de la sauvegarde de la traduction. Impossible d'écrire dans le fichier.",
+            "translation_mismatch_error": "Compte des {type} incohérent. Aucune modification enregistrée.", 
+            "translation_processing_complete": "Traitement de la traduction terminé !" ,
+            "missing_fields_create": "Veuillez remplir tous les champs requis (Nom, Ingrédients, Étapes, Minuteries).",
+            "no_pending_recipes": "Vous n'avez aucune recette en attente de validation.",
+            "error_loading_pending_recipes": "Impossible de charger les recettes en attente."
         }
     }
 }

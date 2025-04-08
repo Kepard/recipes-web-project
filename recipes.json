@@ -105,28 +105,14 @@
                 "imageurl": null
             },
             {
-                "id": 4,
-                "date": "2025-03-27 20:29:31",
-                "author": "admin",
-                "content": "dasdasd",
-                "imageurl": ""
-            },
-            {
                 "id": 5,
                 "date": "2025-03-27 21:41:10",
                 "author": "kevzer",
                 "content": "Parfait!",
                 "imageurl": "https:\/\/media.gettyimages.com\/id\/501964582\/fr\/photo\/grand-homme-manger-un-morceau-de-pizza.jpg?s=612x612&w=gi&k=20&c=UguiTsVsaGNdaPYHvig1fRIQebPbEcPVljyHEo805Bk="
-            },
-            {
-                "id": 6,
-                "date": "2025-03-29 13:54:47",
-                "author": "admin",
-                "content": "mon comm",
-                "imageurl": ""
             }
         ],
-        "validated": 0
+        "validated": 1
     },
     {
         "id": 2,
@@ -185,7 +171,7 @@
             "They are great plain, but sometimes I serve them with a light vinaigrette if we need something acidic to balance out our meal."
         ],
         "stepsFR": [
-            "etape 1 loll",
+            "etape 1 lol",
             "",
             "",
             "",
@@ -214,27 +200,6 @@
             "kevzer"
         ],
         "comments": [
-            {
-                "id": 1,
-                "date": "2025-03-26 15:08:30",
-                "author": "trad",
-                "content": "c'est eclate",
-                "imageurl": null
-            },
-            {
-                "id": 2,
-                "date": "2025-03-26 21:12:28",
-                "author": "trad",
-                "content": "das",
-                "imageurl": null
-            },
-            {
-                "id": 3,
-                "date": "2025-03-26 21:14:38",
-                "author": "trad",
-                "content": "das",
-                "imageurl": null
-            },
             {
                 "id": 4,
                 "date": "2025-03-26 22:33:25",
@@ -295,7 +260,7 @@
             },
             {
                 "quantity": "1\/2 cup",
-                "name": "",
+                "name": "riz basmati",
                 "type": "Misc"
             },
             {
@@ -394,37 +359,37 @@
                 "type": ""
             },
             {
-                "quantity": "",
+                "quantity": "5",
                 "name": "",
                 "type": ""
             },
             {
-                "quantity": "",
+                "quantity": "4",
                 "name": "",
                 "type": ""
             },
             {
-                "quantity": "",
+                "quantity": "2",
                 "name": "",
                 "type": ""
             },
             {
-                "quantity": "",
+                "quantity": "2",
                 "name": "",
                 "type": ""
             },
             {
-                "quantity": "",
+                "quantity": "2",
                 "name": "",
                 "type": ""
             },
             {
-                "quantity": "",
+                "quantity": "1\/4",
                 "name": "",
                 "type": ""
             },
             {
-                "quantity": "",
+                "quantity": "3\/4 verres",
                 "name": "",
                 "type": ""
             }
@@ -807,7 +772,7 @@
     {
         "id": 9,
         "name": "Pelmeni",
-        "nameFR": "",
+        "nameFR": "Pelmeni",
         "Author": "chef",
         "Without": [
             "NoMilk"
@@ -829,22 +794,38 @@
                 "quantity": "1",
                 "name": "Pelmennie",
                 "type": "Viande"
+            },
+            {
+                "quantity": "1",
+                "name": "Sel",
+                "type": "Condiment"
             }
         ],
         "steps": [
-            "Bake bro"
+            "Bake bro",
+            "Eat bro"
         ],
         "stepsFR": [
-            "Cuisine"
+            "Cuisiner",
+            "Manger"
         ],
         "timers": [
-            "15"
+            "15",
+            "30"
         ],
         "imageURL": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/d\/df\/Pelmeni_Russian.jpg\/640px-Pelmeni_Russian.jpg",
         "originalURL": "",
         "likes": [],
-        "comments": [],
-        "validated": 1
+        "comments": [
+            {
+                "id": 1,
+                "date": "2025-04-08 21:39:55",
+                "author": "chef",
+                "content": "gud gud",
+                "imageurl": null
+            }
+        ],
+        "validated": 0
     },
     {
         "id": 10,

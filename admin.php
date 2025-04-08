@@ -237,21 +237,7 @@ function initializePageContent(translations, lang) {
                  if (recipesTableBody.find('tr').length === 0) {
                      recipesTableBody.html(`<tr><td colspan="3">${translations.messages?.no_unvalidated_recipes || 'No recipes waiting for validation.'}</td></tr>`);
                  }
-            },
-            error: function() {
-                 showMessage(translations.messages?.error || "Failed to validate recipe.", 'error');
-                 $button.prop('disabled', false).text(translations.buttons?.validate || 'Validate'); // Re-enable button
             }
-            // Using simple $.post is okay too, but $.ajax gives more control (like error handling)
-            /*
-            $.post("update_recipes.php", { id: recipeId }, function(response) {
-                showMessage(response, 'success'); // Show simple response message
-                $row.fadeOut(500, function() { $(this).remove(); });
-            }).fail(function() {
-                 showMessage(translations.messages?.error || "Failed to validate recipe.", 'error');
-                 $button.prop('disabled', false).text(translations.buttons?.validate || 'Validate');
-            });
-            */
         });
     });
 

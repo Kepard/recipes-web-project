@@ -8,7 +8,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'Administrateur') {
 }
 
 // Get recipe ID from URL
-$recipeId = $_GET['id'] ?? null;
+$recipeId = $_GET['id'];
 
 // Load recipes
 $recipesFile = 'recipes.json';

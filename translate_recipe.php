@@ -26,183 +26,179 @@ if ($recipeId && file_exists($recipesFile)) {
     $recipes = json_decode($recipesData, true);
 
     if (is_array($recipes)) {
-        // Find the recipe and its index
         foreach ($recipes as $index => $r) {
-            // Use loose comparison temporarily if IDs might be strings
              if (isset($r['id']) && $r['id'] == $recipeId) {
                 $recipeIndex = $index;
                 $recipe = $r;
                 break;
             }
         }
-    } else {
-         $recipes = []; // Reset if JSON invalid
     }
 }
 
-// If recipe not found or ID invalid
 if ($recipe === null || $recipeIndex === null) {
-    $_SESSION['flash_message'] = ['type' => 'error', 'text' => 'Recipe not found or invalid ID.'];
+    // Use flash message for redirection
+    $_SESSION['flash_message'] = ['type' => 'error', 'text' => 'Recipe not found or invalid ID.']; // Use key later
     header('Location: index.php');
     exit;
 }
 
-// Check permissions: Translator OR Chef who is the Author OR Admin
+// --- Permission Checks ---
 $isAuthor = isset($recipe['Author']) && $recipe['Author'] === $currentUser;
 $isTranslator = $currentRole === 'Traducteur';
 $isAdmin = $currentRole === 'Administrateur';
 $isChef = $currentRole === 'Chef';
+$isAllowedEditor = ($isChef && $isAuthor) || $isAdmin;
+$canAccessPage = $isTranslator || $isAllowedEditor;
 
-$allowed = $isTranslator || ($isChef && $isAuthor) || $isAdmin;
-
-if (!$allowed) {
+if (!$canAccessPage) {
     header('HTTP/1.1 403 Forbidden');
     die();
 }
 
-// --- Helper function to split quantity (value and unit/label) ---
+
+// --- Helper function ---
 function splitQuantityLabel($quantity) {
     $quantity = trim($quantity);
-    // Matches numbers, fractions, decimals at the start, captures rest as label
     if (preg_match('/^([\d\s\.\/]+)(.*)$/', $quantity, $matches)) {
-        // Further trim the label part
         return ['value' => trim($matches[1]), 'label' => trim($matches[2])];
     }
-    // If no numeric part found, assume the whole string is the label (e.g., "Pinch")
     return ['value' => '', 'label' => $quantity];
 }
 
 
 // --- Handle Form Submission ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-     // --- Permission Check Again ---
-     if (!$allowed) { die("Permission denied."); }
+    if (!$canAccessPage) { die("Permission denied."); }
 
-    // Update French fields if they exist in POST data
-    $recipe['nameFR'] = trim(htmlspecialchars($_POST['nameFR'] ?? $recipe['nameFR'] ?? ''));
+    $recipeBeforeUpdate = $recipes[$recipeIndex];
+    $errorOccurred = false; // Flag for mismatch errors
+
+    // Update Name FR
+    $postedNameFR = trim(htmlspecialchars($_POST['nameFR'] ?? ''));
+    $canUpdateNameFR = $isAllowedEditor || ($isTranslator && empty(trim($recipeBeforeUpdate['nameFR'] ?? '')) && !empty(trim($recipeBeforeUpdate['name'] ?? '')));
+    if ($canUpdateNameFR) {
+        $recipe['nameFR'] = $postedNameFR;
+    }
 
     // Update Ingredients FR
     if (isset($_POST['ingredientsFR']) && is_array($_POST['ingredientsFR'])) {
-        $updatedIngredientsFR = [];
-        foreach ($_POST['ingredientsFR'] as $index => $postedIngredient) {
-             // Ensure the original English ingredient exists at this index
-            if (isset($recipe['ingredients'][$index])) {
-                 $originalQuantityValue = splitQuantityLabel($recipe['ingredients'][$index]['quantity'] ?? '')['value'];
-                 $translatedUnit = trim(htmlspecialchars($postedIngredient['quantity'] ?? '')); // Only the unit/label part is submitted for translation
-                 $translatedName = trim(htmlspecialchars($postedIngredient['name'] ?? ''));
-                 $translatedType = trim(htmlspecialchars($postedIngredient['type'] ?? ''));
+        $originalIngredients = $recipeBeforeUpdate['ingredients'] ?? [];
+        $originalIngredientsFR = $recipeBeforeUpdate['ingredientsFR'] ?? [];
+        $newIngredientsFR = $recipe['ingredientsFR'] ?? [];
 
-                 // Combine original value with translated unit/label
-                 $finalTranslatedQuantity = trim($originalQuantityValue . ' ' . $translatedUnit);
+        if (count($_POST['ingredientsFR']) === count($originalIngredients)) {
+            foreach ($_POST['ingredientsFR'] as $index => $postedIngredient) {
+                 if (!isset($originalIngredients[$index])) continue;
+                 $originalENIngredient = (array) $originalIngredients[$index];
+                 $originalFRIngredient = (array) ($originalIngredientsFR[$index] ?? []);
+                 $postedUnitLabel = trim(htmlspecialchars($postedIngredient['quantity'] ?? ''));
+                 $postedName = trim(htmlspecialchars($postedIngredient['name'] ?? ''));
+                 $postedType = trim(htmlspecialchars($postedIngredient['type'] ?? ''));
+                 $originalQuantityValue = splitQuantityLabel($originalENIngredient['quantity'] ?? '')['value'];
+                 $finalTranslatedQuantity = $originalFRIngredient['quantity'] ?? '';
+                 $finalTranslatedName = $originalFRIngredient['name'] ?? '';
+                 $finalTranslatedType = $originalFRIngredient['type'] ?? '';
 
-                 $updatedIngredientsFR[$index] = [
-                     'quantity' => $finalTranslatedQuantity,
-                     'name' => $translatedName,
-                     'type' => $translatedType
-                 ];
+                 $canUpdateUnit = $isAllowedEditor || ($isTranslator && empty(trim(splitQuantityLabel($originalFRIngredient['quantity'] ?? '')['label'])) && !empty(trim($originalENIngredient['quantity'] ?? '')));
+                 if ($canUpdateUnit) { $finalTranslatedQuantity = trim($originalQuantityValue . ' ' . $postedUnitLabel); }
+
+                 $canUpdateName = $isAllowedEditor || ($isTranslator && empty(trim($originalFRIngredient['name'] ?? '')) && !empty(trim($originalENIngredient['name'] ?? '')));
+                  if ($canUpdateName) { $finalTranslatedName = $postedName; }
+
+                  $canUpdateType = $isAllowedEditor || ($isTranslator && empty(trim($originalFRIngredient['type'] ?? '')) && !empty(trim($originalENIngredient['type'] ?? ''))); // Allow updating type even if EN is empty? Maybe. Adjust if needed.
+                  if ($canUpdateType) { $finalTranslatedType = $postedType; }
+
+                 $newIngredientsFR[$index] = ['quantity' => $finalTranslatedQuantity, 'name' => $finalTranslatedName, 'type' => $finalTranslatedType ];
             }
-        }
-         // Ensure the count matches the original English ingredients count
-         if(count($updatedIngredientsFR) === count($recipe['ingredients'] ?? [])) {
-             $recipe['ingredientsFR'] = $updatedIngredientsFR;
-         } else {
-              // Handle mismatch error - maybe log it, show message
-              $_SESSION['form_error'] = "Ingredient count mismatch during translation.";
-              // Don't update ingredientsFR if counts don't match
-         }
+            $recipe['ingredientsFR'] = $newIngredientsFR;
+        } 
     }
 
     // Update Steps FR
-    if (isset($_POST['stepsFR']) && is_array($_POST['stepsFR'])) {
-         $updatedStepsFR = [];
-         foreach ($_POST['stepsFR'] as $index => $value) {
-             // Ensure the original English step exists at this index
-             if (isset($recipe['steps'][$index])) {
-                $updatedStepsFR[$index] = trim(htmlspecialchars($value));
-             }
-         }
-          // Ensure the count matches the original English steps count
-         if(count($updatedStepsFR) === count($recipe['steps'] ?? [])) {
-             $recipe['stepsFR'] = $updatedStepsFR;
-         } else {
-              $_SESSION['form_error'] = "Steps count mismatch during translation.";
-              // Don't update stepsFR if counts don't match
-         }
+    if (isset($_POST['stepsFR']) && is_array($_POST['stepsFR']) && !$errorOccurred) { // Don't process if previous error
+        $originalSteps = $recipeBeforeUpdate['steps'] ?? [];
+        $originalStepsFR = $recipeBeforeUpdate['stepsFR'] ?? [];
+        $newStepsFR = $recipe['stepsFR'] ?? [];
+
+        if (count($_POST['stepsFR']) === count($originalSteps)) {
+            foreach ($_POST['stepsFR'] as $index => $postedValue) {
+                 if (!isset($originalSteps[$index])) continue;
+                 $originalENStep = trim($originalSteps[$index] ?? '');
+                 $originalFRStep = trim($originalStepsFR[$index] ?? '');
+                 $postedStep = trim(htmlspecialchars($postedValue));
+                 $canUpdateStep = $isAllowedEditor || ($isTranslator && empty($originalFRStep) && !empty($originalENStep));
+                 $newStepsFR[$index] = $canUpdateStep ? $postedStep : $originalFRStep;
+            }
+             $recipe['stepsFR'] = $newStepsFR;
+        }
     }
 
-     // If there was a count mismatch error, redirect back to form
-     if (isset($_SESSION['form_error'])) {
-         header('Location: translate_recipe.php?id=' . $recipeId);
-         exit;
-     }
-
-
     // --- Save the updated recipe data ---
-    $recipes[$recipeIndex] = $recipe; // Update the recipe in the main array using its index
+    $recipes[$recipeIndex] = $recipe;
 
     $fp = fopen($recipesFile, 'w');
     if ($fp && flock($fp, LOCK_EX)) {
         fwrite($fp, json_encode($recipes, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
         flock($fp, LOCK_UN);
         fclose($fp);
-        $_SESSION['flash_message'] = ['type' => 'success', 'text' => 'Translation saved successfully!'];
+        // Use keys for flash messages
+        $_SESSION['flash_message'] = ['type' => 'success', 'key' => 'messages.translation_processing_complete'];
         header('Location: recipe.php?id=' . $recipeId);
         exit;
     } else {
         if ($fp) fclose($fp);
-        $_SESSION['flash_message'] = ['type' => 'error', 'text' => 'Error saving translation. Could not write to file.'];
+        $_SESSION['flash_message'] = ['type' => 'error', 'key' => 'messages.translation_saving_error'];
         header('Location: translate_recipe.php?id=' . $recipeId);
         exit;
     }
 }
 
-// Display potential error message from session
-$formError = '';
-if (isset($_SESSION['form_error'])) {
-    $formError = '<p class="message error">' . htmlspecialchars($_SESSION['form_error']) . '</p>';
-    unset($_SESSION['form_error']); // Clear the message
-}
 
 // --- Generate HTML Content ---
+$recipeNamePHP = htmlspecialchars($recipe['name'] ?? 'N/A'); // Store recipe name for JS
+
 $content = '
 <div class="translation-container">
-    <h1>Translate Recipe: ' . htmlspecialchars($recipe['name'] ?? 'N/A') . '</h1>
-    ' . $formError . ' <!-- Display form error message here -->
+    <!-- MODIFIED H1 Structure -->
+    <h1>
+        <span data-translate="labels.translate_recipe_title_base">Translate Recipe</span>:
+        <span id="recipe-name-display">' . $recipeNamePHP . '</span>
+    </h1>
 
     <form method="POST" id="translation-form">
         <div class="translation-columns">
 
             <!-- Original (English) Column -->
             <div class="translation-column original-column">
-                <h2>Original (English)</h2>
+                <h2 data-translate="labels.original_english">Original (English)</h2>
+                ' . ($isTranslator ? '<p><small data-translate="messages.translator_readonly_hint_base">Read-only source text.</small></p>' : '') . '
 
                 <div class="form-group">
-                    <label>Recipe Name:</label>
+                    <label data-translate="labels.recipe_name">Recipe Name:</label>
                     <div class="original-field">' . htmlspecialchars($recipe['name'] ?? '') . '</div>
                 </div>
 
                 <div class="form-group">
-                    <label>Ingredients:</label>';
+                    <label data-translate="labels.ingredients">Ingredients:</label>';
                     if (!empty($recipe['ingredients']) && is_array($recipe['ingredients'])) {
                         foreach ($recipe['ingredients'] as $index => $ingredient) {
-                            $ingredient = (array) $ingredient; // Ensure array access
+                            $ingredient = (array) $ingredient;
                             $quantityParts = splitQuantityLabel($ingredient['quantity'] ?? '');
                             $content .= '
                             <div class="translation-row">
-                                <div class="original-field quantity-value">' . htmlspecialchars($quantityParts['value']) . '</div>
-                                <div class="original-field quantity-unit">' . htmlspecialchars($quantityParts['label']) . '</div>
-                                <div class="original-field">' . htmlspecialchars($ingredient['name'] ?? '') . '</div>
-                                <div class="original-field">' . htmlspecialchars($ingredient['type'] ?? '') . '</div>
+                                <div class="original-field quantity-value" title="Original Quantity Value">' . htmlspecialchars($quantityParts['value']) . '</div>
+                                <div class="original-field quantity-unit" title="Original Unit/Label">' . htmlspecialchars($quantityParts['label']) . '</div>
+                                <div class="original-field" title="Original Name">' . htmlspecialchars($ingredient['name'] ?? '') . '</div>
+                                <div class="original-field" title="Original Type">' . htmlspecialchars($ingredient['type'] ?? '') . '</div>
                             </div>';
                         }
-                    } else {
-                         $content .= '<p>No English ingredients found.</p>';
-                    }
+                    } else { $content .= '<p data-translate="messages.no_en_ingredients">No English ingredients found.</p>'; }
 $content .= '
                 </div>
 
                 <div class="form-group">
-                    <label>Steps:</label>';
+                    <label data-translate="labels.steps">Steps:</label>';
                      if (!empty($recipe['steps']) && is_array($recipe['steps'])) {
                         foreach ($recipe['steps'] as $index => $step) {
                             $content .= '
@@ -210,156 +206,178 @@ $content .= '
                                 <div class="original-field">' . htmlspecialchars($step ?? '') . '</div>
                             </div>';
                         }
-                    } else {
-                         $content .= '<p>No English steps found.</p>';
-                    }
+                    } else { $content .= '<p data-translate="messages.no_en_steps">No English steps found.</p>'; }
 $content .= '
                 </div>
             </div>
 
             <!-- Translation (French) Column -->
             <div class="translation-column translation-form-column">
-                <h2>Translation (Français)</h2>
+                <h2 data-translate="labels.translation_french">Translation (Français)</h2>
+                 ' . ($isTranslator ? '<p><small data-translate="messages.translator_edit_hint">Edit only empty fields where English source exists.</small></p>' : '') . '
 
-                 <div class="form-group">
-                    <label for="nameFR">Nom de la recette:</label>
-                    <input type="text" id="nameFR" name="nameFR" value="' . htmlspecialchars($recipe['nameFR'] ?? '') . '" placeholder="Translate name here...">
+                 <div class="form-group">';
+                    $nameEN = trim($recipe['name'] ?? '');
+                    $nameFR = trim($recipe['nameFR'] ?? '');
+                    $nameReadonly = $isTranslator && (!empty($nameFR) || empty($nameEN));
+                    $nameTitleKey = $nameReadonly ? 'messages.translator_readonly_hint' : 'placeholders.translate_name';
+                    $nameClass = $nameReadonly ? 'readonly-translator' : '';
+                    $content .= '
+                    <label for="nameFR" data-translate="labels.recipe_name">Nom de la recette:</label>
+                    <input type="text" id="nameFR" name="nameFR" value="' . htmlspecialchars($nameFR) . '"
+                           data-translate-placeholder="placeholders.translate_name" data-translate-title="' . $nameTitleKey . '"
+                           ' . ($nameReadonly ? 'readonly' : '') . ' class="' . $nameClass . '">';
+$content .= '
                 </div>
 
                 <div class="form-group">
-                    <label>Ingrédients:</label>';
-                     // Iterate based on English ingredients to ensure structure matches
+                    <label data-translate="labels.ingredients">Ingrédients:</label>';
                      if (!empty($recipe['ingredients']) && is_array($recipe['ingredients'])) {
                         foreach ($recipe['ingredients'] as $index => $ingredientEN) {
-                             $ingredientEN = (array) $ingredientEN; // Ensure array access
-                             // Get corresponding French data, default to empty if not set
+                             $ingredientEN = (array) $ingredientEN;
                              $ingredientFR = (array) ($recipe['ingredientsFR'][$index] ?? []);
-
                              $quantityPartsEN = splitQuantityLabel($ingredientEN['quantity'] ?? '');
-                             // For French quantity, we only care about the label/unit part for translation input
                              $quantityPartsFR = splitQuantityLabel($ingredientFR['quantity'] ?? '');
 
+                             $enQtyFilled = !empty(trim($ingredientEN['quantity'] ?? ''));
+                             $enNameFilled = !empty(trim($ingredientEN['name'] ?? ''));
+                             $enTypeFilled = !empty(trim($ingredientEN['type'] ?? '')); // Consider type filled if EN type exists
+                             $frUnitLabelEmpty = empty(trim($quantityPartsFR['label']));
+                             $frNameEmpty = empty(trim($ingredientFR['name'] ?? ''));
+                             $frTypeEmpty = empty(trim($ingredientFR['type'] ?? ''));
+
+                             $unitReadonly = $isTranslator && (!$frUnitLabelEmpty || !$enQtyFilled);
+                             $nameReadonly = $isTranslator && (!$frNameEmpty || !$enNameFilled);
+                             $typeReadonly = $isTranslator && (!$frTypeEmpty || !$enTypeFilled); // Allow editing type even if EN type is empty?
+
+                             $unitTitleKey = $unitReadonly ? 'messages.translator_readonly_hint' : 'placeholders.translate_unit';
+                             $nameTitleKey = $nameReadonly ? 'messages.translator_readonly_hint' : 'placeholders.translate_ing_name';
+                             $typeTitleKey = $typeReadonly ? 'messages.translator_readonly_hint' : 'placeholders.translate_ing_type';
 
                             $content .= '
                             <div class="translation-row">
-                                 <!-- Readonly English value -->
                                 <input type="text" class="quantity-value" value="' . htmlspecialchars($quantityPartsEN['value']) . '" readonly title="Original Quantity Value (Readonly)">
-
-                                <!-- Editable French unit/label -->
-                                <input type="text" name="ingredientsFR[' . $index . '][quantity]"
-                                       value="' . htmlspecialchars($quantityPartsFR['label']) . '" placeholder="Unité/Label (ex: tasse)" class="quantity-unit" title="Translate Unit/Label">
-
-                                <!-- Editable French name -->
-                                <input type="text" name="ingredientsFR[' . $index . '][name]"
-                                       value="' . htmlspecialchars($ingredientFR['name'] ?? '') . '" placeholder="Nom ingrédient" title="Translate Ingredient Name">
-
-                                <!-- Editable French type -->
-                                <input type="text" name="ingredientsFR[' . $index . '][type]"
-                                       value="' . htmlspecialchars($ingredientFR['type'] ?? '') . '" placeholder="Type" title="Translate Ingredient Type">
+                                <input type="text" name="ingredientsFR[' . $index . '][quantity]" value="' . htmlspecialchars($quantityPartsFR['label']) . '"
+                                       data-translate-placeholder="placeholders.translate_unit" data-translate-title="' . $unitTitleKey . '"
+                                       class="quantity-unit ' . ($unitReadonly ? 'readonly-translator' : '') . '" ' . ($unitReadonly ? 'readonly' : '') . '>
+                                <input type="text" name="ingredientsFR[' . $index . '][name]" value="' . htmlspecialchars($ingredientFR['name'] ?? '') . '"
+                                       data-translate-placeholder="placeholders.translate_ing_name" data-translate-title="' . $nameTitleKey . '"
+                                       ' . ($nameReadonly ? 'readonly' : '') . ' class="' . ($nameReadonly ? 'readonly-translator' : '') . '">
+                                <input type="text" name="ingredientsFR[' . $index . '][type]" value="' . htmlspecialchars($ingredientFR['type'] ?? '') . '"
+                                       data-translate-placeholder="placeholders.translate_ing_type" data-translate-title="' . $typeTitleKey . '"
+                                       ' . ($typeReadonly ? 'readonly' : '') . ' class="' . ($typeReadonly ? 'readonly-translator' : '') . '">
                             </div>';
                         }
-                    } else {
-                         $content .= '<p>Cannot translate ingredients without English source.</p>';
-                    }
+                    } else { $content .= '<p data-translate="messages.cannot_translate_no_source">Cannot translate ingredients without English source.</p>'; }
 $content .= '
                 </div>
 
                  <div class="form-group">
-                    <label>Étapes:</label>';
-                    // Iterate based on English steps
+                    <label data-translate="labels.steps">Étapes:</label>';
                      if (!empty($recipe['steps']) && is_array($recipe['steps'])) {
                          foreach ($recipe['steps'] as $index => $stepEN) {
-                            // Get corresponding French data, default to empty
-                            $stepFR = $recipe['stepsFR'][$index] ?? '';
+                            $stepEN = trim($stepEN ?? '');
+                            $stepFR = trim($recipe['stepsFR'][$index] ?? '');
+                            $stepReadonly = $isTranslator && (!empty($stepFR) || empty($stepEN));
+                            $stepTitleKey = $stepReadonly ? 'messages.translator_readonly_hint' : 'placeholders.translate_step_n'; // Use dynamic placeholder key
+                            $stepPlaceholderKey = 'placeholders.translate_step_n';
+                            $stepClass = $stepReadonly ? 'readonly-translator' : '';
+
                             $content .= '
                             <div class="translation-row">
-                                <textarea name="stepsFR[' . $index . ']" placeholder="Traduire l\'étape ' . ($index + 1) . '">' . htmlspecialchars($stepFR) . '</textarea>
+                                <textarea name="stepsFR[' . $index . ']" data-translate-placeholder="' . $stepPlaceholderKey . '" data-placeholder-index="' . ($index + 1) . '"
+                                          data-translate-title="' . $stepTitleKey . '" ' . ($stepReadonly ? 'readonly' : '') . ' class="' . $stepClass . '">'
+                                          . htmlspecialchars($stepFR) .
+                                '</textarea>
                             </div>';
                         }
-                    } else {
-                         $content .= '<p>Cannot translate steps without English source.</p>';
-                    }
+                    } else { $content .= '<p data-translate="messages.cannot_translate_no_source">Cannot translate steps without English source.</p>'; }
 $content .= '
                 </div>
             </div>
         </div>
 
         <div class="form-actions">
-            <button type="submit" class="button button-primary btn-save">Save Translation</button>
-            <a href="recipe.php?id=' . $recipeId . '" class="button button-secondary btn-cancel">Cancel</a>
+            <button type="submit" class="button button-primary btn-save" data-translate="buttons.save_translation">Save Translation</button>
+            <a href="recipe.php?id=' . $recipeId . '" class="button button-secondary btn-cancel" data-translate="buttons.cancel">Cancel</a>
         </div>
     </form>
 </div>';
 
-$title = "Translate Recipe";
+$title = "Translate Recipe"; // Keep a simple title, H1 has details
 include 'header.php';
 ?>
 
 <script>
 // This function is called by header.php after translations are loaded
 function initializePageContent(translations, lang) {
-     // Optional: Translate any static text specific to this page if needed
-     // Example: $('some_element').text(translations.labels?.some_key);
+     // Translate the error message placeholder if it exists
+     const $errorMsg = $('.message.error[data-translate-key]');
+     if ($errorMsg.length) {
+         const key = $errorMsg.data('translate-key');
+         const type = $errorMsg.data('translate-type'); // Get 'Ingredients' or 'Steps'
+         let errorText = getNestedTranslation(translations, key);
+         if (type) {
+            // Replace placeholder in the translated message
+            // Assume the placeholder is {type}
+             errorText = errorText.replace('{type}', type);
+         }
+         $errorMsg.text(errorText); // Set the translated text
+     }
+
+      // Translate dynamic placeholders like "Translate step {n}"
+      $('[data-translate-placeholder][data-placeholder-index]').each(function() {
+            const $el = $(this);
+            const key = $el.data('translate-placeholder');
+            const index = $el.data('placeholder-index');
+            let placeholderText = getNestedTranslation(translations, key);
+            placeholderText = placeholderText.replace('{n}', index);
+            $el.attr('placeholder', placeholderText);
+      });
+
+      // Translate dynamic titles like the readonly hint
+       $('[data-translate-title]').each(function() {
+            const $el = $(this);
+            const key = $el.data('translate-title');
+            const titleText = getNestedTranslation(translations, key);
+            $el.attr('title', titleText);
+       });
+
+
  }
 
 $(document).ready(function() {
-    // --- Form Validation (Optional client-side check) ---
+    // --- Form Validation ---
     $('#translation-form').submit(function(e) {
         let hasContent = false;
-        let ingredientCountEN = $('.original-column .form-group:nth-child(2) .translation-row').length; // Count EN ingredients rows
-        let stepCountEN = $('.original-column .form-group:nth-child(3) .translation-row').length; // Count EN steps rows
+        const isTranslator = <?php echo json_encode($isTranslator); ?>;
 
-        let ingredientCountFR = 0;
-        let stepCountFR = 0;
+        const selector = isTranslator
+            ? '.translation-form-column input:not([readonly]), .translation-form-column textarea:not([readonly])'
+            : '.translation-form-column input, .translation-form-column textarea';
 
-        // Check if any French field has content
-        $('input[name="nameFR"], textarea[name^="stepsFR"], input[name^="ingredientsFR"]').each(function() {
+        $(selector).each(function() {
              if ($(this).val().trim() !== '') {
                  hasContent = true;
-            }
-             // Count non-empty French fields (could be more specific if needed)
-             if ($(this).attr('name').startsWith('ingredientsFR') && $(this).closest('.translation-row').find('input[name$="[name]"]').val().trim() !== '') {
-                 // Count only if the name field in the row is filled
-                 // This logic might need refinement based on how you count 'filled' ingredients
+                 return false; // Exit loop
              }
-             if ($(this).attr('name').startsWith('stepsFR') && $(this).val().trim() !== '') {
-                  stepCountFR++;
-             }
-        });
+         });
 
-        // Basic check if anything was filled
         if (!hasContent) {
-            // Use showMessage if available from header.php
-            if(typeof showMessage === 'function') {
-                showMessage("Please fill in at least one translation field.", 'error');
-            } else {
-                alert("Please fill in at least one translation field.");
-            }
-            e.preventDefault(); // Prevent submission
+            if(typeof showMessage === 'function' && typeof currentTranslations !== 'undefined') {
+                 msg = currentTranslations.messages?.translation_missing_fields;
+                 showMessage(msg, 'error');
+             } else { alert(msg); }
+            e.preventDefault();
             return false;
         }
-
-         // Optional: Basic count check (Backend check is more reliable)
-         /*
-         if (ingredientCountFR !== ingredientCountEN || stepCountFR !== stepCountEN) {
-              if(typeof showMessage === 'function') {
-                  showMessage("Warning: Number of translated items might not match the original.", 'error');
-              } else {
-                  alert("Warning: Number of translated items might not match the original.");
-              }
-              // Decide whether to prevent submission or just warn
-              // e.preventDefault();
-              // return false;
-         }
-         */
-
-        return true; // Allow submission
+        return true;
     });
 
     // --- Highlight Changes ---
-    $('.translation-form-column input, .translation-form-column textarea').on('input', function() {
-        // Add 'changed' class if value is not empty, remove if empty
+    $('.translation-form-column input:not([readonly]), .translation-form-column textarea:not([readonly])').on('input', function() {
         $(this).toggleClass('changed', $(this).val().trim() !== '');
     });
 });
 </script>
+

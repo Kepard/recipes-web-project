@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // Get the recipe ID from the URL, ensuring it's an integer
-$recipeId = isset($_GET['id']) ? filter_var($_GET['id'], FILTER_VALIDATE_INT) : null;
+$recipeId = filter_var($_GET['id'], FILTER_VALIDATE_INT);
 
 // Get current user info
 $currentUsername = $_SESSION['username'] ?? null;
@@ -17,7 +17,8 @@ $recipes = json_decode(file_get_contents($recipesFile), true);
 
 foreach ($recipes as &$recipe) {
     if (isset($recipe['id']) && $recipe['id'] == $recipeId && $currentRole != 'Administrateur') {
-        if ($recipe['validated'] == 0) {
+        $isAuthor = isset($recipe['Author']) && $recipe['Author'] === $currentUsername;
+        if ($recipe['validated'] == 0 && !$isAuthor) {
             $content = "<div class='message error'> You do not have permission to access this page.</div>";
             $title = "Unvalidated Recipe";
             include 'header.php';
@@ -298,9 +299,6 @@ function setupCommentForm(recipeId, currentUser, translations) {
                 } else {
                     showMessage(response?.message || translations.messages?.comment_error || "Failed to post comment.", 'error');
                 }
-            },
-            error: function() {
-                showMessage(translations.messages?.comment_error || "An error occurred while posting comment.", 'error');
             },
             complete: function() {
                  $submitButton.prop('disabled', false).text(translations.buttons?.post_comment || 'Post Comment');

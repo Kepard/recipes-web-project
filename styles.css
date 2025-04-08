@@ -84,13 +84,11 @@ nav {
 }
 
 #auth input {
-    padding: 6px 10px; /* MODIFIED: Reduced padding */
+    padding: 6px 10px;
     border: 1px solid #4d6175;
     border-radius: 4px;
     background-color: #243b52;
     color: #ffffff;
-    /* MODIFIED: Removed min-width to allow shrinking */
-    /* min-width: 120px; */
     flex: 1 1 auto; /* Allow growing and shrinking */
     max-width: 150px; /* Optional: prevent becoming too wide */
 }
@@ -196,9 +194,12 @@ nav {
 .button-secondary {
     background-color: #4d6175;
     color: #ffffff;
+    /* Optional: Add a subtle border to secondary */
+    border: 1px solid #6a849f;
 }
 .button-secondary:hover:not(:disabled) {
     background-color: #5a7086;
+    border-color: #7b97b1;
 }
 
 
@@ -345,6 +346,7 @@ label {
 }
 
 .recipe-card h2 {
+    color: #D4AF37; /* Gold title */
     margin-bottom: 10px;
     font-size: 1.3em;
     font-weight: 400;
@@ -386,31 +388,31 @@ label {
 .recipe-details {
     background-color: #1A2A3A;
     border-radius: 16px;
-    padding: 25px; /* MODIFIED: Reduced padding */
+    padding: 25px;
     margin: 20px 0;
-    max-width: 750px; /* MODIFIED: Reduced max-width */
-    margin-left: auto; /* Center the container */
+    max-width: 750px;
+    margin-left: auto;
     margin-right: auto;
     box-shadow: 0 0 25px rgba(212, 175, 55, 0.8);
 }
 
 .recipe-details h1 {
+    color: #D4AF37;
     margin-bottom: 20px;
     font-weight: bold;
     text-align: center;
     font-size: 2em;
 }
 
-/* MODIFIED: Responsive image */
 .recipe-details img {
-    width: 100%; /* Take container width */
-    max-width: 600px; /* But don't exceed this size */
-    height: auto; /* Maintain aspect ratio */
+    width: 100%;
+    max-width: 600px;
+    height: auto;
     object-fit: cover;
     border-radius: 8px;
     margin-bottom: 25px;
-    display: block; /* Prevent extra space below */
-    margin-left: auto; /* Center image within container */
+    display: block;
+    margin-left: auto;
     margin-right: auto;
 }
 
@@ -424,18 +426,42 @@ label {
 }
 
 .recipe-details ul, .recipe-details ol {
-    margin-left: 20px;
     color: #ffffff;
-    padding-left: 20px;
+    padding-left: 0;
+    list-style: none;
+}
+
+/* Added Numbered List Styles */
+.recipe-details ol {
+    counter-reset: step-counter;
 }
 
 .recipe-details li {
     margin-bottom: 12px;
     line-height: 1.5;
-    display:inline block;
+    display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    position: relative;
+    padding-left: 2.5em;
 }
+/* Add number specifically to OL list items */
+.recipe-details ol > li {
+     counter-increment: step-counter;
+}
+.recipe-details ol > li::before {
+    content: counter(step-counter) ".";
+    position: absolute;
+    left: 0;
+    top: 0;
+    line-height: inherit;
+    color: #D4AF37;
+    font-weight: bold;
+    padding-right: 0.8em;
+    width: 2em;
+    text-align: right;
+}
+
 
 .timer {
     background-color: #243b52;
@@ -445,41 +471,39 @@ label {
     font-size: 0.9em;
     margin-left: 10px;
     white-space: nowrap;
+    flex-shrink: 0;
 }
 
-/* MODIFIED: Centered recipe footer */
 .recipe-footer {
     margin-top: 30px;
     padding-top: 15px;
     border-top: 1px solid #4d6175;
-    display: flex; /* Use flexbox */
-    flex-direction: column; /* Stack items vertically */
-    align-items: center; /* Center items horizontally */
-    gap: 10px; /* Space between items */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
 }
 .recipe-footer p {
-    margin: 0; /* Remove default margins */
+    margin: 0;
     font-size: 1em;
-    text-align: center; /* Center text within paragraphs */
+    text-align: center;
 }
 .recipe-footer strong {
     color: #D4AF37;
     font-weight: bold;
 }
-/* Contains the like button now */
 .like-section {
-    margin-top: 10px; /* Add some space above the like button */
+    margin-top: 10px;
 }
 
 
-/* MODIFIED: Role Actions Spacing */
 .role-actions {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 15px; /* Space between buttons */
-    margin-bottom: 25px; /* Space below the buttons */
-    flex-wrap: wrap; /* Allow buttons to wrap on small screens */
+    gap: 15px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
 }
 
 
@@ -546,48 +570,107 @@ label {
 }
 
 
-/* --- Admin --- */
-.admin-container {
-    padding: 20px 0;
-    width: 100%;
-}
-
-.admin-container h1 {
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-/* MODIFIED: Added table border */
-#users-table, #recipes-table {
+/* --- Admin Tables & Chef Pending Table --- */
+#users-table,
+#recipes-table,
+#chef-pending-recipes-table {
     width: 100%;
     border-collapse: collapse;
-    margin: 40px 20px;
+    margin: 20px 0; /* Adjusted margin */
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     overflow-x: auto;
-    border: 1px solid #6a849f; /* Outline for the table */
+    border: 1px solid #6a849f; /* Table outline */
+    border-radius: 4px; /* Added slight rounding */
+    overflow: hidden; /* Needed for border-radius */
 }
 
 #users-table th, #users-table td,
-#recipes-table th, #recipes-table td {
+#recipes-table th, #recipes-table td,
+#chef-pending-recipes-table th,
+#chef-pending-recipes-table td {
     padding: 12px 15px;
-    border: 1px solid #000000; /* MODIFIED: Slightly more visible border */
+    border: 1px solid #6a849f; /* Cell borders */
     text-align: left;
     vertical-align: middle;
 }
 
-#users-table tr, #recipes-table tr {
-    background-color: #1f3040c2;
+#users-table th,
+#recipes-table th,
+#chef-pending-recipes-table th {
+    background-color: #243b52; /* Header background */
+    color: #D4AF37;
     font-weight: bold;
+    text-transform: uppercase; /* Added uppercase */
+    letter-spacing: 0.5px; /* Added spacing */
 }
 
+#users-table tr,
+#recipes-table tr,
+#chef-pending-recipes-table tr {
+    background-color: #1f3040c2;
+    font-weight: normal; /* Changed from bold to normal for data rows */
+}
+#users-table tr:nth-child(even),
+#recipes-table tr:nth-child(even),
+#chef-pending-recipes-table tr:nth-child(even) {
+    background-color: #2a3f53d1; /* Zebra striping */
+}
+
+
+/* Styles Specific to Admin Actions Column (Not needed for Chef table) */
 #users-table td:last-child,
 #recipes-table td:last-child {
     text-align: right;
     white-space: nowrap;
 }
-
 #users-table .button, #recipes-table .button {
     margin-left: 5px;
+}
+select.role-select { /* Style dropdown */
+    padding: 8px;
+    border-radius: 4px;
+    background-color: #243b52;
+    color: #ffffff;
+    border: 1px solid #4d6175;
+}
+
+/* --- Styles for Chef Pending Table (Links and Messages) --- */
+.chef-pending-recipes-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #4d6175;
+}
+
+.chef-pending-recipes-section h2 {
+    color: #D4AF37;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+    text-align: center;
+    font-weight: 500;
+}
+
+#chef-pending-recipes-table a { /* Style links within the chef table */
+    color: #D4AF37;
+    text-decoration: none;
+    font-weight: bold;
+}
+#chef-pending-recipes-table a:hover {
+    text-decoration: underline;
+    color: #fff;
+}
+
+/* Style for "No recipes" or error/loading message rows */
+#chef-pending-recipes-table td[colspan="2"] { /* Match the colspan */
+    text-align: center;
+    font-style: italic;
+    color: #aaa;
+    padding: 20px;
+    background-color: #1f3040c2; /* Match row background */
+}
+#chef-pending-recipes-table td[colspan="2"].message.error {
+    font-style: normal;
+    color: #a04040;
+    background-color: #ffcccb; /* Use error message styles */
 }
 
 
@@ -612,7 +695,7 @@ label {
 
 .profile-info {
     text-align: left;
-    padding: 10px;
+    padding-bottom: 15px; /* Added padding bottom */
     margin-bottom: 20px;
     border-bottom: 1px solid #4d6175;
 }
@@ -697,7 +780,7 @@ label {
 .dynamic-field .ingredient input {
     margin-bottom: 0;
 }
-.dynamic-field > input[type="text"],
+.dynamic-field > input[type="text"], /* Direct child input */
 .dynamic-field > textarea {
     flex-grow: 1;
     margin-bottom: 0;
@@ -714,8 +797,18 @@ label {
     border-radius: 50%;
 }
 
+.checkbox-group {
+    margin-bottom: 15px; /* Space below checkbox group */
+}
+.checkbox-group > label { /* Main group label */
+    display: block;
+    margin-bottom: 8px; /* Space below main label */
+    color: #D4AF37;
+    font-weight: bold;
+}
 .checkbox-group div {
     margin-bottom: 5px;
+    padding-left: 5px; /* Indent checkboxes slightly */
 }
 input[type="checkbox"] {
     margin-right: 8px;
@@ -723,19 +816,12 @@ input[type="checkbox"] {
     width: auto;
     vertical-align: middle;
 }
-.checkbox-group label {
+.checkbox-group label { /* Label next to checkbox */
     display: inline;
     font-weight: normal;
     color: #ffffff;
 }
-label[for^="noGluten"], /* Target main labels for groups */
-label[for^="vegetarian"],
-label[for^="vegan"] {
-     color: #D4AF37;
-     font-weight: bold;
-     display: block; /* Make main label block */
-     margin-bottom: 5px;
-}
+
 
 /* --- Translation Interface --- */
 .translation-container {
@@ -763,9 +849,8 @@ label[for^="vegan"] {
     padding: 1.5rem;
     border-radius: 0.375rem;
     border: 1px solid #4d6175;
-    /* Added to help prevent overflow from children */
-    min-width: 0; /* Allow column to shrink */
-    overflow: hidden; /* Hide overflow if necessary, better to fix children */
+    min-width: 0;
+    overflow: hidden; /* Helps contain children */
 }
 
 .translation-column h2 {
@@ -776,87 +861,31 @@ label[for^="vegan"] {
     margin-bottom: 1.5rem;
     font-size: 1.25rem;
 }
-
-.form-group {
-    margin-bottom: 1.5rem;
+.readonly-translator {
+    background-color: #3a4b5c !important;
+    border-color: #4d6175 !important;
+    color: #9ab;
+    cursor: not-allowed;
+    opacity: 0.7;
 }
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.75rem;
-    font-weight: 600;
-    font-size: 1em;
-    color: #D4AF37;
-}
-
-.translation-row {
-    display: flex;
-    gap: 0.5rem; /* MODIFIED: Reduced gap */
-    margin-bottom: 1rem;
-    align-items: center;
-}
-
+[readonly][title] { cursor: help; }
+.form-group { margin-bottom: 1.5rem; }
+.form-group label { color: #D4AF37; font-weight: 600; }
+.translation-row { display: flex; gap: 0.5rem; margin-bottom: 1rem; align-items: center; }
 .original-field {
-    padding: 0.75rem;
-    border-radius: 0.25rem;
-    min-height: calc(1.5em + 1.5rem + 2px); /* Match input height */
-    font-size: 0.9em; /* Slightly smaller font in table */
-    line-height: 1.4; /* Adjusted line height */
-    background-color: #243b52;
-    border: 1px solid #4d6175;
-    flex-grow: 1;
-    overflow-wrap: break-word;
-    min-width: 0; /* Allow shrinking */
+    padding: 0.75rem; border-radius: 0.25rem; min-height: 40px;
+    font-size: 0.9em; line-height: 1.4; background-color: #243b52;
+    border: 1px solid #4d6175; flex-grow: 1; overflow-wrap: break-word; min-width: 0;
 }
-.original-field.quantity-value,
-.original-field.quantity-unit {
-    flex-grow: 0;
-    min-width: 50px; /* MODIFIED: Reduced min-width */
-    text-align: right;
+.original-field.quantity-value, .original-field.quantity-unit { flex-grow: 0; min-width: 50px; text-align: right; }
+.translation-column input[type="text"], .translation-column textarea {
+    width: auto; flex-grow: 1; margin: 0; background-color: #2e4257; font-size: 0.9em; padding: 8px; min-width: 0;
 }
-
-
-.translation-column input[type="text"],
-.translation-column textarea {
-    width: auto;
-    flex-grow: 1;
-    margin: 0;
-    background-color: #2e4257;
-    font-size: 0.9em; /* MODIFIED: Smaller font */
-    padding: 8px; /* MODIFIED: Reduced padding */
-    min-width: 0; /* MODIFIED: Allow shrinking below intrinsic size */
-}
-.translation-column input.quantity-value {
-     background-color: #243b52;
-     border-color: #4d6175;
-     flex-grow: 0;
-     min-width: 50px; /* MODIFIED: Reduced min-width */
-     text-align: right;
-}
-.translation-column input.quantity-unit {
-     flex-grow: 0;
-     min-width: 80px; /* MODIFIED: Reduced min-width */
-}
-
-.translation-column textarea {
-    min-height: 5em; /* Adjusted height */
-}
-
-/* Highlight changes */
-.translation-column input[type="text"].changed,
-.translation-column textarea.changed {
-    background-color: #5c3d46;
-    border-color: #D4AF37;
-}
-
-
-.form-actions {
-    margin-top: 2rem;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-}
+.translation-column input.quantity-value { background-color: #243b52; border-color: #4d6175; flex-grow: 0; min-width: 50px; text-align: right; }
+.translation-column input.quantity-unit { flex-grow: 0; min-width: 80px; }
+.translation-column textarea { min-height: 5em; }
+.translation-column input[type="text"].changed, .translation-column textarea.changed { border-color: #D4AF37; }
+.form-actions { margin-top: 2rem; text-align: center; display: flex; justify-content: center; gap: 1rem; }
 
 
 /* --- Footer --- */
@@ -896,25 +925,18 @@ footer {
     opacity: 0.95;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
+.message.error { background-color: #ffcccb; border-color: #ff6666; color: #a04040; }
+.message.success { background-color: #c1e1c1; border-color: #77dd77; color: #306030; }
+.message.info { background-color: #bde5f8; border-color: #87ceeb; color: #1e5f7f; } /* Added info style */
 
-.message.error {
-    background-color: #ffcccb;
-    border-color: #ff6666;
-    color: #a04040;
-}
-
-.message.success {
-    background-color: #c1e1c1;
-    border-color: #77dd77;
-    color: #306030;
+.easter-egg img {
+    max-width: 200px;
+    max-height: 200px;
+    margin-top: 2em;
 }
 
 /* --- Accessibility --- */
-.button:focus,
-a:focus,
-input:focus,
-textarea:focus,
-select:focus {
+.button:focus, a:focus, input:focus, textarea:focus, select:focus {
     outline: 2px solid #D4AF37;
     outline-offset: 2px;
     box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.5);
@@ -922,89 +944,30 @@ select:focus {
 
 /* --- Responsive --- */
 @media (max-width: 992px) {
-    main {
-        padding: 0 15px;
-    }
-    nav {
-        /* Keep flex-wrap: wrap */
-    }
-    .auth-container {
-        width: 100%;
-        justify-content: center;
-        margin-top: 10px;
-        order: 3;
-    }
-     .logged-in-nav, .role-lang-container {
-        margin-left: 0;
-        justify-content: center;
-        width: 100%;
-        margin-top: 10px;
-    }
-    .role-lang-container {
-        order: 2;
-    }
-    body {
-        padding-top: 10em; /* Adjust if header wrapping is significant */
-    }
-    .recipe-details {
-        padding: 20px;
-        max-width: 95%; /* Allow more width on tablet */
-    }
-    .translation-columns {
-        flex-direction: column;
-    }
+    main { padding: 0 15px; }
+    nav { /* Keep flex-wrap */ }
+    .auth-container { width: 100%; justify-content: center; margin-top: 10px; order: 3; }
+     .logged-in-nav, .role-lang-container { margin-left: 0; justify-content: center; width: 100%; margin-top: 10px; }
+    .role-lang-container { order: 2; }
+    body { padding-top: 10em; /* Adjust if needed */ }
+    .recipe-details { padding: 20px; max-width: 95%; }
+    .translation-columns { flex-direction: column; }
 }
 
 @media (max-width: 768px) {
-    body {
-        padding-top: 10em; /* Further adjustment might be needed based on final header height */
-    }
-    .page-title {
-        font-size: 1.2em;
-    }
-    .search-container {
-        flex-direction: column;
-    }
-    #search-button {
-        width: 100%;
-    }
-    .recipe-details {
-         padding: 15px; /* Less padding on mobile */
-    }
-    .recipe-details img {
-        max-width: 100%; /* Image takes full width on mobile */
-        max-height: 300px;
-    }
-     #users-table, #recipes-table {
-        font-size: 0.9em;
-    }
-     #users-table td:last-child,
-    #recipes-table td:last-child {
-        text-align: left; /* Stack actions vertically */
-        white-space: normal; /* Allow wrapping */
-    }
-     #users-table .button, #recipes-table .button {
-        display: block;
-        margin-bottom: 5px;
-        width: 100%;
-        text-align: center;
-        margin-left: 0; /* Reset margin */
-    }
-     .profile-actions {
-        flex-direction: column;
-    }
-    .translation-row {
-        flex-wrap: wrap; /* Allow fields in translation row to wrap */
-    }
-     .translation-column input[type="text"],
-    .translation-column textarea {
-        width: 100%; /* Make translation inputs full width when wrapped */
-        flex-basis: 100%;
-    }
-     .translation-column input.quantity-value,
-    .translation-column input.quantity-unit {
-        width: auto; /* Allow quantity/unit to be side-by-side if space */
-        flex-basis: auto;
-        flex-grow: 1; /* Allow them to share space */
-    }
+    body { padding-top: 10em; /* Adjust if needed */ }
+    .page-title { font-size: 1.2em; }
+    .search-container { flex-direction: column; }
+    #search-button { width: 100%; }
+    .recipe-details { padding: 15px; }
+    .recipe-details img { max-height: 300px; }
+    .recipe-details ol > li::before { width: 1.6em; height: 1.6em; line-height: 1.6em; top: 1px; font-size: 0.9em;} /* Adjust counter size/position */
+    .recipe-details li { padding-left: 2.2em; align-items: center; } /* Align center on mobile might look better */
+     #users-table, #recipes-table, #chef-pending-recipes-table { font-size: 0.9em; } /* Applied to chef table */
+     #users-table td:last-child, #recipes-table td:last-child, #chef-pending-recipes-table td:last-child { text-align: left; white-space: normal; } /* Applied to chef table */
+     #users-table .button, #recipes-table .button, #chef-pending-recipes-table .button { display: block; margin-bottom: 5px; width: 100%; text-align: center; margin-left: 0; } /* Applied to chef table */
+     .profile-actions { flex-direction: column; }
+    .translation-row { flex-wrap: wrap; }
+     .translation-column input[type="text"], .translation-column textarea { width: 100%; flex-basis: 100%; }
+     .translation-column input.quantity-value, .translation-column input.quantity-unit { width: auto; flex-basis: auto; flex-grow: 1; }
 }

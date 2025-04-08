@@ -23,6 +23,8 @@
     $role = $_SESSION['role'] ?? '';
 ?>
 
+<div id="snow-container"></div>
+
 <header>
     <nav>
         <a href="index.php" class="logo">
@@ -91,7 +93,7 @@
 </main>
 
 <footer>
-    <p>© <?php echo date('Y'); ?> Gorelov Bogdan</p>
+    <p>© <?php echo date('Y'); ?> Gorelov Bogdan | Université Paris-Saclay</p>
 </footer>
 
 
@@ -292,9 +294,6 @@ $(document).ready(function () {
                 } else {
                     showMessage(response.message || currentTranslations?.messages?.error || 'Authentication failed', 'error');
                 }
-            },
-            error: function() {
-                showMessage(currentTranslations?.messages?.error || 'An error occurred during authentication.', 'error');
             }
         });
     }
