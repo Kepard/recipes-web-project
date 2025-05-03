@@ -63,10 +63,6 @@ if (!$isAdmin && !$isAuthor) {
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // --- Permission Check Again (important inside POST) ---
-     if (!$isAdmin && !$isAuthor) {
-         die("Permission denied."); // Should not happen if initial check works, but good practice
-     }
 
     // Validate and sanitize input data (similar to create_recipe)
     $name = trim(htmlspecialchars($_POST['name'] ?? ''));
@@ -79,21 +75,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $timers = $_POST['timers'] ?? [];
     $imageURL = filter_var(trim($_POST['imageURL'] ?? ''), FILTER_SANITIZE_URL);
     $originalURL = filter_var(trim($_POST['originalURL'] ?? ''), FILTER_SANITIZE_URL);
-
-    // Basic Validation
-    if (empty($name) || empty($ingredients) || !is_array($ingredients) || empty($steps) || !is_array($steps) || empty($timers) || !is_array($timers)) {
-         $_SESSION['form_error'] = "Please fill in all required fields (Name, Ingredients, Steps, Timers).";
-         header("Location: modify_recipe.php?id=" . $recipeId); // Redirect back to modify form
-         exit;
-    }
-
-    // Process arrays - remove empty entries, sanitize more
-     $ingredients = array_values(array_filter($ingredients, fn($ing) => !empty($ing['name'])));
-     $ingredientsFR = array_values(array_filter($ingredientsFR, fn($ing) => !empty($ing['name'])));
-     $steps = array_values(array_filter($steps, fn($step) => !empty(trim($step))));
-     $stepsFR = array_values(array_filter($stepsFR, fn($step) => !empty(trim($step))));
-     $timers = array_values(array_filter($timers, fn($timer) => is_numeric($timer) && $timer >= 0)); // Ensure timers >= 0
-
 
     // Update the recipe data IN PLACE using the stored key
     $recipes[$recipeKey] = [
@@ -114,29 +95,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         "validated" => ($isAdmin) ? 1 : 0 // Default validation to 0, but if the admin modifies the recipe its automatically validated
     ];
 
-    // Save updated recipes back to the JSON file with locking
-    $fp = fopen($recipesFile, 'w');
-    if ($fp && flock($fp, LOCK_EX)) {
-        fwrite($fp, json_encode($recipes, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-        flock($fp, LOCK_UN);
-        fclose($fp);
-        $_SESSION['flash_message'] = ['type' => 'success', 'text' => "Recipe '$name' updated successfully!"];
-        header("Location: recipe.php?id=" . $recipeId); // Redirect back to the recipe page
-        exit;
-    } else {
-        if ($fp) fclose($fp);
-        $_SESSION['form_error'] = "Error saving the recipe. Could not write to file.";
-        header("Location: modify_recipe.php?id=" . $recipeId);
-        exit;
-    }
+    // Save updated recipes back to the JSON file 
+    file_put_contents($recipesFile, json_encode($recipes, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+
+    header("Location: recipe.php?id=" . $recipeId); // Redirect back to recipe page
 }
 
-// Display potential error message from session
-$formError = '';
-if (isset($_SESSION['form_error'])) {
-    $formError = '<p class="message error">' . htmlspecialchars($_SESSION['form_error']) . '</p>';
-    unset($_SESSION['form_error']); // Clear the message
-}
 
 // --- Function to generate dynamic fields populated with existing data ---
 function generateDynamicFields($data, $type, $lang = '') {
@@ -159,18 +123,18 @@ function generateDynamicFields($data, $type, $lang = '') {
 
                  $fieldContent = '
                     <div class="ingredient">
-                        <input type="text" name="' . $namePrefix . '[' . $index . '][quantity]" value="' . $quantity . '" placeholder="'.$placeholderQty.'" required>
-                        <input type="text" name="' . $namePrefix . '[' . $index . '][name]" value="' . $name . '" placeholder="'.$placeholderName.'" required>
+                        <input type="text" name="' . $namePrefix . '[' . $index . '][quantity]" value="' . $quantity . '" placeholder="'.$placeholderQty.'">
+                        <input type="text" name="' . $namePrefix . '[' . $index . '][name]" value="' . $name . '" placeholder="'.$placeholderName.'">
                         <input type="text" name="' . $namePrefix . '[' . $index . '][type]" value="' . $ftype . '" placeholder="'.$placeholderType.'">
                     </div>';
             } elseif ($type === 'steps') {
                 $stepText = htmlspecialchars($item ?? '');
                 $placeholder = ($lang === 'FR' ? 'Étape ' : 'Step ') . ($index + 1);
-                $fieldContent = '<textarea name="' . $namePrefix . '[' . $index . ']" placeholder="' . $placeholder . '" required>' . $stepText . '</textarea>';
+                $fieldContent = '<textarea name="' . $namePrefix . '[' . $index . ']" placeholder="' . $placeholder . '">' . $stepText . '</textarea>';
             } elseif ($type === 'timers') {
                 $timerValue = htmlspecialchars($item ?? '');
                 $placeholder = ($lang === 'FR' ? 'Minuteur Étape ' : 'Timer Step ') . ($index + 1);
-                $fieldContent = '<input type="number" name="' . $namePrefix . '[' . $index . ']" value="' . $timerValue . '" placeholder="' . $placeholder . '" min="0" required>';
+                $fieldContent = '<input type="number" name="' . $namePrefix . '[' . $index . ']" value="' . $timerValue . '" placeholder="' . $placeholder . '" min="0">';
             }
 
             if (!empty($fieldContent)) {
@@ -190,16 +154,16 @@ function generateDynamicFields($data, $type, $lang = '') {
              $placeholderType = ($lang === 'FR' ? 'Type' : 'Type');
              $fieldContent = '
                 <div class="ingredient">
-                    <input type="text" name="' . $namePrefix . '[0][quantity]" placeholder="'.$placeholderQty.'" required>
-                    <input type="text" name="' . $namePrefix . '[0][name]" placeholder="'.$placeholderName.'" required>
+                    <input type="text" name="' . $namePrefix . '[0][quantity]" placeholder="'.$placeholderQty.'">
+                    <input type="text" name="' . $namePrefix . '[0][name]" placeholder="'.$placeholderName.'">
                     <input type="text" name="' . $namePrefix . '[0][type]" placeholder="'.$placeholderType.'">
                 </div>';
          } elseif ($type === 'steps') {
              $placeholder = ($lang === 'FR' ? 'Étape 1' : 'Step 1');
-             $fieldContent = '<textarea name="' . $namePrefix . '[0]" placeholder="' . $placeholder . '" required></textarea>';
+             $fieldContent = '<textarea name="' . $namePrefix . '[0]" placeholder="' . $placeholder . '"></textarea>';
          } elseif ($type === 'timers') {
              $placeholder = ($lang === 'FR' ? 'Minuteur Étape 1' : 'Timer Step 1');
-             $fieldContent = '<input type="number" name="' . $namePrefix . '[0]" placeholder="' . $placeholder . '" min="0" required>';
+             $fieldContent = '<input type="number" name="' . $namePrefix . '[0]" placeholder="' . $placeholder . '" min="0">';
          }
           if (!empty($fieldContent)) {
              $fields .= '<div class="dynamic-field">' . $fieldContent . $removeButton . '</div>';
@@ -215,7 +179,6 @@ function generateDynamicFields($data, $type, $lang = '') {
 $content = '
 <div class="modify-recipe-container">
     <h1>Modify Recipe: ' . htmlspecialchars($recipeToModify['name']) . '</h1>
-    ' . $formError . ' <!-- Display form error message here -->
     <form method="POST" action="modify_recipe.php?id=' . $recipeId . '">
 
         <label for="name">Recipe Name (English): *</label>

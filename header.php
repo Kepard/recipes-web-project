@@ -64,7 +64,7 @@
             <!-- Navbar for logged-in users -->
             <div class="logged-in-nav">
                 <a href="profile.php" class="button button-primary profile-button" data-translate="buttons.profile">My Profile</a>
-                <form id="logout-form" action="logout.php" method="POST" style="margin:0;"> <!-- Remove default form margin -->
+                <form id="logout-form" action="logout.php" method="POST"> 
                     <button type="submit" id="logout" class="button button-secondary" data-translate="buttons.logout">Logout</button>
                 </form>
             </div>
@@ -231,7 +231,7 @@ $(document).ready(function () {
         let role = $('input[name="roleRequest"]:checked').val() || "Cuisinier"; // Default role
 
         if (!username || !password) {
-            showMessage(currentTranslations?.messages?.missing_fields || 'Please fill in username and password.', 'error');
+            showMessage(currentTranslations.messages.missing_fields, 'error');
             return;
         }
 
@@ -253,12 +253,7 @@ $(document).ready(function () {
                     $('#password').val('');
                     $('input[name="roleRequest"]').prop('checked', false); // Uncheck radio
                     // Optionally log the user in automatically after signup
-                } else {
-                    showMessage(response.message || currentTranslations?.messages?.error || 'Signup failed', 'error');
                 }
-            },
-            error: function() {
-                showMessage(currentTranslations?.messages?.error || 'An error occurred during signup.', 'error');
             }
         });
     });
@@ -268,7 +263,7 @@ $(document).ready(function () {
         const password = $('#password').val().trim();
 
         if (!username || !password) {
-            showMessage(currentTranslations?.messages?.missing_fields || 'Please fill in all fields.', 'error');
+            showMessage(currentTranslations.messages.missing_fields, 'error');
             return;
         }
 
@@ -292,7 +287,7 @@ $(document).ready(function () {
                     }
                     // No specific action needed for signup success here, handled by validate-signup handler
                 } else {
-                    showMessage(response.message || currentTranslations?.messages?.error || 'Authentication failed', 'error');
+                    showMessage(response.message, 'error');
                 }
             }
         });

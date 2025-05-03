@@ -7,13 +7,13 @@ if (session_status() === PHP_SESSION_NONE) {
 // Validate recipe ID
 $recipeId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
-// Check if user is logged in
-if (!isset($_SESSION['username'])) {
-    header("Location: index.php");
-    exit;
-}
 $currentUser = $_SESSION['username'];
 $currentRole = $_SESSION['role'];
+
+if (!isset($currentUser)){
+    header('Location: index.php');
+    exit;
+}
 
 // Load recipes from JSON
 $recipesFile = 'recipes.json';
@@ -43,6 +43,7 @@ if ($recipe === null || $recipeIndex === null) {
     exit;
 }
 
+
 // --- Permission Checks ---
 $isAuthor = isset($recipe['Author']) && $recipe['Author'] === $currentUser;
 $isTranslator = $currentRole === 'Traducteur';
@@ -69,17 +70,11 @@ function splitQuantityLabel($quantity) {
 
 // --- Handle Form Submission ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!$canAccessPage) { die("Permission denied."); }
-
     $recipeBeforeUpdate = $recipes[$recipeIndex];
-    $errorOccurred = false; // Flag for mismatch errors
 
     // Update Name FR
     $postedNameFR = trim(htmlspecialchars($_POST['nameFR'] ?? ''));
-    $canUpdateNameFR = $isAllowedEditor || ($isTranslator && empty(trim($recipeBeforeUpdate['nameFR'] ?? '')) && !empty(trim($recipeBeforeUpdate['name'] ?? '')));
-    if ($canUpdateNameFR) {
-        $recipe['nameFR'] = $postedNameFR;
-    }
+    $recipe['nameFR'] = $postedNameFR;
 
     // Update Ingredients FR
     if (isset($_POST['ingredientsFR']) && is_array($_POST['ingredientsFR'])) {
@@ -99,16 +94,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                  $finalTranslatedQuantity = $originalFRIngredient['quantity'] ?? '';
                  $finalTranslatedName = $originalFRIngredient['name'] ?? '';
                  $finalTranslatedType = $originalFRIngredient['type'] ?? '';
-
-                 $canUpdateUnit = $isAllowedEditor || ($isTranslator && empty(trim(splitQuantityLabel($originalFRIngredient['quantity'] ?? '')['label'])) && !empty(trim($originalENIngredient['quantity'] ?? '')));
-                 if ($canUpdateUnit) { $finalTranslatedQuantity = trim($originalQuantityValue . ' ' . $postedUnitLabel); }
-
-                 $canUpdateName = $isAllowedEditor || ($isTranslator && empty(trim($originalFRIngredient['name'] ?? '')) && !empty(trim($originalENIngredient['name'] ?? '')));
-                  if ($canUpdateName) { $finalTranslatedName = $postedName; }
-
-                  $canUpdateType = $isAllowedEditor || ($isTranslator && empty(trim($originalFRIngredient['type'] ?? '')) && !empty(trim($originalENIngredient['type'] ?? ''))); // Allow updating type even if EN is empty? Maybe. Adjust if needed.
-                  if ($canUpdateType) { $finalTranslatedType = $postedType; }
-
+                 $finalTranslatedQuantity = trim($originalQuantityValue . ' ' . $postedUnitLabel);
+                 $finalTranslatedName = $postedName;
+                 $finalTranslatedType = $postedType;
                  $newIngredientsFR[$index] = ['quantity' => $finalTranslatedQuantity, 'name' => $finalTranslatedName, 'type' => $finalTranslatedType ];
             }
             $recipe['ingredientsFR'] = $newIngredientsFR;
@@ -116,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Update Steps FR
-    if (isset($_POST['stepsFR']) && is_array($_POST['stepsFR']) && !$errorOccurred) { // Don't process if previous error
+    if (isset($_POST['stepsFR']) && is_array($_POST['stepsFR'])) { 
         $originalSteps = $recipeBeforeUpdate['steps'] ?? [];
         $originalStepsFR = $recipeBeforeUpdate['stepsFR'] ?? [];
         $newStepsFR = $recipe['stepsFR'] ?? [];
@@ -127,36 +115,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                  $originalENStep = trim($originalSteps[$index] ?? '');
                  $originalFRStep = trim($originalStepsFR[$index] ?? '');
                  $postedStep = trim(htmlspecialchars($postedValue));
-                 $canUpdateStep = $isAllowedEditor || ($isTranslator && empty($originalFRStep) && !empty($originalENStep));
-                 $newStepsFR[$index] = $canUpdateStep ? $postedStep : $originalFRStep;
+                 $newStepsFR[$index] = $postedStep;
             }
-             $recipe['stepsFR'] = $newStepsFR;
+            $recipe['stepsFR'] = $newStepsFR;
         }
     }
 
     // --- Save the updated recipe data ---
     $recipes[$recipeIndex] = $recipe;
 
-    $fp = fopen($recipesFile, 'w');
-    if ($fp && flock($fp, LOCK_EX)) {
-        fwrite($fp, json_encode($recipes, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-        flock($fp, LOCK_UN);
-        fclose($fp);
-        // Use keys for flash messages
-        $_SESSION['flash_message'] = ['type' => 'success', 'key' => 'messages.translation_processing_complete'];
-        header('Location: recipe.php?id=' . $recipeId);
-        exit;
-    } else {
-        if ($fp) fclose($fp);
-        $_SESSION['flash_message'] = ['type' => 'error', 'key' => 'messages.translation_saving_error'];
-        header('Location: translate_recipe.php?id=' . $recipeId);
-        exit;
-    }
+    file_put_contents($recipesFile, json_encode($recipes, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+
+    header("Location: recipe.php?id=" . $recipeId); // Redirect back to recipe page
 }
 
 
 // --- Generate HTML Content ---
-$recipeNamePHP = htmlspecialchars($recipe['name'] ?? 'N/A'); // Store recipe name for JS
+$recipeNamePHP = htmlspecialchars($recipe['name']); // Store recipe name for JS
 
 $content = '
 <div class="translation-container">
@@ -214,8 +189,7 @@ $content .= '
             <!-- Translation (French) Column -->
             <div class="translation-column translation-form-column">
                 <h2 data-translate="labels.translation_french">Translation (Français)</h2>
-                 ' . ($isTranslator ? '<p><small data-translate="messages.translator_edit_hint">Edit only empty fields where English source exists.</small></p>' : '') . '
-
+                <p><small data-translate="messages.translator_edit_hint">Edit only empty fields where English source exists.</small></p>
                  <div class="form-group">';
                     $nameEN = trim($recipe['name'] ?? '');
                     $nameFR = trim($recipe['nameFR'] ?? '');
@@ -304,7 +278,7 @@ $content .= '
     </form>
 </div>';
 
-$title = "Translate Recipe"; // Keep a simple title, H1 has details
+$title = "Translate Recipe"; 
 include 'header.php';
 ?>
 
@@ -315,11 +289,9 @@ function initializePageContent(translations, lang) {
      const $errorMsg = $('.message.error[data-translate-key]');
      if ($errorMsg.length) {
          const key = $errorMsg.data('translate-key');
-         const type = $errorMsg.data('translate-type'); // Get 'Ingredients' or 'Steps'
+         const type = $errorMsg.data('translate-type');
          let errorText = getNestedTranslation(translations, key);
          if (type) {
-            // Replace placeholder in the translated message
-            // Assume the placeholder is {type}
              errorText = errorText.replace('{type}', type);
          }
          $errorMsg.text(errorText); // Set the translated text
@@ -350,11 +322,7 @@ $(document).ready(function() {
     // --- Form Validation ---
     $('#translation-form').submit(function(e) {
         let hasContent = false;
-        const isTranslator = <?php echo json_encode($isTranslator); ?>;
-
-        const selector = isTranslator
-            ? '.translation-form-column input:not([readonly]), .translation-form-column textarea:not([readonly])'
-            : '.translation-form-column input, .translation-form-column textarea';
+        const selector = '.translation-form-column input:not([readonly]), .translation-form-column textarea:not([readonly])';
 
         $(selector).each(function() {
              if ($(this).val().trim() !== '') {

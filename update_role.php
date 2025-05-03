@@ -28,6 +28,5 @@ $_SESSION['role'] = $newRole;
 // Envoyer un message de success au AJAX
 echo json_encode([
     'success' => true,
-    'message' => 'Role updated successfully',
     'newRole' => $newRole
 ]);

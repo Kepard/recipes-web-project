@@ -18,6 +18,7 @@ if (!isset($_SESSION['username'])) {
     $username = htmlspecialchars($_SESSION['username']); // Sanitize output
     $role = htmlspecialchars($_SESSION['role']);     // Sanitize output
 
+
     // --- Start Building Content ---
     $content = '
     <div class="profile-container" id="profile-container">
@@ -41,12 +42,10 @@ if (!isset($_SESSION['username'])) {
                     <tr>
                         <th data-translate="labels.recipe_name">Recipe Name</th>
                         <th data-translate="labels.status">Status</th>
-                        <!-- Add more columns if needed, e.g., Date Submitted -->
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Rows will be added by JavaScript -->
-                    <tr><td colspan="2" data-translate="messages.loading">Loading...</td></tr>
+                   
                 </tbody>
             </table>
         </div>
@@ -104,19 +103,17 @@ function loadChefPendingRecipes(translations, lang) {
     const chefUsername = $("#profileUsername").text();
     const $tableBody = $("#chef-pending-recipes-table tbody");
 
-    // Show loading state
-    $tableBody.html('<tr><td colspan="2">' + (translations.messages?.loading || 'Loading...') + '</td></tr>');
-
     $.getJSON("recipes.json?v=" + Date.now(), function (recipes) {
         const recipeArray = Array.isArray(recipes) ? recipes : Object.values(recipes);
+
+        // --- FIX: Clear the table body before adding new rows ---
+        $tableBody.empty();
 
         const pendingRecipes = recipeArray.filter(recipe =>
             recipe &&
             recipe.Author === chefUsername &&
-            recipe.validated == 0 // Use == for potential string/number difference, === 0 is safer if validated is always number
+            recipe.validated === 0 
         );
-
-        $tableBody.empty(); // Clear loading row
 
         if (pendingRecipes.length === 0) {
             $tableBody.html('<tr><td colspan="2">' + (translations.messages?.no_pending_recipes || 'No recipes pending.') + '</td></tr>');
@@ -134,9 +131,6 @@ function loadChefPendingRecipes(translations, lang) {
                 $tableBody.append(row);
             });
         }
-    }).fail(function() {
-        $tableBody.empty(); // Clear loading row
-        $tableBody.html('<tr><td colspan="2" class="message error">' + (translations.messages?.error_loading_pending_recipes || 'Error loading recipes.') + '</td></tr>');
     });
 }
 
@@ -165,18 +159,8 @@ function updateRoleRequest(newRole, translations) {
                 $("#userRole").text(response.newRole);
                 updateButtonStates(response.newRole); // Defined within initializePageContent scope or needs to be global
                 showMessage(response.message || translations.messages?.role_request_sent || "Role request sent!", 'success');
-            } else {
-                showMessage(response.message || translations.messages?.error || "Failed request.", 'error');
-                 // Re-enable button and restore text on failure
-                 $buttonToDisable.prop('disabled', false).text(getNestedTranslation(translations, originalButtonTextKey) || (newRole === "DemandeChef" ? "Request Chef Role" : "Request Translator Role"));
             }
-        },
-        error: function() { // Handle AJAX errors
-            showMessage(translations.messages?.error || "AJAX Error.", 'error');
-             // Re-enable button and restore text on AJAX error
-             $buttonToDisable.prop('disabled', false).text(getNestedTranslation(translations, originalButtonTextKey) || (newRole === "DemandeChef" ? "Request Chef Role" : "Request Translator Role"));
         }
-        // Removed complete handler as success/error handle button state now
     });
 }
 

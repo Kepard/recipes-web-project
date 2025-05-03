@@ -11,21 +11,20 @@
 body {
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Ensure footer stays at bottom */
+    min-height: 100vh; 
     align-items: center;
-    padding-top: 6em; /* Adjusted for potential fixed header height */
+    padding-top: 6em; 
     background-color: #4d6175;
 }
 
 main {
-    flex-grow: 1; /* Allow main content to take available space */
-    width: 100%; /* Ensure main takes full width */
-    max-width: 1200px; /* Limit content width */
-    padding: 0 20px; /* Add horizontal padding */
-    margin-top: 20px; /* Space below header */
+    flex-grow: 1; 
+    width: 100%; 
+    max-width: 1200px; 
+    padding: 0 20px; 
+    margin-top: 20px; 
 }
 
-/* --- Header & Navigation --- */
 header {
     position: fixed;
     top: 0;
@@ -41,7 +40,7 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    flex-wrap: wrap; 
 }
 
 .logo {
@@ -66,21 +65,21 @@ nav {
 .auth-container {
     display: flex;
     align-items: center;
-    gap: 10px; /* Reduced gap */
-    flex-wrap: wrap; /* Allow wrapping */
+    gap: 10px; 
+    flex-wrap: wrap; 
 }
 
 #auth {
     display: flex;
     align-items: center;
-    gap: 8px; /* Reduced gap further */
-    flex-wrap: wrap; /* Allow form elements to wrap */
+    gap: 8px; 
+    flex-wrap: wrap; 
 }
 
 #auth label {
     color: white;
-    margin-right: 4px; /* Space between label and input */
-    font-size: 0.9em; /* Slightly smaller label */
+    margin-right: 4px; 
+    font-size: 0.9em; 
 }
 
 #auth input {
@@ -89,17 +88,16 @@ nav {
     border-radius: 4px;
     background-color: #243b52;
     color: #ffffff;
-    flex: 1 1 auto; /* Allow growing and shrinking */
-    max-width: 150px; /* Optional: prevent becoming too wide */
+    flex: 1 1 auto;
+    max-width: 150px; 
 }
 
-/* Role selection */
 #role-selection {
     background-color: #243b52;
     padding: 10px;
     border-radius: 4px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    display: none; /* Initially hidden */
+    display: none; 
     text-align: center;
     border: 1px solid #4d6175;
     margin-left: 10px;
@@ -131,22 +129,19 @@ nav {
     color: #ffffff;
 }
 
-/* Logged-in navbar */
 .logged-in-nav {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-/* Role-based button container */
 .role-lang-container {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-left: auto; /* Push to the right */
+    margin-left: auto; 
 }
 
-/* --- Buttons --- */
 .button {
     padding: 8px 15px;
     border: none;
@@ -158,14 +153,7 @@ nav {
     text-align: center;
     transition: background-color 0.3s ease, opacity 0.3s ease;
     font-size: 0.9em;
-    line-height: 1.4;
 }
-/* Make auth buttons slightly smaller */
-#auth .button {
-    padding: 6px 12px;
-    font-size: 0.85em;
-}
-
 
 .button-primary {
     background-color: #D4AF37;
@@ -194,16 +182,14 @@ nav {
 .button-secondary {
     background-color: #4d6175;
     color: #ffffff;
-    /* Optional: Add a subtle border to secondary */
-    border: 1px solid #6a849f;
 }
+
 .button-secondary:hover:not(:disabled) {
     background-color: #5a7086;
     border-color: #7b97b1;
 }
 
 
-/* Specific Button Application Examples */
 #changeLang {
     box-shadow: 0 0 10px rgba(26, 42, 58, 0.8), 0 0 10px rgba(255, 215, 0, 0.8);
 }
@@ -213,28 +199,27 @@ nav {
 
 .like-button {
     border: none;
-    background-color: rgba(255, 21, 21, 0.19); /* Adjusted transparency */
+    background-color: rgba(255, 21, 21, 0.19); 
     font-size: 1.5em;
     cursor: pointer;
     display: flex;
     align-items: center;
     padding: 2px 8px;
     border-radius: 8px;
-    transition: background-color 0.3s ease, transform 0.2s ease; /* Modified transition */
+    transition: background-color 0.3s ease, transform 0.2s ease; 
 }
 .like-button:not(.liked) {
-     color: #f8f8f8; /* White heart when not liked */
+     color: #f8f8f8; 
 }
 
 .like-button:hover {
-    /* Keep hover transform */
     transform: scale(1.1);
-     background-color: rgba(255, 142, 142, 0.5); /* Lighter red on hover */
+     background-color: rgba(255, 142, 142, 0.5); 
 }
 
 .like-button.liked {
-    background-color: rgba(255, 21, 21, 0.71); /* Adjusted transparency */
-    color: #fff; /* White heart when liked */
+    background-color: rgba(255, 21, 21, 0.71); 
+    color: #fff; 
 }
 
 .like-button .like-count {
@@ -263,10 +248,12 @@ select {
     color: #ffffff;
     font-size: 1em;
 }
+
 textarea {
     min-height: 80px;
     resize: vertical;
 }
+
 label {
     display: block;
     margin-bottom: 5px;
@@ -288,17 +275,18 @@ label {
     display: flex;
     gap: 10px;
 }
+
 #search-input {
     flex-grow: 1;
     margin: 0;
 }
+
 #search-button {
     margin: 0;
     flex-shrink: 0;
 }
 
 
-/* --- Recipe Cards --- */
 .grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -346,7 +334,7 @@ label {
 }
 
 .recipe-card h2 {
-    color: #D4AF37; /* Gold title */
+    color: #D4AF37; 
     margin-bottom: 10px;
     font-size: 1.3em;
     font-weight: 400;
@@ -384,7 +372,6 @@ label {
 }
 
 
-/* --- Recipe Details --- */
 .recipe-details {
     background-color: #1A2A3A;
     border-radius: 16px;
@@ -428,7 +415,6 @@ label {
 .recipe-details ul, .recipe-details ol {
     color: #ffffff;
     padding-left: 0;
-    list-style: none;
 }
 
 /* Added Numbered List Styles */
@@ -445,10 +431,12 @@ label {
     position: relative;
     padding-left: 2.5em;
 }
+
 /* Add number specifically to OL list items */
 .recipe-details ol > li {
      counter-increment: step-counter;
 }
+
 .recipe-details ol > li::before {
     content: counter(step-counter) ".";
     position: absolute;
@@ -507,7 +495,6 @@ label {
 }
 
 
-/* Comments Section */
 .comments-section {
     margin-top: 30px;
 }
@@ -570,18 +557,17 @@ label {
 }
 
 
-/* --- Admin Tables & Chef Pending Table --- */
 #users-table,
 #recipes-table,
 #chef-pending-recipes-table {
     width: 100%;
     border-collapse: collapse;
-    margin: 20px 0; /* Adjusted margin */
+    margin: 20px 0; 
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     overflow-x: auto;
-    border: 1px solid #6a849f; /* Table outline */
-    border-radius: 4px; /* Added slight rounding */
-    overflow: hidden; /* Needed for border-radius */
+    border: 1px solid #6a849f; 
+    border-radius: 4px; 
+    overflow: hidden; 
 }
 
 #users-table th, #users-table td,
@@ -589,7 +575,7 @@ label {
 #chef-pending-recipes-table th,
 #chef-pending-recipes-table td {
     padding: 12px 15px;
-    border: 1px solid #6a849f; /* Cell borders */
+    border: 1px solid #6a849f; 
     text-align: left;
     vertical-align: middle;
 }
@@ -597,32 +583,26 @@ label {
 #users-table th,
 #recipes-table th,
 #chef-pending-recipes-table th {
-    background-color: #243b52; /* Header background */
+    background-color: #243b52; 
     color: #D4AF37;
     font-weight: bold;
-    text-transform: uppercase; /* Added uppercase */
-    letter-spacing: 0.5px; /* Added spacing */
+    text-transform: uppercase; 
+    letter-spacing: 0.5px; 
 }
 
 #users-table tr,
 #recipes-table tr,
 #chef-pending-recipes-table tr {
     background-color: #1f3040c2;
-    font-weight: normal; /* Changed from bold to normal for data rows */
-}
-#users-table tr:nth-child(even),
-#recipes-table tr:nth-child(even),
-#chef-pending-recipes-table tr:nth-child(even) {
-    background-color: #2a3f53d1; /* Zebra striping */
 }
 
 
-/* Styles Specific to Admin Actions Column (Not needed for Chef table) */
 #users-table td:last-child,
 #recipes-table td:last-child {
     text-align: right;
     white-space: nowrap;
 }
+
 #users-table .button, #recipes-table .button {
     margin-left: 5px;
 }
@@ -634,7 +614,6 @@ select.role-select { /* Style dropdown */
     border: 1px solid #4d6175;
 }
 
-/* --- Styles for Chef Pending Table (Links and Messages) --- */
 .chef-pending-recipes-section {
     margin-top: 30px;
     padding-top: 20px;
@@ -649,8 +628,7 @@ select.role-select { /* Style dropdown */
     font-weight: 500;
 }
 
-#chef-pending-recipes-table a { /* Style links within the chef table */
-    color: #D4AF37;
+#chef-pending-recipes-table a { 
     text-decoration: none;
     font-weight: bold;
 }
@@ -659,22 +637,7 @@ select.role-select { /* Style dropdown */
     color: #fff;
 }
 
-/* Style for "No recipes" or error/loading message rows */
-#chef-pending-recipes-table td[colspan="2"] { /* Match the colspan */
-    text-align: center;
-    font-style: italic;
-    color: #aaa;
-    padding: 20px;
-    background-color: #1f3040c2; /* Match row background */
-}
-#chef-pending-recipes-table td[colspan="2"].message.error {
-    font-style: normal;
-    color: #a04040;
-    background-color: #ffcccb; /* Use error message styles */
-}
 
-
-/* --- Profile --- */
 .profile-container {
     background-color: #1A2A3A;
     border-radius: 16px;
@@ -695,7 +658,7 @@ select.role-select { /* Style dropdown */
 
 .profile-info {
     text-align: left;
-    padding-bottom: 15px; /* Added padding bottom */
+    padding-bottom: 15px; 
     margin-bottom: 20px;
     border-bottom: 1px solid #4d6175;
 }
@@ -726,7 +689,6 @@ select.role-select { /* Style dropdown */
     background-color: #5a7086;
 }
 
-/* --- Create/Modify Recipe Forms --- */
 .create-recipe-container,
 .modify-recipe-container {
     max-width: 800px;
@@ -752,10 +714,12 @@ select.role-select { /* Style dropdown */
     border-radius: 4px;
     border: 1px solid #4d6175;
 }
+
 .dynamic-fields-section label {
     margin-bottom: 10px;
     font-size: 1.1em;
 }
+
 .dynamic-fields-section .button {
     margin-top: 10px;
     display: block;
@@ -771,59 +735,60 @@ select.role-select { /* Style dropdown */
     gap: 10px;
     margin-bottom: 10px;
 }
+
 .dynamic-field .ingredient {
     display: flex;
     gap: 10px;
     flex-grow: 1;
     margin-bottom: 0;
 }
+
 .dynamic-field .ingredient input {
     margin-bottom: 0;
 }
-.dynamic-field > input[type="text"], /* Direct child input */
-.dynamic-field > textarea {
+
+.dynamic-field > input[type="text"], .dynamic-field > textarea {
     flex-grow: 1;
     margin-bottom: 0;
 }
 
 
 .remove-field {
-    flex-shrink: 0;
-    width: 28px;
-    height: 28px;
-    font-size: 16px;
-    line-height: 26px;
-    padding: 0;
+    width: 1em;
+    height: 1em;
+    font-size: 26px;
     border-radius: 50%;
 }
 
 .checkbox-group {
-    margin-bottom: 15px; /* Space below checkbox group */
+    margin-bottom: 15px; 
 }
-.checkbox-group > label { /* Main group label */
+
+.checkbox-group > label { 
     display: block;
-    margin-bottom: 8px; /* Space below main label */
+    margin-bottom: 8px; 
     color: #D4AF37;
     font-weight: bold;
 }
+
 .checkbox-group div {
     margin-bottom: 5px;
-    padding-left: 5px; /* Indent checkboxes slightly */
+    padding-left: 5px; 
 }
+
 input[type="checkbox"] {
     margin-right: 8px;
     accent-color: #D4AF37;
     width: auto;
     vertical-align: middle;
 }
-.checkbox-group label { /* Label next to checkbox */
+
+.checkbox-group label { 
     display: inline;
     font-weight: normal;
     color: #ffffff;
 }
 
-
-/* --- Translation Interface --- */
 .translation-container {
     max-width: 1200px;
     margin: 2rem auto;
@@ -832,6 +797,7 @@ input[type="checkbox"] {
     border-radius: 0.5rem;
     box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.1);
 }
+
 .translation-container h1 {
     color: #D4AF37;
     text-align: center;
@@ -850,7 +816,7 @@ input[type="checkbox"] {
     border-radius: 0.375rem;
     border: 1px solid #4d6175;
     min-width: 0;
-    overflow: hidden; /* Helps contain children */
+    overflow: hidden; 
 }
 
 .translation-column h2 {
@@ -861,34 +827,89 @@ input[type="checkbox"] {
     margin-bottom: 1.5rem;
     font-size: 1.25rem;
 }
+
 .readonly-translator {
-    background-color: #3a4b5c !important;
-    border-color: #4d6175 !important;
-    color: #9ab;
+    background-color: #3a4b5c;
+    border-color: #4d6175;
+    color: rgb(212, 212, 212);
     cursor: not-allowed;
     opacity: 0.7;
 }
-[readonly][title] { cursor: help; }
-.form-group { margin-bottom: 1.5rem; }
-.form-group label { color: #D4AF37; font-weight: 600; }
-.translation-row { display: flex; gap: 0.5rem; margin-bottom: 1rem; align-items: center; }
+
+.form-group {
+    margin-bottom: 1.5rem; 
+}
+
+.form-group label { 
+    color: #D4AF37; 
+    font-weight: 600; 
+}
+
+.translation-row { 
+    display: flex; 
+    gap: 0.5rem; 
+    margin-bottom: 1rem; 
+    align-items: center; 
+}
+
 .original-field {
-    padding: 0.75rem; border-radius: 0.25rem; min-height: 40px;
-    font-size: 0.9em; line-height: 1.4; background-color: #243b52;
-    border: 1px solid #4d6175; flex-grow: 1; overflow-wrap: break-word; min-width: 0;
+    padding: 0.75rem; 
+    border-radius: 0.25rem; 
+    min-height: 40px;
+    font-size: 0.9em; 
+    line-height: 1.4; 
+    background-color: #243b52;
+    border: 1px solid #4d6175; 
+    flex-grow: 1; 
+    overflow-wrap: break-word; 
+    min-width: 0;
 }
-.original-field.quantity-value, .original-field.quantity-unit { flex-grow: 0; min-width: 50px; text-align: right; }
+
+.original-field.quantity-value, .original-field.quantity-unit { 
+    flex-grow: 0; 
+    min-width: 50px; 
+    text-align: right; 
+}
+
 .translation-column input[type="text"], .translation-column textarea {
-    width: auto; flex-grow: 1; margin: 0; background-color: #2e4257; font-size: 0.9em; padding: 8px; min-width: 0;
+    width: auto; 
+    flex-grow: 1; 
+    margin: 0; 
+    background-color: #2e4257; 
+    font-size: 0.9em; 
+    padding: 8px; 
+    min-width: 0;
 }
-.translation-column input.quantity-value { background-color: #243b52; border-color: #4d6175; flex-grow: 0; min-width: 50px; text-align: right; }
-.translation-column input.quantity-unit { flex-grow: 0; min-width: 80px; }
-.translation-column textarea { min-height: 5em; }
-.translation-column input[type="text"].changed, .translation-column textarea.changed { border-color: #D4AF37; }
-.form-actions { margin-top: 2rem; text-align: center; display: flex; justify-content: center; gap: 1rem; }
 
+.translation-column input.quantity-value { 
+    background-color: #243b52; 
+    border-color: #4d6175; 
+    flex-grow: 0; 
+    min-width: 50px; 
+    text-align: right; 
+}
 
-/* --- Footer --- */
+.translation-column input.quantity-unit { 
+    flex-grow: 0; 
+    min-width: 80px; 
+}
+
+.translation-column textarea { 
+    min-height: 5em; 
+}
+
+.translation-column input[type="text"].changed, .translation-column textarea.changed { 
+    border-color: #D4AF37; 
+}
+
+.form-actions { 
+    margin-top: 2rem; 
+    text-align: center; 
+    display: flex; 
+    justify-content: center; 
+    gap: 1rem; 
+}
+
 footer {
     background-color: #1A2A3A;
     color: #FFFFFF;
@@ -899,7 +920,6 @@ footer {
     margin-top: 40px;
 }
 
-/* --- Utility & Messages --- */
 #message-container {
     position: fixed;
     top: 70px;
@@ -925,9 +945,24 @@ footer {
     opacity: 0.95;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
-.message.error { background-color: #ffcccb; border-color: #ff6666; color: #a04040; }
-.message.success { background-color: #c1e1c1; border-color: #77dd77; color: #306030; }
-.message.info { background-color: #bde5f8; border-color: #87ceeb; color: #1e5f7f; } /* Added info style */
+
+.message.error {
+    background-color: #ffcccb; 
+    border-color: #ff6666; 
+    color: #a04040; 
+}
+
+.message.success {
+    background-color: #c1e1c1;
+    border-color: #77dd77; 
+    color: #306030;
+}
+
+.message.info {
+    background-color: #bde5f8; 
+    border-color: #87ceeb; 
+    color: #1e5f7f; 
+}
 
 .easter-egg img {
     max-width: 200px;
@@ -935,39 +970,3 @@ footer {
     margin-top: 2em;
 }
 
-/* --- Accessibility --- */
-.button:focus, a:focus, input:focus, textarea:focus, select:focus {
-    outline: 2px solid #D4AF37;
-    outline-offset: 2px;
-    box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.5);
-}
-
-/* --- Responsive --- */
-@media (max-width: 992px) {
-    main { padding: 0 15px; }
-    nav { /* Keep flex-wrap */ }
-    .auth-container { width: 100%; justify-content: center; margin-top: 10px; order: 3; }
-     .logged-in-nav, .role-lang-container { margin-left: 0; justify-content: center; width: 100%; margin-top: 10px; }
-    .role-lang-container { order: 2; }
-    body { padding-top: 10em; /* Adjust if needed */ }
-    .recipe-details { padding: 20px; max-width: 95%; }
-    .translation-columns { flex-direction: column; }
-}
-
-@media (max-width: 768px) {
-    body { padding-top: 10em; /* Adjust if needed */ }
-    .page-title { font-size: 1.2em; }
-    .search-container { flex-direction: column; }
-    #search-button { width: 100%; }
-    .recipe-details { padding: 15px; }
-    .recipe-details img { max-height: 300px; }
-    .recipe-details ol > li::before { width: 1.6em; height: 1.6em; line-height: 1.6em; top: 1px; font-size: 0.9em;} /* Adjust counter size/position */
-    .recipe-details li { padding-left: 2.2em; align-items: center; } /* Align center on mobile might look better */
-     #users-table, #recipes-table, #chef-pending-recipes-table { font-size: 0.9em; } /* Applied to chef table */
-     #users-table td:last-child, #recipes-table td:last-child, #chef-pending-recipes-table td:last-child { text-align: left; white-space: normal; } /* Applied to chef table */
-     #users-table .button, #recipes-table .button, #chef-pending-recipes-table .button { display: block; margin-bottom: 5px; width: 100%; text-align: center; margin-left: 0; } /* Applied to chef table */
-     .profile-actions { flex-direction: column; }
-    .translation-row { flex-wrap: wrap; }
-     .translation-column input[type="text"], .translation-column textarea { width: 100%; flex-basis: 100%; }
-     .translation-column input.quantity-value, .translation-column input.quantity-unit { width: auto; flex-basis: auto; flex-grow: 1; }
-}

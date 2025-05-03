@@ -66,17 +66,8 @@ foreach ($recipes as &$recipe) {
     }
 }
 
-// Fix 4: Use file locking to prevent corruption
-$fp = fopen($recipesFile, 'w');
-if (flock($fp, LOCK_EX)) {
-    fwrite($fp, json_encode($recipes, JSON_PRETTY_PRINT));
-    flock($fp, LOCK_UN);
-} else {
-    echo json_encode(["success" => false, "message" => "Impossible de verrouiller le fichier pour écriture."]);
-    fclose($fp);
-    exit;
-}
-fclose($fp);
+file_put_contents($recipesFile, json_encode($recipes, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+
 
 echo json_encode([
     "success" => true,

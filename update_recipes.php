@@ -29,6 +29,7 @@ $recipes[$recipeIndex]['validated'] = 1;
 // Mettre a jour la recette dans le JSON
 file_put_contents('recipes.json', json_encode($recipes, JSON_PRETTY_PRINT));
 
-echo 'Recipe validated!';
+// Envoyer un message de success au AJAX
+echo json_encode(['success' => true]);
 
 ?>

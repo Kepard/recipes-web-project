@@ -3,7 +3,7 @@ session_start();
 
 // Check if user is logged in
 if (!isset($_SESSION['username'])) {
-    echo json_encode(['success' => false, 'message' => 'You must be logged in to like recipes']);
+    echo json_encode(['success' => false]);
     exit;
 }
 

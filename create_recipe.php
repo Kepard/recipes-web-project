@@ -4,7 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Check if the user is logged in and has the role of Chef
+// Check if the user is logged in and has the role of Chef or Admin
 $isAllowed = isset($_SESSION['role']) && ($_SESSION['role'] == 'Chef' || $_SESSION['role'] == 'Administrateur'); // Allow Admin too
 if (!$isAllowed) {
     // Use flash message and redirect
@@ -17,7 +17,6 @@ $authorUsername = $_SESSION['username'];
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // ... (validation and sanitization logic remains the same) ...
     $name = trim(htmlspecialchars($_POST['name'] ?? ''));
     $nameFR = trim(htmlspecialchars($_POST['nameFR'] ?? ''));
     $without = $_POST['without'] ?? [];
@@ -29,19 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $imageURL = filter_var(trim($_POST['imageURL'] ?? ''), FILTER_SANITIZE_URL);
     $originalURL = filter_var(trim($_POST['originalURL'] ?? ''), FILTER_SANITIZE_URL);
 
-    // Basic Validation
-    if (empty($name) || empty($ingredients) || !is_array($ingredients) || empty($steps) || !is_array($steps) || empty($timers) || !is_array($timers)) {
-         $_SESSION['form_error_key'] = 'messages.missing_fields_create'; // Use key
-         header("Location: create_recipe.php");
-         exit;
-    }
-
-     // Process arrays (remains the same)
-     $ingredients = array_values(array_filter($ingredients, fn($ing) => !empty($ing['name'])));
-     $ingredientsFR = array_values(array_filter($ingredientsFR, fn($ing) => !empty($ing['name'])));
-     $steps = array_values(array_filter($steps, fn($step) => !empty(trim($step))));
-     $stepsFR = array_values(array_filter($stepsFR, fn($step) => !empty(trim($step))));
-     $timers = array_values(array_filter($timers, fn($timer) => is_numeric($timer)));
 
 
     // ... (Load recipes, find max ID logic remains the same) ...
@@ -58,43 +44,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $maxId = max($maxId, (int)$recipe['id']);
         }
     }
+    // Calculate the new ID
+    $newId = $maxId + 1; // Define new ID before using it
 
-    // Create new recipe structure (remains the same)
-    $newRecipe = [ /* ... */ ];
+    // --- *** FIX: Define the actual $newRecipe array *** ---
+    $newRecipe = [
+        "id" => $newId,                 // Use the calculated new ID
+        "name" => $name,
+        "nameFR" => $nameFR,
+        "Author" => $authorUsername,    // Set the author from session
+        "Without" => $without,          // Dietary restrictions array
+        "ingredients" => $ingredients,    // Processed ingredients array
+        "ingredientsFR" => $ingredientsFR,  // Processed French ingredients array
+        "steps" => $steps,              // Processed steps array
+        "stepsFR" => $stepsFR,          // Processed French steps array
+        "timers" => $timers,            // Processed timers array
+        "imageURL" => $imageURL,
+        "originalURL" => $originalURL,
+        "likes" => [],                  // Initialize likes as empty array
+        "comments" => [],               // Initialize comments as empty array
+        "validated" => 0                // Default to not validated
+    ];
+    // ----------------------------------------------------------
+
+    // Add the newly defined recipe to the array
     $recipes[] = $newRecipe;
 
-    // Save updated recipes (remains the same, but use keys for messages)
-    $fp = fopen($recipesFile, 'w');
-    if ($fp && flock($fp, LOCK_EX)) {
-        fwrite($fp, json_encode($recipes, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-        flock($fp, LOCK_UN);
-        fclose($fp);
-        $_SESSION['flash_message'] = ['type' => 'success', 'key' => 'messages.recipe_created', 'params' => ['name' => $name]]; // Pass name for potential use in message
-        header("Location: recipe.php?id=" . ($maxId + 1));
-        exit;
-    } else {
-         if ($fp) fclose($fp);
-         $_SESSION['form_error_key'] = 'messages.error_saving_recipe'; // Use key
-         header("Location: create_recipe.php");
-         exit;
-    }
+    // Save updated recipes back to the JSON file
+    file_put_contents($recipesFile, json_encode($recipes, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+
+    header("Location: profile.php"); 
 }
 
-// Display potential error message from session (using keys)
-$formErrorHTML = '';
-if (isset($_SESSION['form_error_key'])) {
-    $errorKey = $_SESSION['form_error_key'];
-    // We need JS to translate this properly later
-    $formErrorHTML = '<p class="message error" data-translate-key="' . $errorKey . '">Error occurred.</p>'; // Placeholder text
-    unset($_SESSION['form_error_key']);
-}
 
 
 // --- HTML Form Generation with data-translate attributes ---
+// (Keep the rest of the file exactly as you provided it in the previous message)
 $content = '
 <div class="create-recipe-container">
     <h1 data-translate="labels.create_recipe_title">Create a New Recipe</h1>
-    ' . $formErrorHTML . ' <!-- Display form error message placeholder -->
     <form method="POST" action="create_recipe.php">
 
         <label for="name" data-translate="labels.recipe_name_en_req">Recipe Name (English): *</label>
@@ -208,13 +196,13 @@ include 'header.php';
 <!-- Include the shared dynamic fields script -->
 <script src="dynamic_fields.js"></script>
 
-<!-- Specific JS for this page -->
+<!-- Specific JS for this page (remains the same) -->
 <script>
 // This function is called by header.php after translations are loaded
 function initializePageContent(translations, lang) {
     // Store translations globally for this page context if needed by dynamic_fields.js
     // If dynamic_fields.js uses the global 'currentTranslations', ensure it's set here.
-    // window.currentTranslations = translations; // Make it explicit global (alternative)
+    window.currentTranslations = translations; // Make it explicit global (alternative)
 
     // Translate the error message placeholder if it exists
     const $errorMsg = $('.message.error[data-translate-key]');
@@ -222,6 +210,7 @@ function initializePageContent(translations, lang) {
         const key = $errorMsg.data('translate-key');
         const errorText = getNestedTranslation(translations, key) || "An error occurred.";
         $errorMsg.text(errorText); // Set the translated text
+        $errorMsg.removeAttr('data-translate-key'); // Clean up attribute
     }
 
      // Translate dynamic placeholders for the *initial* fields added by PHP
@@ -241,11 +230,9 @@ function translateDynamicPlaceholders(translations) {
         let placeholderText = getNestedTranslation(translations, key) || '';
         // Basic replacement, assumes placeholder key doesn't need {n}
         // If keys like 'placeholders.step_n' are used, this needs updating
-        if (key.includes('step_')) { // Example check for dynamic keys
-             placeholderText = placeholderText.replace('{n}', index);
-         } else if (key.includes('timer_')) {
-             placeholderText = placeholderText.replace('{n}', index);
-         } // Add more rules if needed
+        if (placeholderText.includes('{n}')) { // Simpler check
+             placeholderText = placeholderText.replace(/\{n\}/g, index); // Use regex global replace
+        }
         $el.attr('placeholder', placeholderText);
     });
      // Translate static placeholders too
@@ -268,7 +255,8 @@ $(document).ready(function() {
             e.preventDefault(); // Prevent submission
             // Get translated message using currentTranslations (available globally via header.php)
             let alertMsg = "Number of steps ({stepCount}) must match number of timers ({timerCount}). Add 0 for steps without a timer."; // Default
-             if (typeof currentTranslations !== 'undefined' && currentTranslations.messages?.steps_timers_mismatch) {
+             // Safely check if translations and the specific message exist
+             if (typeof currentTranslations !== 'undefined' && currentTranslations.messages && currentTranslations.messages.steps_timers_mismatch) {
                  alertMsg = currentTranslations.messages.steps_timers_mismatch;
              }
              alertMsg = alertMsg.replace('{stepCount}', stepCount).replace('{timerCount}', timerCount);
@@ -276,8 +264,6 @@ $(document).ready(function() {
               // Use showMessage if available, otherwise alert
              if (typeof showMessage === 'function') {
                  showMessage(alertMsg, 'error');
-             } else {
-                 alert(alertMsg);
              }
             return false;
         }

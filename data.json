@@ -3,8 +3,6 @@
         "labels": {
             "lusername": "Username:",
             "lpassword": "Password:",
-            "cuisine": "Cuisine",
-            "difficulty": "Difficulty",
             "ingredients": "Ingredients",
             "author": "Author",
             "dietary_restrictions": "Dietary Restrictions",
@@ -177,8 +175,6 @@
         "labels": {
             "lusername": "Login:",
             "lpassword": "Mot de passe:",
-            "cuisine": "Cuisine",
-            "difficulty": "Difficulté",
             "ingredients": "Ingrédients",
             "author": "Auteur",
             "dietary_restrictions": "Restrictions alimentaires",

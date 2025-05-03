@@ -15,8 +15,8 @@
     </div>
 
     <div class="grid-container" id="recipe-grid">
-        <!-- Recipe cards will be loaded here by JavaScript -->
-        <p id="loading-message">Loading recipes...</p> <!-- Loading indicator -->
+        
+        <p id="loading-message">Loading recipes...</p> 
     </div>
     ';
 
@@ -61,7 +61,7 @@ function displayRecipes(recipesToDisplay, lang) {
     const validatedRecipes = recipesToDisplay.filter(recipe => recipe && recipe.validated === 1);
 
     if (validatedRecipes.length === 0) {
-        gridContainer.html(`<p class="message info">${currentTranslations.messages?.no_recipes_found || 'No recipes found matching your criteria.'}</p>`);
+        gridContainer.html(`<p class="message info">${currentTranslations.messages.no_recipes_found}</p>`);
         return;
     }
 
@@ -82,20 +82,18 @@ function displayRecipes(recipesToDisplay, lang) {
         }
 
         // Dietary restrictions - join if array, else show default
-         const restrictions = Array.isArray(recipe.Without) && recipe.Without.length > 0
-            ? recipe.Without.join(", ")
-            : (currentTranslations.labels?.none || "None");
+         const restrictions = Array.isArray(recipe.Without) && recipe.Without.length > 0 ? recipe.Without.join(", ") : (currentTranslations.labels.none);
 
 
         const card = `
             <div class="recipe-card">
                 <a href="recipe.php?id=${recipe.id}">
-                    <img src="${recipe.imageURL || 'placeholder.png'}" alt="${recipeName || 'Recipe Image'}" onerror="this.onerror=null;this.src='placeholder.png';"> <!-- Add placeholder -->
+                    <img src="${recipe.imageURL || 'placeholder.png'}" alt="${recipeName}" onerror="this.onerror=null;this.src='placeholder.png';">
                     <div class="content">
-                        <h2>${recipeName || (currentTranslations.labels?.unnamed_recipe || 'Unnamed Recipe')}</h2>
-                        <p><strong>${currentTranslations.labels?.author || "Author"}:</strong> ${recipe.Author || (currentTranslations.labels?.unknown || "Unknown")}</p>
-                        <p><strong>${currentTranslations.labels?.dietary_restrictions || "Dietary Restrictions"}:</strong> ${restrictions}</p>
-                        <p><strong>${currentTranslations.labels?.total_time || "Total Time"}:</strong> ${totalTime} ${currentTranslations.labels?.minutes || "min"}</p>
+                        <h2>${recipeName}</h2>
+                        <p><strong>${currentTranslations.labels.author || "Author"}:</strong> ${recipe.Author || currentTranslations.labels.unknown}</p>
+                        <p><strong>${currentTranslations.labels.dietary_restrictions}:</strong> ${restrictions}</p>
+                        <p><strong>${currentTranslations.labels.total_time}:</strong> ${totalTime} ${currentTranslations.labels.minutes}</p>
                     </div>
                 </a>
                 <div class="footer">
@@ -182,7 +180,7 @@ function setupLikeButtons() {
 
         // Check if user is logged in
         if (!currentUser) {
-             showMessage(currentTranslations.messages?.login_to_like || "Please log in to like recipes", 'error');
+             showMessage(currentTranslations.messages.login_to_like, 'error');
              return;
         }
 

@@ -7,11 +7,9 @@ if (session_status() === PHP_SESSION_NONE) {
 // Check if the user is an admin
 // Use strict comparison and check if session variable exists
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'Administrateur') {
-    // Redirect or display error message instead of dying immediately
-    // header('Location: index.php'); // Or an access denied page
-    // exit;
-     // For SPA feel, we might let the JS handle this, but PHP check is safer
-     $content = '<div class="message error">Access Denied. You must be an Administrator.</div>';
+    header('HTTP/1.1 403 Forbidden');
+    die();
+    
 } else {
     // Basic HTML structure - content will be generated dynamically
     $content = '
@@ -25,7 +23,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'Administrateur') {
                     <th data-translate="labels.actions">Actions</th>
                 </tr>
             </thead>
-            <tbody><!-- User rows will be added here --></tbody>
+            <tbody> </tbody>
         </table>
 
         <h1 data-translate="labels.unvalidated_recipes">Unvalidated Recipes</h1>
@@ -37,7 +35,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'Administrateur') {
                     <th data-translate="labels.actions">Actions</th>
                 </tr>
             </thead>
-            <tbody><!-- Recipe rows will be added here --></tbody>
+            <tbody> </tbody>
         </table>
     </div>
     ';
@@ -83,16 +81,14 @@ function initializePageContent(translations, lang) {
                             </select>
                         </td>
                         <td>
-                            <button class="update-password button button-secondary" data-username="${username}" data-translate="buttons.update_password">${translations.buttons?.update_password || 'Update Password'}</button>
-                            <button class="remove-user button button-danger" data-username="${username}" data-translate="buttons.remove_user">${translations.buttons?.remove_user || 'Remove User'}</button>
+                            <button class="update-password button button-secondary" data-username="${username}" data-translate="buttons.update_password">${translations.buttons.update_password}</button>
+                            <button class="remove-user button button-danger" data-username="${username}" data-translate="buttons.remove_user">${translations.buttons.remove_user}</button>
                         </td>
                     </tr>
                 `;
                 usersTableBody.append(row);
             }
         }
-    }).fail(function() {
-        showMessage(translations.messages?.error || "Failed to load users.", 'error');
     });
 
      // --- Load Unvalidated Recipes ---
@@ -102,24 +98,22 @@ function initializePageContent(translations, lang) {
         const unvalidatedRecipes = recipeArray.filter(recipe => recipe && recipe.validated == 0); // Check recipe exists
 
         if (unvalidatedRecipes.length === 0) {
-             recipesTableBody.html(`<tr><td colspan="3">${translations.messages?.no_unvalidated_recipes || 'No recipes waiting for validation.'}</td></tr>`);
+             recipesTableBody.html(`<tr><td colspan="3">${translations.messages.no_unvalidated_recipes}</td></tr>`);
          } else {
              unvalidatedRecipes.forEach(recipe => {
                  const recipeName = lang === "fr" && recipe.nameFR ? recipe.nameFR : recipe.name;
                  const row = `
                      <tr data-id="${recipe.id}">
-                         <td><a href="recipe.php?id=${recipe.id}">${recipeName || (translations.labels?.unnamed_recipe || 'Unnamed Recipe')}</a></td>
-                         <td>${recipe.Author || (translations.labels?.unknown || 'Unknown')}</td>
+                         <td><a href="recipe.php?id=${recipe.id}">${recipeName}</a></td>
+                         <td>${recipe.Author || translations.labels.unknown}</td>
                          <td>
-                             <button class="validate-recipe button button-success" data-id="${recipe.id}" data-translate="buttons.validate">${translations.buttons?.validate || 'Validate'}</button>
+                             <button class="validate-recipe button button-success" data-id="${recipe.id}" data-translate="buttons.validate">${translations.buttons.validate}</button>
                          </td>
                      </tr>
                  `;
                  recipesTableBody.append(row);
              });
          }
-     }).fail(function() {
-         showMessage(translations.messages?.error || "Failed to load recipes.", 'error');
      });
 
 
@@ -141,14 +135,8 @@ function initializePageContent(translations, lang) {
             dataType: "json",
             success: function(response) {
                 if (response.success) {
-                    showMessage(translations.messages?.role_updated || response.message || "Role updated!", 'success');
-                } else {
-                    showMessage(response.message || translations.messages?.error || "Failed to update role.", 'error');
-                     // Revert dropdown if update failed? Optional.
+                    showMessage(translations.messages.role_updated, 'success');
                 }
-            },
-            error: function() {
-                 showMessage(translations.messages?.error || "Error communicating with server.", 'error');
             }
         });
     });
@@ -156,14 +144,10 @@ function initializePageContent(translations, lang) {
     // Handle password updates
     usersTableBody.on("click", ".update-password", function() {
         const username = $(this).attr("data-username");
-        const promptMessage = (translations.messages?.enter_new_password || "Enter new password for {username}:").replace('{username}', username);
+        const promptMessage = (translations.messages.enter_new_password).replace('{username}', username);
         const newPassword = prompt(promptMessage);
 
         if (newPassword) { // Only proceed if a password was entered
-             if (newPassword.length < 4) { // Basic validation example
-                 showMessage(translations.messages?.password_too_short || "Password should be at least 4 characters.", 'error');
-                 return;
-            }
             $.ajax({
                 url: "update_users.php",
                 method: "POST",
@@ -175,13 +159,8 @@ function initializePageContent(translations, lang) {
                 dataType: "json",
                 success: function(response) {
                     if (response.success) {
-                        showMessage(translations.messages?.password_updated || response.message || "Password updated!", 'success');
-                    } else {
-                        showMessage(response.message || translations.messages?.error || "Failed to update password.", 'error');
+                        showMessage(translations.messages.password_updated, 'success');
                     }
-                },
-                error: function() {
-                     showMessage(translations.messages?.error || "Error communicating with server.", 'error');
                 }
             });
         }
@@ -190,7 +169,7 @@ function initializePageContent(translations, lang) {
     // Handle user removal
     usersTableBody.on("click", ".remove-user", function() {
         const username = $(this).attr("data-username");
-        const confirmMessage = (translations.messages?.confirm_remove_user || "Are you sure you want to remove {username}?").replace('{username}', username);
+        const confirmMessage = (translations.messages.confirm_remove_user).replace('{username}', username);
 
         if (confirm(confirmMessage)) {
             $.ajax({
@@ -203,16 +182,11 @@ function initializePageContent(translations, lang) {
                 dataType: "json",
                 success: function(response) {
                     if (response.success) {
-                        showMessage(translations.messages?.user_removed || response.message || "User removed!", 'success');
+                        showMessage(translations.messages.user_removed, 'success');
                         // Remove the row from the table
                         $(`tr[data-username="${username}"]`).fadeOut(500, function() { $(this).remove(); });
-                    } else {
-                        showMessage(response.message || translations.messages?.error || "Failed to remove user.", 'error');
                     }
                 },
-                error: function() {
-                     showMessage(translations.messages?.error || "Error communicating with server.", 'error');
-                }
             });
         }
     });
@@ -223,23 +197,21 @@ function initializePageContent(translations, lang) {
         const $button = $(this); // Reference the button
         const $row = $button.closest("tr");
 
-        $button.prop('disabled', true).text('Validating...'); // Provide visual feedback
-
         $.ajax({
             url: "update_recipes.php",
             method: "POST",
             data: { id: recipeId },
             // dataType: "text", // Expecting simple text response based on update_recipes.php
             success: function(response) {
-                showMessage(response || translations.messages?.recipe_validated || "Recipe validated!", 'success');
+                showMessage(translations.messages.recipe_validated, 'success');
                 $row.fadeOut(500, function() { $(this).remove(); });
                  // Check if table is empty after removal
                  if (recipesTableBody.find('tr').length === 0) {
-                     recipesTableBody.html(`<tr><td colspan="3">${translations.messages?.no_unvalidated_recipes || 'No recipes waiting for validation.'}</td></tr>`);
+                     recipesTableBody.html(`<tr><td colspan="3">${translations.messages.no_unvalidated_recipes}</td></tr>`);
                  }
             }
         });
     });
 
-} // End of initializePageContent
+} 
 </script>

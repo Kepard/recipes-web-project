@@ -20,21 +20,18 @@ switch ($action) {
     case 'update_role':
         if (isset($users[$username])) {
             $users[$username]['role'] = $_POST['role'];
-            $message = 'Role updated';
         }
         break;
         
     case 'update_password':
         if (isset($users[$username])) {
             $users[$username]['password'] = password_hash($_POST['password'], PASSWORD_BCRYPT);
-            $message = 'Password updated';
         }
         break;
         
     case 'remove_user':
         if (isset($users[$username])) {
             unset($users[$username]);
-            $message = 'User removed';
         }
         break;
         
@@ -46,4 +43,4 @@ switch ($action) {
 // Sauvegarder les changements dans le json
 file_put_contents('users.json', json_encode($users));
 // Envoyer un message de success au AJAX
-echo json_encode(['success' => true, 'message' => $message]);
+echo json_encode(['success' => true]);

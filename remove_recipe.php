@@ -27,7 +27,9 @@ $recipes = array_values($recipes);
 
 // Save back to file
 file_put_contents($recipesFile, json_encode($recipes, JSON_PRETTY_PRINT));
-// Redirect back to homepage with success message
-$_SESSION['flash_message'] = 'Recipe successfully removed';
+
+// Envoyer un message de success au AJAX
+echo json_encode(['success' => true]);
+
 header('Location: index.php');
 exit;
