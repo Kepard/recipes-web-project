@@ -7,10 +7,8 @@ if (session_status() === PHP_SESSION_NONE) {
 // Check if the user is logged in and has the role of Chef or Admin
 $isAllowed = isset($_SESSION['role']) && ($_SESSION['role'] == 'Chef' || $_SESSION['role'] == 'Administrateur'); // Allow Admin too
 if (!$isAllowed) {
-    // Use flash message and redirect
-    $_SESSION['flash_message'] = ['type' => 'error', 'key' => 'messages.permission_denied'];
-    header("Location: index.php");
-    exit;
+    header('HTTP/1.1 403 Forbidden');
+    die();
 }
 
 $authorUsername = $_SESSION['username'];
@@ -32,12 +30,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // ... (Load recipes, find max ID logic remains the same) ...
     $recipesFile = 'recipes.json';
-    $recipes = [];
-    if (file_exists($recipesFile)) {
-         $recipesData = file_get_contents($recipesFile);
-         $recipes = json_decode($recipesData, true);
-        if (!is_array($recipes)) { $recipes = []; }
-    }
+    $recipesData = file_get_contents($recipesFile);
+    $recipes = json_decode($recipesData, true);
+
     $maxId = 0;
     foreach ($recipes as $recipe) {
         if (isset($recipe['id']) && is_numeric($recipe['id'])) {
@@ -200,25 +195,12 @@ include 'header.php';
 <script>
 // This function is called by header.php after translations are loaded
 function initializePageContent(translations, lang) {
-    // Store translations globally for this page context if needed by dynamic_fields.js
-    // If dynamic_fields.js uses the global 'currentTranslations', ensure it's set here.
-    window.currentTranslations = translations; // Make it explicit global (alternative)
-
-    // Translate the error message placeholder if it exists
-    const $errorMsg = $('.message.error[data-translate-key]');
-    if ($errorMsg.length) {
-        const key = $errorMsg.data('translate-key');
-        const errorText = getNestedTranslation(translations, key) || "An error occurred.";
-        $errorMsg.text(errorText); // Set the translated text
-        $errorMsg.removeAttr('data-translate-key'); // Clean up attribute
-    }
-
      // Translate dynamic placeholders for the *initial* fields added by PHP
      translateDynamicPlaceholders(translations);
 
      // Translate the page title (optional)
      const pageTitle = getNestedTranslation(translations, 'labels.create_recipe_title');
-     if(pageTitle) document.title = pageTitle;
+     document.title = pageTitle;
 }
 
 // Helper function to translate dynamic placeholders (can be shared or page-specific)
@@ -253,18 +235,8 @@ $(document).ready(function() {
 
         if (stepCount !== timerCount) {
             e.preventDefault(); // Prevent submission
-            // Get translated message using currentTranslations (available globally via header.php)
-            let alertMsg = "Number of steps ({stepCount}) must match number of timers ({timerCount}). Add 0 for steps without a timer."; // Default
-             // Safely check if translations and the specific message exist
-             if (typeof currentTranslations !== 'undefined' && currentTranslations.messages && currentTranslations.messages.steps_timers_mismatch) {
-                 alertMsg = currentTranslations.messages.steps_timers_mismatch;
-             }
-             alertMsg = alertMsg.replace('{stepCount}', stepCount).replace('{timerCount}', timerCount);
+            showMessage(currentTranslations.messages.steps_timers_mismatch, 'error');
 
-              // Use showMessage if available, otherwise alert
-             if (typeof showMessage === 'function') {
-                 showMessage(alertMsg, 'error');
-             }
             return false;
         }
         return true; // Allow submission

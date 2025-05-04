@@ -1,238 +1,319 @@
 $(document).ready(function () {
-    // --- Initialize counters based on the number of existing fields ---
-    // We assume the initial HTML (especially on modify page) might have differing counts,
-    // but from now on, ingredient and step counts should ideally be synced.
-    // We'll use the English count as the 'master' for index generation, but reindex both.
-    let ingredientIndex = $("#ingredients-container .dynamic-field").length;
-    let ingredientFrIndex = $("#ingredients-fr-container .dynamic-field").length; // Keep track separately for reindexing FR
-    let stepIndex = $("#steps-container .dynamic-field").length;
-    let stepFrIndex = $("#steps-fr-container .dynamic-field").length; // Keep track separately for reindexing FR
-    let timerIndex = $("#timers-container .dynamic-field").length || 1; // Timer is independent
+    // --- Initialisation ---
+    // Pas besoin de compteurs globaux complexes. On se basera sur le nombre
+    // d'éléments existants dans le DOM au moment où on en a besoin.
 
-    // --- Helper Functions ---
+    // --- Fonctions d'aide (Helpers) ---
 
-    // Function to add a PAIR of ingredient fields (EN + FR)
+    /**
+     * Ajoute une PAIRE de champs pour un ingrédient (Anglais + Français).
+     * Les champs français sont initialement vides.
+     */
     function addIngredientPair() {
-        const currentIndex = $("#ingredients-container .dynamic-field").length; // Get current count before adding
+        // Trouve le nombre actuel de champs ingrédients anglais pour déterminer le nouvel index
+        const currentIndex = $("#ingredients-container .dynamic-field").length;
 
-        // English Ingredient HTML
-        const newIngredientEn = `
+        // Crée le HTML pour le nouvel ingrédient anglais
+        const newIngredientEnHtml = `
             <div class="dynamic-field">
                 <div class="ingredient">
-                    <input type="text" name="ingredients[${currentIndex}][quantity]" placeholder="Quantity" required>
-                    <input type="text" name="ingredients[${currentIndex}][name]" placeholder="Ingredient Name" required>
-                    <input type="text" name="ingredients[${currentIndex}][type]" placeholder="Type">
+                    <input type="text" name="ingredients[${currentIndex}][quantity]" data-translate-placeholder="placeholders.quantity" required>
+                    <input type="text" name="ingredients[${currentIndex}][name]" data-translate-placeholder="placeholders.ingredient_name" required>
+                    <input type="text" name="ingredients[${currentIndex}][type]" data-translate-placeholder="placeholders.ingredient_type_en">
                 </div>
                 <button type="button" class="remove-field button button-danger" data-sync-type="ingredient">×</button>
             </div>
         `;
 
-        // French Ingredient HTML (empty)
-        const newIngredientFr = `
+        // Crée le HTML pour le nouvel ingrédient français (placeholders spécifiques FR)
+        const newIngredientFrHtml = `
             <div class="dynamic-field">
                 <div class="ingredient">
-                    <input type="text" name="ingredientsFR[${currentIndex}][quantity]" placeholder="Quantité">
-                    <input type="text" name="ingredientsFR[${currentIndex}][name]" placeholder="Nom ingrédient">
-                    <input type="text" name="ingredientsFR[${currentIndex}][type]" placeholder="Type">
+                    <input type="text" name="ingredientsFR[${currentIndex}][quantity]" data-translate-placeholder="placeholders.quantity_fr">
+                    <input type="text" name="ingredientsFR[${currentIndex}][name]" data-translate-placeholder="placeholders.ingredient_name_fr">
+                    <input type="text" name="ingredientsFR[${currentIndex}][type]" data-translate-placeholder="placeholders.ingredient_type_fr">
                 </div>
                 <button type="button" class="remove-field button button-danger" data-sync-type="ingredient">×</button>
             </div>
         `;
 
-        $("#ingredients-container").append(newIngredientEn);
-        $("#ingredients-fr-container").append(newIngredientFr);
+        // Ajoute les nouveaux éléments au DOM
+        $("#ingredients-container").append(newIngredientEnHtml);
+        $("#ingredients-fr-container").append(newIngredientFrHtml);
 
-        // Update indices (though using length directly in reindex might be safer)
-        ingredientIndex++;
-        ingredientFrIndex++;
+        // Traduit les placeholders des nouveaux champs ajoutés dynamiquement
+        translateDynamicPlaceholders(currentTranslations); // Assurez-vous que currentTranslations est accessible
     }
 
-    // Function to add a PAIR of step fields (EN + FR)
+    /**
+     * Ajoute une PAIRE de champs pour une étape (Anglais + Français).
+     * Le champ français est initialement vide.
+     */
     function addStepPair() {
-        const currentIndex = $("#steps-container .dynamic-field").length; // Get current count
+        // Trouve le nombre actuel de champs étapes anglais pour déterminer le nouvel index et le placeholder
+        const currentIndex = $("#steps-container .dynamic-field").length;
+        const nextStepNumber = currentIndex + 1;
 
-        // English Step HTML
-        const newStepEn = `
+        // Crée le HTML pour la nouvelle étape anglaise
+        // Utilise data-attributes pour la traduction dynamique du placeholder
+        const newStepEnHtml = `
             <div class="dynamic-field">
-                <textarea name="steps[${currentIndex}]" placeholder="Step ${currentIndex + 1}" required></textarea>
+                <textarea name="steps[${currentIndex}]"
+                          data-translate-placeholder="placeholders.step_n"
+                          data-placeholder-index="${nextStepNumber}" required></textarea>
                 <button type="button" class="remove-field button button-danger" data-sync-type="step">×</button>
             </div>
         `;
 
-        // French Step HTML (empty)
-        const newStepFr = `
+        // Crée le HTML pour la nouvelle étape française
+        const newStepFrHtml = `
             <div class="dynamic-field">
-                <textarea name="stepsFR[${currentIndex}]" placeholder="Étape ${currentIndex + 1}"></textarea>
+                <textarea name="stepsFR[${currentIndex}]"
+                          data-translate-placeholder="placeholders.step_n_fr"
+                          data-placeholder-index="${nextStepNumber}"></textarea>
                 <button type="button" class="remove-field button button-danger" data-sync-type="step">×</button>
             </div>
         `;
 
-        $("#steps-container").append(newStepEn);
-        $("#steps-fr-container").append(newStepFr);
+        // Ajoute les nouveaux éléments au DOM
+        $("#steps-container").append(newStepEnHtml);
+        $("#steps-fr-container").append(newStepFrHtml);
 
-        // Update indices
-        stepIndex++;
-        stepFrIndex++;
+        // Traduit les placeholders des nouveaux champs
+        translateDynamicPlaceholders(currentTranslations);
     }
 
-    // Function to add a Timer field (independent)
+    /**
+     * Ajoute un champ pour un minuteur (indépendant des langues).
+     */
     function addTimerField() {
-        // Use current length for the index of the new timer
+        // Trouve le nombre actuel de champs minuteurs pour déterminer le nouvel index et le placeholder
         const currentIndex = $("#timers-container .dynamic-field").length;
-        const newTimer = `
+        const nextStepNumber = currentIndex + 1;
+
+        // Crée le HTML pour le nouveau minuteur
+        // Utilise data-attributes pour la traduction dynamique du placeholder
+        const newTimerHtml = `
             <div class="dynamic-field">
-                <input type="number" name="timers[${currentIndex}]" placeholder="Timer for Step ${currentIndex + 1}" min="0" required>
+                <input type="number" name="timers[${currentIndex}]" min="0" required
+                       data-translate-placeholder="placeholders.timer_n"
+                       data-placeholder-index="${nextStepNumber}">
                 <button type="button" class="remove-field button button-danger" data-sync-type="timer">×</button>
             </div>
         `;
-        $("#timers-container").append(newTimer);
-        timerIndex++; // Increment timer specific index
+
+        // Ajoute le nouvel élément au DOM
+        $("#timers-container").append(newTimerHtml);
+
+        // Traduit les placeholders des nouveaux champs
+        translateDynamicPlaceholders(currentTranslations);
     }
 
+    /**
+     * Réindexe les attributs 'name' et les placeholders des champs
+     * dans un conteneur donné après une suppression.
+     * @param {jQuery} $container Le conteneur jQuery (ex: $("#ingredients-container"))
+     */
+    function reindexFields($container) {
+        const containerId = $container.attr('id');
+        // Sélectionne tous les champs dynamiques directement enfants du conteneur
+        const $fields = $container.children('.dynamic-field');
 
-    // --- Event Handlers for Adding Fields ---
+        // Parcours chaque champ pour mettre à jour son index
+        $fields.each(function(newIndex) {
+            const $field = $(this);
 
-    // Add Ingredient Pair (triggered by either button)
+            // --- Mise à jour pour les ingrédients (Anglais) ---
+            if (containerId === 'ingredients-container') {
+                // Met à jour l'index dans l'attribut 'name' de chaque input
+                $field.find('input[name^="ingredients["]').each(function() {
+                    // Remplace l'ancien index (ex: [1]) par le nouveau (ex: [0])
+                    const oldName = $(this).attr('name');
+                    const newName = oldName.replace(/\[\d+\]/, `[${newIndex}]`);
+                    $(this).attr('name', newName);
+                });
+                // Optionnel: Mettre à jour les placeholders si nécessaire (normalement géré par la traduction globale)
+            }
+            // --- Mise à jour pour les ingrédients (Français) ---
+            else if (containerId === 'ingredients-fr-container') {
+                $field.find('input[name^="ingredientsFR["]').each(function() {
+                    const oldName = $(this).attr('name');
+                    const newName = oldName.replace(/\[\d+\]/, `[${newIndex}]`);
+                    $(this).attr('name', newName);
+                });
+            }
+            // --- Mise à jour pour les étapes (Anglais) ---
+            else if (containerId === 'steps-container') {
+                const $textarea = $field.find('textarea');
+                const oldName = $textarea.attr('name');
+                // Met à jour l'index dans le 'name'
+                const newName = oldName.replace(/\[\d+\]/, `[${newIndex}]`);
+                $textarea.attr('name', newName);
+                // Met à jour l'attribut data-placeholder-index pour la traduction future
+                $textarea.attr('data-placeholder-index', newIndex + 1);
+                // Met à jour le placeholder immédiatement (si besoin, mais la traduction le fera aussi)
+                // $textarea.attr('placeholder', `Step ${newIndex + 1}`); // Version non traduite
+            }
+            // --- Mise à jour pour les étapes (Français) ---
+            else if (containerId === 'steps-fr-container') {
+                const $textarea = $field.find('textarea');
+                const oldName = $textarea.attr('name');
+                const newName = oldName.replace(/\[\d+\]/, `[${newIndex}]`);
+                $textarea.attr('name', newName);
+                $textarea.attr('data-placeholder-index', newIndex + 1);
+                // $textarea.attr('placeholder', `Étape ${newIndex + 1}`); // Version non traduite
+            }
+            // --- Mise à jour pour les minuteurs ---
+            else if (containerId === 'timers-container') {
+                const $input = $field.find('input[type="number"]');
+                const oldName = $input.attr('name');
+                const newName = oldName.replace(/\[\d+\]/, `[${newIndex}]`);
+                $input.attr('name', newName);
+                $input.attr('data-placeholder-index', newIndex + 1);
+                 // $input.attr('placeholder', `Timer for Step ${newIndex + 1}`); // Version non traduite
+            }
+        });
+
+        // Après la réindexation, on retraduit les placeholders dynamiques du conteneur
+        translateDynamicPlaceholders(currentTranslations, $container);
+    }
+
+    /**
+     * Traduit les placeholders dynamiques qui utilisent data-translate-placeholder
+     * et potentiellement data-placeholder-index.
+     * @param {object} translations - L'objet de traductions pour la langue actuelle.
+     * @param {jQuery} [$scope=null] - Optionnel: Un conteneur jQuery pour limiter la traduction.
+     */
+    function translateDynamicPlaceholders(translations, $scope = null) {
+        if (!translations) return; // Ne rien faire si les traductions ne sont pas chargées
+
+        const $elementsToIndex = $scope
+            ? $scope.find('[data-translate-placeholder][data-placeholder-index]') // Dans un scope précis
+            : $('[data-translate-placeholder][data-placeholder-index]'); // Sur toute la page
+
+        $elementsToIndex.each(function() {
+            const $el = $(this);
+            const key = $el.data('translate-placeholder');
+            const index = $el.data('placeholder-index');
+            let placeholderText = getNestedTranslation(translations, key) || ''; // Utilise la fonction globale de header.php
+
+            // Remplace {n} par l'index réel
+            if (placeholderText && typeof placeholderText.replace === 'function') {
+                 placeholderText = placeholderText.replace(/\{n\}/g, index); // g = remplacement global
+            }
+            $el.attr('placeholder', placeholderText);
+        });
+
+        // Traduit aussi les placeholders statiques (sans data-placeholder-index) dans le scope
+        const $elementsStatic = $scope
+            ? $scope.find('[data-translate-placeholder]:not([data-placeholder-index])')
+            : $('[data-translate-placeholder]:not([data-placeholder-index])');
+
+        $elementsStatic.each(function() {
+            const $el = $(this);
+            const key = $el.data('translate-placeholder');
+            const placeholderText = getNestedTranslation(translations, key) || '';
+            $el.attr('placeholder', placeholderText);
+        });
+    }
+
+    // --- Gestionnaires d'Événements (Event Handlers) ---
+
+    // Clic sur les boutons "Ajouter Ingrédient" (EN ou FR)
     $("#add-ingredient, #add-ingredient-fr").click(function () {
         addIngredientPair();
     });
 
-    // Add Step Pair (triggered by either button)
+    // Clic sur les boutons "Ajouter Étape" (EN ou FR)
     $("#add-step, #add-step-fr").click(function () {
         addStepPair();
     });
 
-    // Add Timer (independent)
+    // Clic sur le bouton "Ajouter Minuteur"
     $("#add-timer").click(function () {
         addTimerField();
     });
 
-    // --- Event Handler for Removing Fields (with Synchronization) ---
-
+    // Clic sur N'IMPORTE QUEL bouton "Supprimer" (classe .remove-field)
+    // Utilise la délégation d'événements pour fonctionner aussi sur les éléments ajoutés dynamiquement.
     $(document).on('click', '.remove-field', function() {
-        const $button = $(this);
-        const syncType = $button.data('sync-type'); // ingredient, step, or timer
+        const $button = $(this); // Le bouton 'x' cliqué
+        // Récupère le type de champ à synchroniser (ingredient, step, timer) depuis l'attribut data-sync-type
+        const syncType = $button.data('sync-type');
+        // Trouve le conteneur parent '.dynamic-field' du bouton
         const $fieldToRemove = $button.closest('.dynamic-field');
+        // Trouve le conteneur principal (ex: #ingredients-container)
         const $container = $fieldToRemove.parent();
         const containerId = $container.attr('id');
 
-        // Check if it's the last field IN ITS CONTAINER
+        // --- Vérification de Sécurité : Ne pas supprimer le dernier élément ---
+        // Vérifie s'il reste d'autres champs du même type DANS CE CONTENEUR SPÉCIFIQUE
         if ($fieldToRemove.siblings('.dynamic-field').length === 0) {
-             // Prevent removing the last field pair (or the last timer)
-             let message = "You must keep at least one item.";
-             if (typeof showMessage === 'function' && typeof currentTranslations !== 'undefined') {
-                message = currentTranslations.messages?.cannot_remove_last || message;
-                showMessage(message, 'error');
-             } else {
-                alert(message);
-             }
-             return; // Stop the removal
+            // Affiche un message d'erreur (utilise la fonction showMessage de header.php)
+            showMessage(currentTranslations.messages.cannot_remove_last, 'error');
+            return; // Arrête l'exécution de la fonction de suppression
         }
 
-        // Find the index of the field being removed within its container
+        // --- Logique de Suppression ---
+
+        // Trouve l'index (position) du champ à supprimer parmi ses frères
         const indexToRemove = $fieldToRemove.index();
 
-        // --- Synchronized Removal for Ingredients and Steps ---
+        // 1. Cas synchronisé : Ingrédients ou Étapes
         if (syncType === 'ingredient' || syncType === 'step') {
             let siblingContainerId;
             let $siblingContainer;
 
+            // Détermine l'ID du conteneur frère (EN <-> FR)
             if (containerId.includes('-fr')) {
-                // Removing from French, find English sibling
+                // Si on supprime depuis FR, le frère est EN
                 siblingContainerId = containerId.replace('-fr', '');
             } else {
-                // Removing from English, find French sibling
+                // Si on supprime depuis EN, le frère est FR
                 siblingContainerId = containerId + '-fr';
             }
+            // Sélectionne le conteneur frère avec jQuery
             $siblingContainer = $('#' + siblingContainerId);
 
-            // Find the corresponding field in the sibling container using the index
-            const $siblingFieldToRemove = $siblingContainer.find('.dynamic-field').eq(indexToRemove);
+            // Trouve le champ correspondant dans le conteneur frère en utilisant le même index
+            const $siblingFieldToRemove = $siblingContainer.children('.dynamic-field').eq(indexToRemove);
 
-            // Remove both fields
+            // Supprime les DEUX champs (celui cliqué et son frère)
             $fieldToRemove.remove();
-            $siblingFieldToRemove.remove(); // Remove the corresponding sibling
+            if ($siblingFieldToRemove.length > 0) { // Sécurité: s'assurer qu'on a bien trouvé le frère
+                 $siblingFieldToRemove.remove();
+            }
 
-            // Reindex both containers
+            // Réindexe les champs restants dans les DEUX conteneurs
             reindexFields($container);
-            reindexFields($siblingContainer);
+            if ($siblingContainer.length > 0) { // Sécurité: s'assurer que le conteneur frère existe
+                reindexFields($siblingContainer);
+            }
 
         }
-        // --- Independent Removal for Timers ---
+        // 2. Cas indépendant : Minuteurs
         else if (syncType === 'timer') {
+            // Supprime juste le champ cliqué
             $fieldToRemove.remove();
-            reindexFields($container); // Reindex only the timer container
+            // Réindexe seulement le conteneur des minuteurs
+            reindexFields($container);
         }
-         else {
-             console.error("Unknown sync type or button missing data-sync-type attribute.");
+        // 3. Cas d'erreur (ne devrait pas arriver si data-sync-type est toujours présent)
+        else {
+             console.error("Type de synchronisation inconnu ou attribut data-sync-type manquant sur le bouton.");
          }
     });
 
-
-    // --- Function to Reindex Fields within a specific container ---
-    // This function now correctly updates names and placeholders based on the new index
-    function reindexFields(container) {
-        const containerId = container.attr('id');
-        const fields = container.find('.dynamic-field');
-        const fieldCount = fields.length; // Get the new count after removal
-
-        fields.each(function(index) {
-            const $field = $(this);
-
-            if (containerId === 'ingredients-container') {
-                $field.find('input[name^="ingredients["]').each(function() {
-                    const oldName = $(this).attr('name');
-                    const newName = oldName.replace(/\[\d+\]/, '[' + index + ']');
-                    $(this).attr('name', newName);
-                });
-                 // Update placeholder if needed (less critical maybe)
-                 ingredientIndex = fieldCount; // Update the global counter to the new length
-            } else if (containerId === 'ingredients-fr-container') {
-                $field.find('input[name^="ingredientsFR["]').each(function() {
-                    const oldName = $(this).attr('name');
-                    const newName = oldName.replace(/\[\d+\]/, '[' + index + ']');
-                    $(this).attr('name', newName);
-                });
-                 ingredientFrIndex = fieldCount; // Update the global counter
-            } else if (containerId === 'steps-container') {
-                const textarea = $field.find('textarea');
-                const oldName = textarea.attr('name');
-                const newName = oldName.replace(/\[\d+\]/, '[' + index + ']');
-                textarea.attr('name', newName).attr('placeholder', 'Step ' + (index + 1));
-                 stepIndex = fieldCount; // Update the global counter
-            } else if (containerId === 'steps-fr-container') {
-                const textarea = $field.find('textarea');
-                const oldName = textarea.attr('name');
-                const newName = oldName.replace(/\[\d+\]/, '[' + index + ']');
-                textarea.attr('name', newName).attr('placeholder', 'Étape ' + (index + 1));
-                 stepFrIndex = fieldCount; // Update the global counter
-            } else if (containerId === 'timers-container') {
-                const input = $field.find('input[type="number"]');
-                const oldName = input.attr('name');
-                const newName = oldName.replace(/\[\d+\]/, '[' + index + ']');
-                input.attr('name', newName).attr('placeholder', 'Timer for Step ' + (index + 1));
-                 timerIndex = fieldCount; // Update the global counter
-            }
-        });
-
-         // Ensure counters reflect the actual count after reindex
-         ingredientIndex = $('#ingredients-container .dynamic-field').length;
-         ingredientFrIndex = $('#ingredients-fr-container .dynamic-field').length;
-         stepIndex = $('#steps-container .dynamic-field').length;
-         stepFrIndex = $('#steps-fr-container .dynamic-field').length;
-         timerIndex = $('#timers-container .dynamic-field').length;
-
-         // console.log("Indices after reindex:", ingredientIndex, ingredientFrIndex, stepIndex, stepFrIndex, timerIndex);
-    }
-
-    // --- Initial Reindex on Page Load (important for modify page) ---
-    // Reindex all containers to ensure indices are correct from the start
+    // --- Réindexation Initiale au Chargement de la Page ---
+    // C'est important surtout pour la page 'modify_recipe.php' où les champs
+    // sont pré-remplis et pourraient avoir des index incohérents initialement.
+    // On s'assure que tous les index sont corrects dès le départ.
+    console.log("Reindexing fields on page load...");
     reindexFields($('#ingredients-container'));
     reindexFields($('#ingredients-fr-container'));
     reindexFields($('#steps-container'));
     reindexFields($('#steps-fr-container'));
     reindexFields($('#timers-container'));
+    console.log("Initial reindexing complete.");
 
-    // Log initial indices after load and reindex
-    console.log("Initial Indices:", ingredientIndex, ingredientFrIndex, stepIndex, stepFrIndex, timerIndex);
 });

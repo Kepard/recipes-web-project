@@ -11,7 +11,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'Administrateur') {
     die();
     
 } else {
-    // Basic HTML structure - content will be generated dynamically
+    // Basic HTML structure - content will be generated dynamically inside corresponding containers
     $content = '
     <div class="admin-container">
         <h1 data-translate="labels.manage_users">Manage Users</h1>

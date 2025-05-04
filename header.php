@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $title ?? 'Recettes de Mamie'; ?></title>
+    <title><?php echo $title ?? 'Croissant Gastronomy'; ?></title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,13 +23,11 @@
     $role = $_SESSION['role'] ?? '';
 ?>
 
-<div id="snow-container"></div>
-
 <header>
     <nav>
         <a href="index.php" class="logo">
             <img src="favicon.ico" alt="Logo" class="logo-image">
-            <span class="page-title"> Recettes de Mamie </span>
+            <span class="page-title"> Croissant Gastronomy </span>
         </a>
 
         <?php if (empty($role)): ?>
@@ -182,9 +180,6 @@ $(document).ready(function () {
             console.warn("Function initializePageContent() is not defined for this page.");
         }
 
-    }).fail(function(jqXHR, textStatus, errorThrown) {
-        console.error("Failed to load data.json:", textStatus, errorThrown);
-        showMessage("Failed to load language data.", "error");
     });
 
     // --- Event Handlers ---

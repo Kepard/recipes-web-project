@@ -13,10 +13,6 @@ $imageURL = $_POST['imageURL'] ?? null;
 // Handle file upload
 if (!empty($_FILES['image']['name'])) {
     $uploadDir = 'uploads/';
-    if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0755, true);
-    }
-    
     $fileName = uniqid() . '_' . basename($_FILES['image']['name']);
     $uploadFile = $uploadDir . $fileName;
     $fileType = strtolower(pathinfo($uploadFile, PATHINFO_EXTENSION));
@@ -30,29 +26,15 @@ if (!empty($_FILES['image']['name'])) {
 }
 
 if (empty($commentText)) {
-    echo json_encode(["success" => false, "message" => "Le commentaire ne peut pas être vide."]);
+    echo json_encode(["success" => false]);
     exit;
 }
 
 $recipesFile = 'recipes.json';
 $recipes = json_decode(file_get_contents($recipesFile), true);
 
-// Fix 1: Handle case where recipes is null or invalid
-if ($recipes === null) {
-    $recipes = [];
-}
-
-// Fix 2: Handle numeric vs string recipe IDs
-$recipeFound = false;
 foreach ($recipes as &$recipe) {
     if ($recipe['id'] == $recipeId) { // Loose comparison to handle string vs numeric
-        $recipeFound = true;
-        
-        // Fix 3: Initialize comments array if it doesn't exist
-        if (!isset($recipe['comments'])) {
-            $recipe['comments'] = [];
-        }
-
         $newComment = [
             'id' => count($recipe['comments']) + 1,
             'date' => date('Y-m-d H:i:s'),

@@ -8,7 +8,7 @@ if (!isset($_SESSION['username'])) {
 }
 
 // Get recipe ID from POST data
-$recipeId = $_POST['id'] ?? null;
+$recipeId = $_POST['id'];
 
 // Load recipes
 $recipesFile = 'recipes.json';

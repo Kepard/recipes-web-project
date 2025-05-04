@@ -2,7 +2,7 @@
     {
         "id": 1,
         "name": "Crock Pot Roast",
-        "nameFR": "Roti à la cocotte",
+        "nameFR": "Roti \u00e0 la cocotte",
         "Author": "admin",
         "Without": [
             "NoGluten",
@@ -30,7 +30,7 @@
                 "type": "Condiments"
             },
             {
-                "quantity": "1/2 cup",
+                "quantity": "1\/2 cup",
                 "name": "water",
                 "type": "Drinks"
             }
@@ -57,7 +57,7 @@
                 "type": "Condiments"
             },
             {
-                "quantity": "1/2 verre",
+                "quantity": "1\/2 verre",
                 "name": "eau",
                 "type": "Boisson"
             }
@@ -77,8 +77,8 @@
             "1",
             "2"
         ],
-        "imageURL": "http://img.sndimg.com/food/image/upload/w_266/v1/img/recipes/27/20/8/picVfzLZo.jpg",
-        "originalURL": "http://www.food.com/recipe/to-die-for-crock-pot-roast-27208",
+        "imageURL": "http:\/\/img.sndimg.com\/food\/image\/upload\/w_266\/v1\/img\/recipes\/27\/20\/8\/picVfzLZo.jpg",
+        "originalURL": "http:\/\/www.food.com\/recipe\/to-die-for-crock-pot-roast-27208",
         "likes": [
             "admin"
         ],
@@ -109,7 +109,7 @@
                 "date": "2025-03-27 21:41:10",
                 "author": "kevzer",
                 "content": "Parfait!",
-                "imageurl": "https://media.gettyimages.com/id/501964582/fr/photo/grand-homme-manger-un-morceau-de-pizza.jpg?s=612x612&w=gi&k=20&c=UguiTsVsaGNdaPYHvig1fRIQebPbEcPVljyHEo805Bk="
+                "imageurl": "https:\/\/media.gettyimages.com\/id\/501964582\/fr\/photo\/grand-homme-manger-un-morceau-de-pizza.jpg?s=612x612&w=gi&k=20&c=UguiTsVsaGNdaPYHvig1fRIQebPbEcPVljyHEo805Bk="
             }
         ],
         "validated": 0
@@ -131,12 +131,12 @@
                 "type": "Produce"
             },
             {
-                "quantity": "1/2 tbsp",
+                "quantity": "1\/2 tbsp",
                 "name": "olive oil",
                 "type": "Condiments"
             },
             {
-                "quantity": "1/2 tsp",
+                "quantity": "1\/2 tsp",
                 "name": "kosher salt",
                 "type": "Baking"
             }
@@ -148,18 +148,18 @@
                 "type": "Produit"
             },
             {
-                "quantity": "1/2 cuillere",
+                "quantity": "1\/2 cuillere",
                 "name": "huile d&amp;#039;olive",
                 "type": "Condiments"
             },
             {
-                "quantity": "1/2 cuillere",
+                "quantity": "1\/2 cuillere",
                 "name": "sel",
                 "type": "Baking"
             }
         ],
         "steps": [
-            "Preheat oven to 425°F.",
+            "Preheat oven to 425\u00b0F.",
             "Cut off the woody bottom part of the asparagus spears and discard.",
             "With a vegetable peeler, peel off the skin on the bottom 2-3 inches of the spears (this keeps the asparagus from being all.\",string.\", and if you eat asparagus you know what I mean by that).",
             "Place asparagus on foil-lined baking sheet and drizzle with olive oil.",
@@ -171,7 +171,7 @@
             "They are great plain, but sometimes I serve them with a light vinaigrette if we need something acidic to balance out our meal."
         ],
         "stepsFR": [
-            "Prechauffer le four a 425°F.",
+            "Prechauffer le four a 425\u00b0F.",
             "Enlever le bois"
         ],
         "timers": [
@@ -186,8 +186,8 @@
             "0",
             "0"
         ],
-        "imageURL": "http://img.sndimg.com/food/image/upload/w_266/v1/img/recipes/50/84/7/picMcSyVd.jpg",
-        "originalURL": "http://www.food.com/recipe/roasted-asparagus-50847",
+        "imageURL": "http:\/\/img.sndimg.com\/food\/image\/upload\/w_266\/v1\/img\/recipes\/50\/84\/7\/picMcSyVd.jpg",
+        "originalURL": "http:\/\/www.food.com\/recipe\/roasted-asparagus-50847",
         "likes": [
             "kevzer"
         ],
@@ -231,7 +231,7 @@
                 "type": "Misc"
             },
             {
-                "quantity": "1/2 cup",
+                "quantity": "1\/2 cup",
                 "name": "basmati rice",
                 "type": "Misc"
             },
@@ -253,7 +253,7 @@
                 "type": "Misc"
             },
             {
-                "quantity": "1/2 cup",
+                "quantity": "1\/2 cup",
                 "name": "riz basmati",
                 "type": "Misc"
             }
@@ -273,7 +273,7 @@
             "20",
             "0"
         ],
-        "imageURL": "http://dagzhsfg97k4.cloudfront.net/wp-content/uploads/2012/05/lentils3.jpg",
+        "imageURL": "http:\/\/dagzhsfg97k4.cloudfront.net\/wp-content\/uploads\/2012\/05\/lentils3.jpg",
         "originalURL": "",
         "likes": [
             "trad"
@@ -321,12 +321,12 @@
                 "type": "Misc"
             },
             {
-                "quantity": "1/4 cup",
+                "quantity": "1\/4 cup",
                 "name": "pizza sauce",
                 "type": "Misc"
             },
             {
-                "quantity": "3/4 cup",
+                "quantity": "3\/4 cup",
                 "name": "mozzarella cheese",
                 "type": "Dairy"
             }
@@ -363,12 +363,12 @@
                 "type": ""
             },
             {
-                "quantity": "1/4",
+                "quantity": "1\/4",
                 "name": "",
                 "type": ""
             },
             {
-                "quantity": "3/4 verres",
+                "quantity": "3\/4 verres",
                 "name": "",
                 "type": ""
             }
@@ -400,7 +400,7 @@
             15,
             0
         ],
-        "imageURL": "http://upload.wikimedia.org/wikipedia/commons/c/c7/Spinach_pizza.jpg",
+        "imageURL": "http:\/\/upload.wikimedia.org\/wikipedia\/commons\/c\/c7\/Spinach_pizza.jpg",
         "likes": [],
         "comments": [
             {
@@ -408,7 +408,7 @@
                 "date": "2025-03-26 22:43:04",
                 "author": "admin",
                 "content": "mhmmm",
-                "imageurl": "https://cdn.atriumhealth.org/dailydose/-/media/daily-dose-blog/featured-images/dogeating.jpg?mw=1024&rev=3d374457e90f4c9d814f8739a26455f6&hash=9AD4DCE52825449A70E9B59F1C0A18E8"
+                "imageurl": "https:\/\/cdn.atriumhealth.org\/dailydose\/-\/media\/daily-dose-blog\/featured-images\/dogeating.jpg?mw=1024&rev=3d374457e90f4c9d814f8739a26455f6&hash=9AD4DCE52825449A70E9B59F1C0A18E8"
             }
         ],
         "validated": 0
@@ -416,7 +416,7 @@
     {
         "id": 5,
         "name": "Cranberry and Apple Stuffed Acorn Squash Recipe",
-        "nameFR": "Courge poivrée farcies aux cranberries et aux pommes",
+        "nameFR": "Courge poivr\u00e9e farcies aux cranberries et aux pommes",
         "Author": "",
         "Without": [
             "NoGluten",
@@ -439,7 +439,7 @@
                 "type": "Produce"
             },
             {
-                "quantity": "1/2 cup",
+                "quantity": "1\/2 cup",
                 "name": "dried cranberries",
                 "type": "Produce"
             },
@@ -458,7 +458,7 @@
         "steps": [
             "Cut squash in half, remove seeds.",
             "Place squash in baking dish, cut-side down.",
-            "Pour 1/4-inch water into dish.",
+            "Pour 1\/4-inch water into dish.",
             "Bake for 30 minutes at 350 degrees F.",
             "In large bowl, combine remaining ingredients.",
             "Remove squash from oven, fill with mix.",
@@ -476,7 +476,7 @@
             30,
             0
         ],
-        "imageURL": "http://elanaspantry.com/wp-content/uploads/2008/10/acorn_squash_with_cranberry.jpg",
+        "imageURL": "http:\/\/elanaspantry.com\/wp-content\/uploads\/2008\/10\/acorn_squash_with_cranberry.jpg",
         "originalURL": "",
         "likes": [
             "kevzer"
@@ -520,7 +520,7 @@
             "Stir in eggs, one at a time.",
             "Whisk in milk until you have a smooth batter.",
             "Chill in the fridge for at least 30 minutes.",
-            "Heat oven to 220C/gas mark 7.",
+            "Heat oven to 220C\/gas mark 7.",
             "Pour the oil into the holes of a 8-hole muffin tin.",
             "Heat tin in the oven for 5 minutes.",
             "Ladle the batter mix into the tin.",
@@ -538,8 +538,8 @@
             0,
             30
         ],
-        "imageURL": "http://upload.wikimedia.org/wikipedia/commons/f/f9/Yorkshire_Pudding.jpg",
-        "originalURL": "https://fr.wikipedia.org/wiki/Yorkshire_pudding",
+        "imageURL": "http:\/\/upload.wikimedia.org\/wikipedia\/commons\/f\/f9\/Yorkshire_Pudding.jpg",
+        "originalURL": "https:\/\/fr.wikipedia.org\/wiki\/Yorkshire_pudding",
         "likes": [],
         "comments": [],
         "validated": 1
@@ -562,17 +562,17 @@
                 "type": "Drinks"
             },
             {
-                "quantity": "3/4 cup",
+                "quantity": "3\/4 cup",
                 "name": "shortening",
                 "type": "Baking"
             },
             {
-                "quantity": "1 1/2 cups",
+                "quantity": "1 1\/2 cups",
                 "name": "sugar",
                 "type": "Baking"
             },
             {
-                "quantity": "2 1/2 cups",
+                "quantity": "2 1\/2 cups",
                 "name": "flour",
                 "type": "Baking"
             },
@@ -592,12 +592,12 @@
                 "type": "Baking"
             },
             {
-                "quantity": "1/2 tsp.",
+                "quantity": "1\/2 tsp.",
                 "name": "baking powder",
                 "type": "Baking"
             },
             {
-                "quantity": "1/2 tsp.",
+                "quantity": "1\/2 tsp.",
                 "name": "cloves",
                 "type": "Baking"
             },
@@ -607,7 +607,7 @@
                 "type": "Baking"
             },
             {
-                "quantity": "1/2 cup",
+                "quantity": "1\/2 cup",
                 "name": "chopped nuts",
                 "type": "Baking"
             }
@@ -616,14 +616,14 @@
         "steps": [
             "Simmer raisins and water over medium heat until raisins are plump, about 15 minutes.",
             "Drain raisins, reserving the liquid.",
-            "Add enough water to reserved liquid to measure 1/2 cup.",
-            "Heat oven to 400°.",
+            "Add enough water to reserved liquid to measure 1\/2 cup.",
+            "Heat oven to 400\u00b0.",
             "Mix thoroughly shortening, sugar, eggs and vanilla.",
             "Stir in reserved liquid.",
             "Blend in remaining ingredients.",
             "Drop dough by rounded teaspoonfuls about 2 inches apart onto ungreased baking sheet.",
             "Bake 8 to 10 minutes or until light brown.",
-            "About 6 1/2 dozen cookies."
+            "About 6 1\/2 dozen cookies."
         ],
         "stepsFR": [],
         "timers": [
@@ -638,7 +638,7 @@
             8,
             0
         ],
-        "imageURL": "http://s3.amazonaws.com/gmi-digital-library/65caecf7-a8f7-4a09-8513-2659cf92871e.jpg",
+        "imageURL": "http:\/\/s3.amazonaws.com\/gmi-digital-library\/65caecf7-a8f7-4a09-8513-2659cf92871e.jpg",
         "originalURL": "#",
         "likes": [],
         "comments": [
@@ -660,12 +660,12 @@
         "Without": [],
         "ingredients": [
             {
-                "quantity": "2-1/2 cups",
+                "quantity": "2-1\/2 cups",
                 "name": "rolled oats, (not instant)",
                 "type": "Baking"
             },
             {
-                "quantity": "1-1/4 cups",
+                "quantity": "1-1\/4 cups",
                 "name": "all-purpose flour",
                 "type": "Baking"
             },
@@ -675,7 +675,7 @@
                 "type": "Produce"
             },
             {
-                "quantity": "1/4 tsp",
+                "quantity": "1\/4 tsp",
                 "name": "salt",
                 "type": "Baking"
             },
@@ -685,7 +685,7 @@
                 "type": "Baking"
             },
             {
-                "quantity": "3/4 cup",
+                "quantity": "3\/4 cup",
                 "name": "packed brown sugar",
                 "type": "Baking"
             },
@@ -695,12 +695,12 @@
                 "type": "Produce"
             },
             {
-                "quantity": "1/2 cup",
+                "quantity": "1\/2 cup",
                 "name": "granulated sugar",
                 "type": "Baking"
             },
             {
-                "quantity": "1/3 cup",
+                "quantity": "1\/3 cup",
                 "name": "orange juice",
                 "type": "Produce"
             },
@@ -716,8 +716,8 @@
             "Whisk cornstarch with 2 tbsp (25 mL) water; whisk into blueberries and boil, stirring, until thickened, about 1 minute.",
             "Place plastic wrap directly on surface; refrigerate until cooled, about 1 hour.",
             "In large bowl, whisk together oats, flour, sugar, orange rind and salt ; with pastry blender, cut in butter until in coarse crumbs.",
-            "Press half into 8-inch (2 L) square parchment paper–lined metal cake pan; spread with blueberry filling.",
-            "Bake in centre of 350°F oven until light golden, about 45 minutes.",
+            "Press half into 8-inch (2 L) square parchment paper\u2013lined metal cake pan; spread with blueberry filling.",
+            "Bake in centre of 350\u00b0F oven until light golden, about 45 minutes.",
             "Let cool on rack before cutting into squares.",
             "(Make-ahead: Cover and refrigerate for up to 2 days or overwrap with heavy-duty foil and freeze for up to 2 weeks.)"
         ],
@@ -732,8 +732,8 @@
             0,
             0
         ],
-        "imageURL": "http://www.canadianliving.com/img/photos/biz/blueberry-oatmeal-squares5801359401371.jpg",
-        "originalURL": "http://www.canadianliving.com/food/blueberry_oatmeal_squares.php",
+        "imageURL": "http:\/\/www.canadianliving.com\/img\/photos\/biz\/blueberry-oatmeal-squares5801359401371.jpg",
+        "originalURL": "http:\/\/www.canadianliving.com\/food\/blueberry_oatmeal_squares.php",
         "likes": [
             "admin",
             "trad"
@@ -744,7 +744,7 @@
                 "date": "2025-04-01 20:21:11",
                 "author": "admin",
                 "content": "J'adore!",
-                "imageurl": "uploads/67ec4ab725e1c_989-447-max.png"
+                "imageurl": "uploads\/67ec4ab725e1c_989-447-max.png"
             }
         ],
         "validated": 1
@@ -752,48 +752,42 @@
     {
         "id": 9,
         "name": "Pelmeni",
-        "nameFR": "Pelmeni",
+        "nameFR": "Pelmenie",
         "Author": "chef",
         "Without": [
-            "NoMilk"
+            "NoMilk",
+            "Vegetarian"
         ],
         "ingredients": [
             {
-                "quantity": "1",
+                "quantity": "2",
                 "name": "Pelmen",
                 "type": "Meat"
-            },
-            {
-                "quantity": "1",
-                "name": "Salt",
-                "type": "Condiments"
             }
         ],
         "ingredientsFR": [
             {
-                "quantity": "1",
-                "name": "Pelmennie",
+                "quantity": "2",
+                "name": "Pelmenni",
                 "type": "Viande"
-            },
-            {
-                "quantity": "1",
-                "name": "Sel",
-                "type": "Condiment"
             }
         ],
         "steps": [
             "Bake bro",
-            "Eat bro"
+            "Eat bro",
+            "Sleep"
         ],
         "stepsFR": [
             "Cuisiner",
-            "Manger"
+            "Manger",
+            "Dormir"
         ],
         "timers": [
             "15",
-            "30"
+            "30",
+            "120"
         ],
-        "imageURL": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Pelmeni_Russian.jpg/640px-Pelmeni_Russian.jpg",
+        "imageURL": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/d\/df\/Pelmeni_Russian.jpg\/640px-Pelmeni_Russian.jpg",
         "originalURL": "",
         "likes": [],
         "comments": [
@@ -820,7 +814,7 @@
                 "type": "Produce"
             },
             {
-                "quantity": "1/2 head",
+                "quantity": "1\/2 head",
                 "name": "cabbage, shredded",
                 "type": "Produce"
             },
@@ -862,74 +856,74 @@
             {
                 "quantity": "for serving",
                 "name": "sour cream and fresh dill",
-                "type": "Dairy/Produce"
+                "type": "Dairy\/Produce"
             }
         ],
         "ingredientsFR": [
             {
                 "quantity": "3 moyennes",
-                "name": "betteraves, pelées et râpées",
-                "type": "Légume"
+                "name": "betteraves, pel\u00e9es et r\u00e2p\u00e9es",
+                "type": "L\u00e9gume"
             },
             {
-                "quantity": "1/2",
-                "name": "chou, émincé",
-                "type": "Légume"
+                "quantity": "1\/2",
+                "name": "chou, \u00e9minc\u00e9",
+                "type": "L\u00e9gume"
             },
             {
                 "quantity": "2 grosses",
-                "name": "pommes de terre, pelées et en dés",
-                "type": "Légume"
+                "name": "pommes de terre, pel\u00e9es et en d\u00e9s",
+                "type": "L\u00e9gume"
             },
             {
                 "quantity": "1 grosse",
-                "name": "carotte, râpée",
-                "type": "Légume"
+                "name": "carotte, r\u00e2p\u00e9e",
+                "type": "L\u00e9gume"
             },
             {
                 "quantity": "1 gros",
-                "name": "oignon, haché",
-                "type": "Légume"
+                "name": "oignon, hach\u00e9",
+                "type": "L\u00e9gume"
             },
             {
                 "quantity": "1.5 litre",
-                "name": "bouillon de boeuf ou légumes",
+                "name": "bouillon de boeuf ou l\u00e9gumes",
                 "type": "Divers"
             },
             {
-                "quantity": "2 c. à soupe",
-                "name": "concentré de tomate",
+                "quantity": "2 c. \u00e0 soupe",
+                "name": "concentr\u00e9 de tomate",
                 "type": "Condiments"
             },
             {
-                "quantity": "1 c. à soupe",
+                "quantity": "1 c. \u00e0 soupe",
                 "name": "vinaigre",
                 "type": "Condiments"
             },
             {
-                "quantity": "au goût",
+                "quantity": "au go\u00fbt",
                 "name": "sel et poivre",
                 "type": "Condiments"
             },
             {
                 "quantity": "pour servir",
-                "name": "crème aigre et aneth frais",
-                "type": "Laitier/Légume"
+                "name": "cr\u00e8me aigre et aneth frais",
+                "type": "Laitier\/L\u00e9gume"
             }
         ],
         "steps": [
-            "In a large pot, sauté onions and carrots until softened.",
+            "In a large pot, saut\u00e9 onions and carrots until softened.",
             "Add broth, potatoes, and cabbage. Bring to a boil, then simmer until potatoes are tender.",
             "Add grated beets, tomato paste, and vinegar. Simmer for another 10-15 minutes.",
             "Season with salt and pepper to taste.",
             "Serve hot, garnished with a dollop of sour cream and fresh dill."
         ],
         "stepsFR": [
-            "Dans une grande marmite, faire revenir les oignons et les carottes jusqu'à ce qu'ils soient tendres.",
-            "Ajouter le bouillon, les pommes de terre et le chou. Porter à ébullition, puis laisser mijoter jusqu'à ce que les pommes de terre soient tendres.",
-            "Ajouter les betteraves râpées, le concentré de tomate et le vinaigre. Laisser mijoter encore 10-15 minutes.",
-            "Assaisonner avec sel et poivre au goût.",
-            "Servir chaud, garni d'une cuillerée de crème aigre et d'aneth frais."
+            "Dans une grande marmite, faire revenir les oignons et les carottes jusqu'\u00e0 ce qu'ils soient tendres.",
+            "Ajouter le bouillon, les pommes de terre et le chou. Porter \u00e0 \u00e9bullition, puis laisser mijoter jusqu'\u00e0 ce que les pommes de terre soient tendres.",
+            "Ajouter les betteraves r\u00e2p\u00e9es, le concentr\u00e9 de tomate et le vinaigre. Laisser mijoter encore 10-15 minutes.",
+            "Assaisonner avec sel et poivre au go\u00fbt.",
+            "Servir chaud, garni d'une cuiller\u00e9e de cr\u00e8me aigre et d'aneth frais."
         ],
         "timers": [
             "5",
@@ -938,7 +932,7 @@
             "1",
             "0"
         ],
-        "imageURL": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Borscht_served.jpg/640px-Borscht_served.jpg",
+        "imageURL": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/a\/a7\/Borscht_served.jpg\/640px-Borscht_served.jpg",
         "originalURL": "#",
         "likes": [],
         "comments": [],
@@ -947,7 +941,7 @@
     {
         "id": 11,
         "name": "Blini (Russian Pancakes)",
-        "nameFR": "Blinis (Crêpes Russes)",
+        "nameFR": "Blinis (Cr\u00eapes Russes)",
         "Author": "admin",
         "Without": [
             "Vegetarian"
@@ -979,7 +973,7 @@
                 "type": "Baking"
             },
             {
-                "quantity": "1/2 tsp",
+                "quantity": "1\/2 tsp",
                 "name": "salt",
                 "type": "Baking"
             },
@@ -997,7 +991,7 @@
             },
             {
                 "quantity": "1 tasse",
-                "name": "lait, tiède",
+                "name": "lait, ti\u00e8de",
                 "type": "Laitier"
             },
             {
@@ -1006,22 +1000,22 @@
                 "type": "Laitier"
             },
             {
-                "quantity": "1 c. à café",
-                "name": "levure sèche active",
+                "quantity": "1 c. \u00e0 caf\u00e9",
+                "name": "levure s\u00e8che active",
                 "type": "Aide culinaire"
             },
             {
-                "quantity": "1 c. à soupe",
+                "quantity": "1 c. \u00e0 soupe",
                 "name": "sucre",
                 "type": "Aide culinaire"
             },
             {
-                "quantity": "1/2 c. à café",
+                "quantity": "1\/2 c. \u00e0 caf\u00e9",
                 "name": "sel",
                 "type": "Aide culinaire"
             },
             {
-                "quantity": "2 c. à soupe",
+                "quantity": "2 c. \u00e0 soupe",
                 "name": "beurre fondu",
                 "type": "Laitier"
             }
@@ -1032,17 +1026,17 @@
             "Add the yeast mixture, egg, and melted butter to the flour. Whisk until smooth.",
             "Cover the bowl and let the batter rise in a warm place for about 1 hour.",
             "Heat a lightly oiled griddle or frying pan over medium heat.",
-            "Pour or scoop the batter onto the griddle, using approximately 1/4 cup for each blin.",
+            "Pour or scoop the batter onto the griddle, using approximately 1\/4 cup for each blin.",
             "Cook for about 2 minutes per side, or until golden brown. Serve warm with desired toppings (sour cream, caviar, smoked salmon, jam)."
         ],
         "stepsFR": [
-            "Dissoudre la levure et le sucre dans le lait tiède. Laisser reposer 10 minutes jusqu'à ce que ça mousse.",
-            "Dans un bol, mélanger la farine et le sel.",
-            "Ajouter le mélange de levure, l'oeuf et le beurre fondu à la farine. Mélanger jusqu'à consistance lisse.",
-            "Couvrir le bol et laisser la pâte lever dans un endroit chaud pendant environ 1 heure.",
-            "Chauffer une plaque ou une poêle légèrement huilée à feu moyen.",
-            "Verser ou déposer la pâte sur la plaque, en utilisant environ 1/4 tasse par blin.",
-            "Cuire environ 2 minutes de chaque côté, ou jusqu'à ce qu'ils soient dorés. Servir chaud avec les garnitures désirées (crème aigre, caviar, saumon fumé, confiture)."
+            "Dissoudre la levure et le sucre dans le lait ti\u00e8de. Laisser reposer 10 minutes jusqu'\u00e0 ce que \u00e7a mousse.",
+            "Dans un bol, m\u00e9langer la farine et le sel.",
+            "Ajouter le m\u00e9lange de levure, l'oeuf et le beurre fondu \u00e0 la farine. M\u00e9langer jusqu'\u00e0 consistance lisse.",
+            "Couvrir le bol et laisser la p\u00e2te lever dans un endroit chaud pendant environ 1 heure.",
+            "Chauffer une plaque ou une po\u00eale l\u00e9g\u00e8rement huil\u00e9e \u00e0 feu moyen.",
+            "Verser ou d\u00e9poser la p\u00e2te sur la plaque, en utilisant environ 1\/4 tasse par blin.",
+            "Cuire environ 2 minutes de chaque c\u00f4t\u00e9, ou jusqu'\u00e0 ce qu'ils soient dor\u00e9s. Servir chaud avec les garnitures d\u00e9sir\u00e9es (cr\u00e8me aigre, caviar, saumon fum\u00e9, confiture)."
         ],
         "timers": [
             "10",
@@ -1053,7 +1047,7 @@
             "2",
             "2"
         ],
-        "imageURL": "https://ascania-pack.com/assets/media/honey-pancakes_1_largeThumb.jpg",
+        "imageURL": "https:\/\/ascania-pack.com\/assets\/media\/honey-pancakes_1_largeThumb.jpg",
         "originalURL": "#",
         "likes": [
             "admin"
@@ -1089,7 +1083,7 @@
                 "type": "Produce"
             },
             {
-                "quantity": "1/4 cup",
+                "quantity": "1\/4 cup",
                 "name": "butter",
                 "type": "Dairy"
             },
@@ -1104,7 +1098,7 @@
                 "type": "Misc"
             },
             {
-                "quantity": "1/2 cup",
+                "quantity": "1\/2 cup",
                 "name": "sour cream",
                 "type": "Dairy"
             },
@@ -1127,23 +1121,23 @@
         "ingredientsFR": [
             {
                 "quantity": "500g",
-                "name": "filet de boeuf, émincé finement",
+                "name": "filet de boeuf, \u00e9minc\u00e9 finement",
                 "type": "Viande"
             },
             {
                 "quantity": "225g",
-                "name": "champignons, émincés",
-                "type": "Légume"
+                "name": "champignons, \u00e9minc\u00e9s",
+                "type": "L\u00e9gume"
             },
             {
                 "quantity": "1 gros",
-                "name": "oignon, haché",
-                "type": "Légume"
+                "name": "oignon, hach\u00e9",
+                "type": "L\u00e9gume"
             },
             {
                 "quantity": "2 gousses",
-                "name": "ail, hachées",
-                "type": "Légume"
+                "name": "ail, hach\u00e9es",
+                "type": "L\u00e9gume"
             },
             {
                 "quantity": "60g",
@@ -1151,7 +1145,7 @@
                 "type": "Laitier"
             },
             {
-                "quantity": "2 c. à soupe",
+                "quantity": "2 c. \u00e0 soupe",
                 "name": "farine tout usage",
                 "type": "Aide culinaire"
             },
@@ -1162,16 +1156,16 @@
             },
             {
                 "quantity": "125ml",
-                "name": "crème aigre",
+                "name": "cr\u00e8me aigre",
                 "type": "Laitier"
             },
             {
-                "quantity": "1 c. à soupe",
+                "quantity": "1 c. \u00e0 soupe",
                 "name": "moutarde de Dijon",
                 "type": "Condiments"
             },
             {
-                "quantity": "au goût",
+                "quantity": "au go\u00fbt",
                 "name": "sel et poivre",
                 "type": "Condiments"
             },
@@ -1193,15 +1187,15 @@
             "Serve immediately over cooked egg noodles or rice."
         ],
         "stepsFR": [
-            "Assaisonner les lanières de boeuf avec sel et poivre.",
-            "Dans une grande poêle, faire fondre la moitié du beurre à feu moyen-vif. Faire dorer le boeuf en plusieurs fois; retirer et réserver.",
-            "Faire fondre le reste du beurre dans la poêle. Ajouter les oignons et les champignons, cuire jusqu'à ce qu'ils soient tendres et dorés.",
+            "Assaisonner les lani\u00e8res de boeuf avec sel et poivre.",
+            "Dans une grande po\u00eale, faire fondre la moiti\u00e9 du beurre \u00e0 feu moyen-vif. Faire dorer le boeuf en plusieurs fois; retirer et r\u00e9server.",
+            "Faire fondre le reste du beurre dans la po\u00eale. Ajouter les oignons et les champignons, cuire jusqu'\u00e0 ce qu'ils soient tendres et dor\u00e9s.",
             "Ajouter l'ail et cuire 1 minute de plus.",
-            "Saupoudrer la farine sur les légumes et cuire en remuant pendant 1 minute.",
-            "Incorporer graduellement le bouillon de boeuf au fouet jusqu'à consistance lisse. Porter à frémissement en grattant les sucs.",
-            "Réduire le feu à doux. Incorporer la crème aigre et la moutarde de Dijon. Ne pas faire bouillir.",
-            "Remettre le boeuf dans la poêle et réchauffer.",
-            "Servir immédiatement sur des nouilles aux oeufs cuites ou du riz."
+            "Saupoudrer la farine sur les l\u00e9gumes et cuire en remuant pendant 1 minute.",
+            "Incorporer graduellement le bouillon de boeuf au fouet jusqu'\u00e0 consistance lisse. Porter \u00e0 fr\u00e9missement en grattant les sucs.",
+            "R\u00e9duire le feu \u00e0 doux. Incorporer la cr\u00e8me aigre et la moutarde de Dijon. Ne pas faire bouillir.",
+            "Remettre le boeuf dans la po\u00eale et r\u00e9chauffer.",
+            "Servir imm\u00e9diatement sur des nouilles aux oeufs cuites ou du riz."
         ],
         "timers": [
             "1",
@@ -1214,7 +1208,7 @@
             "2",
             "0"
         ],
-        "imageURL": "https://img.cuisineaz.com/660x660/2022/07/05/i184567-boeuf-stroganoff.jpeg",
+        "imageURL": "https:\/\/img.cuisineaz.com\/660x660\/2022\/07\/05\/i184567-boeuf-stroganoff.jpeg",
         "originalURL": "#",
         "likes": [],
         "comments": [],
@@ -1258,7 +1252,7 @@
                 "type": "Meat"
             },
             {
-                "quantity": "1/2",
+                "quantity": "1\/2",
                 "name": "onion, finely chopped (optional)",
                 "type": "Produce"
             },
@@ -1305,7 +1299,7 @@
                 "type": ""
             },
             {
-                "quantity": "1/2",
+                "quantity": "1\/2",
                 "name": "",
                 "type": ""
             },
@@ -1322,7 +1316,7 @@
         ],
         "steps": [
             "Ensure all boiled ingredients (potatoes, carrots, eggs) are completely cooled.",
-            "In a large bowl, combine diced potatoes, carrots, eggs, pickles, peas, and chicken/ham.",
+            "In a large bowl, combine diced potatoes, carrots, eggs, pickles, peas, and chicken\/ham.",
             "Add chopped onion, if using.",
             "Gently fold in the mayonnaise until all ingredients are coated.",
             "Season with salt and pepper to taste.",
@@ -1343,7 +1337,7 @@
             "1",
             "30"
         ],
-        "imageURL": "https://img1.russianfood.com/dycontent/images_upl/371/big_370825.jpg",
+        "imageURL": "https:\/\/img1.russianfood.com\/dycontent\/images_upl\/371\/big_370825.jpg",
         "originalURL": "#",
         "likes": [
             "admin"
@@ -1371,12 +1365,12 @@
                 "type": "Produce"
             },
             {
-                "quantity": "1/2 cup",
+                "quantity": "1\/2 cup",
                 "name": "vinegar (white or cider)",
                 "type": "Condiments"
             },
             {
-                "quantity": "1/4 cup",
+                "quantity": "1\/4 cup",
                 "name": "vegetable oil",
                 "type": "Condiments"
             },
@@ -1423,7 +1417,7 @@
             "12",
             "0"
         ],
-        "imageURL": "https://butteroverbae.com/wp-content/uploads/2023/07/chicken-shashlik-dry-recipe-card.jpg",
+        "imageURL": "https:\/\/butteroverbae.com\/wp-content\/uploads\/2023\/07\/chicken-shashlik-dry-recipe-card.jpg",
         "originalURL": "#",
         "likes": [],
         "comments": [
@@ -1486,7 +1480,7 @@
             {
                 "quantity": "for frying",
                 "name": "vegetable oil or butter",
-                "type": "Condiments/Dairy"
+                "type": "Condiments\/Dairy"
             }
         ],
         "ingredientsFR": [],
@@ -1494,7 +1488,7 @@
             "In a bowl, combine tvorog, egg, sugar, vanilla extract, and salt. Mix well.",
             "Gradually add flour, mixing until a soft dough forms. It might be slightly sticky.",
             "Dust your hands and a work surface with flour.",
-            "Take spoonfuls of the dough, roll into balls, then flatten into small, thick pancakes (about 1/2 inch thick).",
+            "Take spoonfuls of the dough, roll into balls, then flatten into small, thick pancakes (about 1\/2 inch thick).",
             "Heat oil or butter in a frying pan over medium heat.",
             "Carefully place syrniki in the hot pan (do not overcrowd).",
             "Fry for 3-5 minutes per side, until golden brown and cooked through.",
@@ -1511,7 +1505,7 @@
             "4",
             "0"
         ],
-        "imageURL": "https://www.havocinthekitchen.com/wp-content/uploads/2022/02/Syrniki-2-1.jpg",
+        "imageURL": "https:\/\/www.havocinthekitchen.com\/wp-content\/uploads\/2022\/02\/Syrniki-2-1.jpg",
         "originalURL": "#",
         "likes": [
             "admin",
@@ -1548,12 +1542,12 @@
                 "type": "Produce"
             },
             {
-                "quantity": "1/2 bunch",
+                "quantity": "1\/2 bunch",
                 "name": "green onions, chopped",
                 "type": "Produce"
             },
             {
-                "quantity": "1/2 bunch",
+                "quantity": "1\/2 bunch",
                 "name": "fresh dill, chopped",
                 "type": "Produce"
             },
@@ -1565,7 +1559,7 @@
             {
                 "quantity": "4 cups",
                 "name": "kvass or kefir",
-                "type": "Drinks/Dairy"
+                "type": "Drinks\/Dairy"
             },
             {
                 "quantity": "to taste",
@@ -1575,7 +1569,7 @@
             {
                 "quantity": "for serving",
                 "name": "sour cream, mustard (optional)",
-                "type": "Dairy/Condiments"
+                "type": "Dairy\/Condiments"
             }
         ],
         "ingredientsFR": [],
@@ -1596,7 +1590,7 @@
             "1",
             "0"
         ],
-        "imageURL": "https://www.mariaushakova.com/wp-content/uploads/2020/07/Okroshka-740-735x735.jpg",
+        "imageURL": "https:\/\/www.mariaushakova.com\/wp-content\/uploads\/2020\/07\/Okroshka-740-735x735.jpg",
         "originalURL": "#",
         "likes": [],
         "comments": [],
@@ -1611,7 +1605,7 @@
         "ingredients": [
             {
                 "quantity": "For Dough:",
-                "name": "basic yeast dough recipe (flour, yeast, water/milk, sugar, salt, oil/butter)",
+                "name": "basic yeast dough recipe (flour, yeast, water\/milk, sugar, salt, oil\/butter)",
                 "type": "Baking"
             },
             {
@@ -1634,7 +1628,7 @@
             "Place a spoonful of filling in the center of each circle.",
             "Fold the dough over the filling, pinching the edges firmly to seal, forming an oval or round bun.",
             "Place pirozhki seam-side down on a baking sheet (for baking) or prepare for frying.",
-            "If baking, let rise again for 20-30 minutes, brush with egg wash, and bake at 375°F (190°C) until golden brown (15-20 min).",
+            "If baking, let rise again for 20-30 minutes, brush with egg wash, and bake at 375\u00b0F (190\u00b0C) until golden brown (15-20 min).",
             "If frying, heat oil in a pan and fry pirozhki until golden brown on both sides."
         ],
         "stepsFR": [],
@@ -1649,7 +1643,7 @@
             "25",
             "10"
         ],
-        "imageURL": "https://img1.russianfood.com/dycontent/images_upl/467/big_466730.jpg",
+        "imageURL": "https:\/\/img1.russianfood.com\/dycontent\/images_upl\/467\/big_466730.jpg",
         "originalURL": "#",
         "likes": [
             "admin"
@@ -1685,7 +1679,7 @@
                 "type": "Condiments"
             },
             {
-                "quantity": "1/2 cup",
+                "quantity": "1\/2 cup",
                 "name": "pitted olives (green or black), sliced",
                 "type": "Produce"
             },
@@ -1702,17 +1696,17 @@
             {
                 "quantity": "1 tbsp",
                 "name": "butter or oil",
-                "type": "Dairy/Condiments"
+                "type": "Dairy\/Condiments"
             },
             {
                 "quantity": "for serving",
                 "name": "lemon slices, sour cream, fresh dill",
-                "type": "Produce/Dairy"
+                "type": "Produce\/Dairy"
             }
         ],
         "ingredientsFR": [],
         "steps": [
-            "In a large pot or Dutch oven, melt butter/oil over medium heat. Sauté onions until translucent.",
+            "In a large pot or Dutch oven, melt butter\/oil over medium heat. Saut\u00e9 onions until translucent.",
             "Add the chopped mixed meats and cook for a few minutes.",
             "Stir in the chopped pickles, capers, olives, and tomato paste. Cook for 2 minutes, stirring constantly.",
             "Pour in the broth and bring the soup to a boil.",
@@ -1730,7 +1724,7 @@
             "1",
             "0"
         ],
-        "imageURL": "https://cdn.lifehacker.ru/wp-content/uploads/2020/06/6_1592925463-scaled.jpg",
+        "imageURL": "https:\/\/cdn.lifehacker.ru\/wp-content\/uploads\/2020\/06\/6_1592925463-scaled.jpg",
         "originalURL": "#",
         "likes": [],
         "comments": [],
@@ -1765,12 +1759,12 @@
             },
             {
                 "quantity": "8 oz",
-                "name": "mushrooms, sliced and sautéed",
+                "name": "mushrooms, sliced and saut\u00e9ed",
                 "type": "Produce"
             },
             {
                 "quantity": "1",
-                "name": "onion, finely chopped and sautéed",
+                "name": "onion, finely chopped and saut\u00e9ed",
                 "type": "Produce"
             },
             {
@@ -1791,13 +1785,13 @@
         ],
         "ingredientsFR": [],
         "steps": [
-            "Preheat oven to 400°F (200°C). Season salmon fillet with salt and pepper.",
+            "Preheat oven to 400\u00b0F (200\u00b0C). Season salmon fillet with salt and pepper.",
             "Roll out the pastry dough into a large rectangle on a lightly floured surface.",
-            "Place half of the cooked rice/buckwheat mixture down the center third of the dough.",
+            "Place half of the cooked rice\/buckwheat mixture down the center third of the dough.",
             "Layer sliced eggs over the rice.",
             "Place the salmon fillet on top of the eggs.",
-            "Mix sautéed mushrooms, onions, and dill. Spread this mixture over the salmon.",
-            "Top with the remaining rice/buckwheat.",
+            "Mix saut\u00e9ed mushrooms, onions, and dill. Spread this mixture over the salmon.",
+            "Top with the remaining rice\/buckwheat.",
             "Fold the sides of the dough over the filling, overlapping slightly. Trim excess dough. Pinch ends to seal.",
             "Carefully transfer the pie to a baking sheet, seam-side down. Cut a few slits in the top for steam to escape.",
             "Brush the entire surface with the beaten egg wash.",
@@ -1819,7 +1813,7 @@
             "30",
             "5"
         ],
-        "imageURL": "https://img.taste.com.au/PigbcPTP/taste/2016/11/kulebyaka-48834-1.jpeg",
+        "imageURL": "https:\/\/img.taste.com.au\/PigbcPTP\/taste\/2016\/11\/kulebyaka-48834-1.jpeg",
         "originalURL": "#",
         "likes": [
             "chef"
@@ -1859,7 +1853,7 @@
         "timers": [
             "15"
         ],
-        "imageURL": "https://e1.edimdoma.ru/data/photos/0026/3442/263442-ed4_wide.jpg?1628760955",
+        "imageURL": "https:\/\/e1.edimdoma.ru\/data\/photos\/0026\/3442\/263442-ed4_wide.jpg?1628760955",
         "originalURL": "",
         "likes": [],
         "comments": [],

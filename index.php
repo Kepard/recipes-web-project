@@ -1,13 +1,18 @@
 <?php
-    // Start session only if not already started
+    /**
+     * Page d'accueil principale : Affiche la liste des recettes (cartes).
+     * Inclut une barre de recherche et gère l'affichage initial.
+     */
+
+    // Démarrage session si nécessaire
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
-    // Get username from session, default to empty string if not set
+    // Récupère infos utilisateur connecté (ou null si non connecté)
     $username = $_SESSION['username'] ?? '';
-    $role = $_SESSION['role'] ?? ''; // Also get role if needed
+    $role = $_SESSION['role'] ?? ''; // Récupère aussi le rôle
 
-    // Define page content
+    // Contenu HTML de base de la page (barre recherche + conteneur grille recettes)
     $content = '
     <div class="search-container">
         <input type="text" id="search-input" placeholder="Search recipes..." data-translate="labels.search_placeholder">
@@ -15,79 +20,104 @@
     </div>
 
     <div class="grid-container" id="recipe-grid">
-        
-        <p id="loading-message">Loading recipes...</p> 
+        <p id="loading-message">Loading recipes...</p>
     </div>
     ';
 
-    $title = "Recettes de Mamie"; // Set page title
-    include 'header.php'; // Include header AFTER setting content
+    // Titre de la page HTML
+    $title = "Croissant Gastronomy";
+    // Inclusion de l'en-tête (qui affichera $content et $title)
+    include 'header.php';
 ?>
 
 <script>
-// Global variables for recipes and translations
-let allRecipes = [];
-let currentUser = <?php echo json_encode($username); ?>; // Get username from PHP
+// Variables globales pour stocker toutes les recettes chargées et l'utilisateur courant
+let allRecipes = []; // Tableau pour stocker toutes les recettes du JSON
+let currentUser = <?php echo json_encode($username); ?>; // Passe le nom d'utilisateur PHP au JS
 
-// This function is called by header.php after translations are loaded
+/**
+ * Fonction appelée par header.php après chargement des traductions.
+ * Charge les recettes via AJAX et initialise l'affichage et les interactions.
+ * @param {object} translations - Traductions pour la langue courante.
+ * @param {string} lang - Code langue ('fr' ou 'en').
+ */
 function initializePageContent(translations, lang) {
-    currentTranslations = translations; // Store translations globally for this page
-    const gridContainer = $("#recipe-grid");
-    const loadingMessage = $("#loading-message");
+    // Stocke les traductions pour usage global dans ce script
+    currentTranslations = translations;
+    const gridContainer = $("#recipe-grid"); // Conteneur pour les cartes recettes
+    const loadingMessage = $("#loading-message"); // Message "Chargement..."
 
-    gridContainer.empty().append(loadingMessage); // Clear grid and show loading message
+    // Vide la grille et affiche le message de chargement
+    gridContainer.empty().append(loadingMessage);
 
-    // Load recipes using AJAX with cache busting
+    // Charge les recettes depuis recipes.json via AJAX (avec cache busting)
     $.getJSON("recipes.json?v=" + Date.now(), function (recipes) {
 
-        console.log("Recipes loaded successfully."); // Message de succès pour le debug
+        // console.log("Recipes loaded successfully.");
+
+        // S'assure que 'recipes' est un tableau
+        allRecipes = Array.isArray(recipes) ? recipes : Object.values(recipes);
+
+        // Cache le message de chargement
         loadingMessage.hide();
+
+        // Affiche initialement toutes les recettes *validées*
         displayRecipes(allRecipes, lang);
 
-        // Ensure recipes is an array
-        allRecipes = Array.isArray(recipes) ? recipes : Object.values(recipes);
-        loadingMessage.hide(); // Hide loading message
-        displayRecipes(allRecipes, lang); // Display all validated recipes initially
-        setupSearch(); // Setup search functionality
-        setupLikeButtons(); // Setup like button listeners
+        // Met en place la fonctionnalité de recherche
+        setupSearch();
+        // Met en place la fonctionnalité des boutons "Like"
+        setupLikeButtons();
+
     });
 };
 
+/**
+ * Affiche les recettes fournies dans la grille.
+ * Filtre pour ne montrer que les recettes validées.
+ * @param {array} recipesToDisplay - Tableau des recettes à potentiellement afficher.
+ * @param {string} lang - Code langue ('fr' ou 'en').
+ */
 function displayRecipes(recipesToDisplay, lang) {
     const gridContainer = $("#recipe-grid");
-    gridContainer.empty(); // Clear previous recipes
+    gridContainer.empty(); // Vide la grille avant d'ajouter les nouvelles cartes
 
-    // Filter for validated recipes only
+    // Filtre pour ne garder que les recettes validées (validated === 1)
     const validatedRecipes = recipesToDisplay.filter(recipe => recipe && recipe.validated === 1);
 
+    // Si aucune recette validée (ou après filtrage), affiche un message
     if (validatedRecipes.length === 0) {
         gridContainer.html(`<p class="message info">${currentTranslations.messages.no_recipes_found}</p>`);
-        return;
+        return; // Arrête la fonction
     }
 
-    // Build and append recipe cards
+    // Pour chaque recette validée, crée et ajoute une carte HTML
     validatedRecipes.forEach(recipe => {
+        // Choix du nom selon la langue
         const recipeName = lang === "fr" && recipe.nameFR ? recipe.nameFR : recipe.name;
-        // Defensive check for likes array
+        // Sécurité : vérifie que likes/comments sont des tableaux
         const likesArray = Array.isArray(recipe.likes) ? recipe.likes : [];
         const commentsArray = Array.isArray(recipe.comments) ? recipe.comments : [];
 
+        // Détermine si l'utilisateur actuel a liké cette recette
         const hasLiked = currentUser && likesArray.includes(currentUser);
-        const likedClass = hasLiked ? 'liked' : '';
+        const likedClass = hasLiked ? 'liked' : ''; // Classe CSS pour le bouton like
 
-        // Calculate total time safely
+        // Calcul du temps total (sécurisé)
         let totalTime = 0;
         if (Array.isArray(recipe.timers)) {
             totalTime = recipe.timers.reduce((sum, timer) => sum + (parseInt(timer, 10) || 0), 0);
         }
 
-        // Dietary restrictions - join if array, else show default
-         const restrictions = Array.isArray(recipe.Without) && recipe.Without.length > 0 ? recipe.Without.join(", ") : (currentTranslations.labels.none);
+        // Affichage des restrictions (texte simple ici, pourrait être les icônes)
+        const restrictions = Array.isArray(recipe.Without) && recipe.Without.length > 0
+            ? recipe.Without.join(", ") // Liste séparée par virgules
+            : (currentTranslations.labels.none); // Texte "None" traduit si vide
 
-
+        // Construction de la carte HTML
         const card = `
             <div class="recipe-card">
-                <a href="recipe.php?id=${recipe.id}">
+                <a href="recipe.php?id=${recipe.id}"> 
                     <img src="${recipe.imageURL || 'placeholder.png'}" alt="${recipeName}" onerror="this.onerror=null;this.src='placeholder.png';">
                     <div class="content">
                         <h2>${recipeName}</h2>
@@ -104,125 +134,125 @@ function displayRecipes(recipesToDisplay, lang) {
                 </div>
             </div>
         `;
+        // Ajoute la carte construite à la grille
         gridContainer.append(card);
     });
 }
 
+/**
+ * Met en place les écouteurs d'événements pour la barre de recherche
+ * (bouton + touche Entrée).
+ */
 function setupSearch() {
-    $('#search-button').off('click').on('click', performSearch); // Use .off().on() to prevent multiple bindings
+    // Attache l'événement au clic sur le bouton (évite doublons avec .off().on())
+    $('#search-button').off('click').on('click', performSearch);
+    // Attache l'événement à la pression de touche dans l'input (évite doublons)
     $('#search-input').off('keypress').on('keypress', function(e) {
-        if (e.which === 13) { // Enter key
-            performSearch();
+        if (e.which === 13) { // Si la touche est "Entrée"
+            performSearch(); // Lance la recherche
         }
     });
 }
 
+/**
+ * Exécute la recherche de recettes basée sur le terme entré.
+ * Filtre `allRecipes` et appelle `displayRecipes` avec les résultats.
+ */
 function performSearch() {
+    // Récupère le terme de recherche, le met en minuscule et enlève les espaces superflus
     const searchTerm = $('#search-input').val().toLowerCase().trim();
+    // Récupère la langue actuelle pour l'affichage des résultats
     const currentLang = localStorage.getItem("lang") || "fr";
 
-    // If search term is empty, show all validated recipes
+    // Si la recherche est vide, affiche toutes les recettes validées
     if (!searchTerm) {
         displayRecipes(allRecipes, currentLang);
         return;
     }
 
+    // Filtre le tableau `allRecipes`
     const filteredRecipes = allRecipes.filter(recipe => {
-        if (!recipe) return false; // Skip invalid recipe entries
+        // Ignore les entrées potentiellement invalides dans le JSON
+        if (!recipe) return false;
 
-        // Check name (both languages, case-insensitive)
+        // Vérifie si le terme est inclus (insensible à la casse) dans :
+        // Nom (FR/EN)
         const nameMatch = (recipe.name && recipe.name.toLowerCase().includes(searchTerm)) ||
                          (recipe.nameFR && recipe.nameFR.toLowerCase().includes(searchTerm));
-
-        // Check author (case-insensitive)
+        // Auteur
         const authorMatch = recipe.Author && recipe.Author.toLowerCase().includes(searchTerm);
-
-        // Check ingredients (handle array of objects, check name in both languages)
+        // Ingrédients EN (nom)
         const ingredientsMatch = Array.isArray(recipe.ingredients) && recipe.ingredients.some(ingredient => {
-            if (typeof ingredient === 'object' && ingredient !== null) {
-                return (ingredient.name && ingredient.name.toLowerCase().includes(searchTerm)) ||
-                       (ingredient.nameFR && ingredient.nameFR.toLowerCase().includes(searchTerm)); // Check French name too if exists
-            } else if (typeof ingredient === 'string') {
-                return ingredient.toLowerCase().includes(searchTerm); // Handle simple string ingredients if they exist
+            if (typeof ingredient === 'object' && ingredient !== null) { // Vérifie si c'est un objet {name, quantity...}
+                return (ingredient.name && ingredient.name.toLowerCase().includes(searchTerm));
+                       // Note : la recherche sur ingredient.nameFR est redondante si ingredientsFRMatch est fait ensuite
+            } else if (typeof ingredient === 'string') { // Gère le cas où c'est juste une chaîne
+                return ingredient.toLowerCase().includes(searchTerm);
             }
             return false;
         });
-         // Check French ingredients too
+         // Ingrédients FR (nom)
         const ingredientsFRMatch = Array.isArray(recipe.ingredientsFR) && recipe.ingredientsFR.some(ingredient => {
             if (typeof ingredient === 'object' && ingredient !== null) {
-                return (ingredient.name && ingredient.name.toLowerCase().includes(searchTerm)); // Only need to check French name here
+                return (ingredient.name && ingredient.name.toLowerCase().includes(searchTerm));
             }
             return false;
         });
-
-
-        // Check steps (both languages, case-insensitive)
+        // Étapes (FR/EN)
         const stepsMatch = (Array.isArray(recipe.steps) && recipe.steps.some(step => typeof step === 'string' && step.toLowerCase().includes(searchTerm))) ||
                           (Array.isArray(recipe.stepsFR) && recipe.stepsFR.some(step => typeof step === 'string' && step.toLowerCase().includes(searchTerm)));
-
-        // Check dietary restrictions (case-insensitive)
+        // Restrictions (éléments du tableau Without)
         const restrictionsMatch = Array.isArray(recipe.Without) &&
                                recipe.Without.some(restriction => typeof restriction === 'string' && restriction.toLowerCase().includes(searchTerm));
 
+        // Retourne true si AU MOINS UN des critères correspond
         return nameMatch || authorMatch || ingredientsMatch || ingredientsFRMatch || stepsMatch || restrictionsMatch;
     });
 
-    // Display only validated recipes from the filtered results
-    const validatedResults = filteredRecipes.filter(recipe => recipe.validated === 1);
-    displayRecipes(validatedResults, currentLang);
+    // Affiche les résultats filtrés (qui seront re-filtrés par displayRecipes pour ne garder que les validés)
+    displayRecipes(filteredRecipes, currentLang);
 }
 
+/**
+ * Met en place les écouteurs d'événements pour les boutons "Like" sur les cartes.
+ * Utilise la délégation d'événements car les cartes sont ajoutées dynamiquement.
+ */
 function setupLikeButtons() {
-    // Use event delegation for like buttons added dynamically
+    // Attache l'événement 'click' au conteneur '#recipe-grid', mais ne réagit
+    // que si l'élément cliqué a la classe '.like-button'.
     $('#recipe-grid').off('click', '.like-button').on('click', '.like-button', function() {
+        // Récupère l'ID de la recette depuis l'attribut data-recipe-id du bouton
         const recipeId = $(this).data('recipe-id');
-        const $button = $(this); // Reference the clicked button
+        const $button = $(this); // Référence au bouton cliqué
 
-        // Check if user is logged in
+        // Vérifie si l'utilisateur est connecté
         if (!currentUser) {
-             showMessage(currentTranslations.messages.login_to_like, 'error');
-             return;
+             showMessage(currentTranslations.messages.login_to_like, 'error'); // Message d'erreur
+             return; // Arrête
         }
 
-        // Disable button temporarily to prevent double-clicks
+        // Désactive temporairement le bouton
         $button.prop('disabled', true);
 
+        // Appel AJAX vers like_recipe.php
         $.ajax({
             url: 'like_recipe.php',
             method: 'POST',
-            data: { id: recipeId },
-            dataType: 'json',
-            success: function(response) {
+            data: { id: recipeId }, // Envoie l'ID
+            dataType: 'json', // Attend du JSON
+            success: function(response) { // Si succès
                 if (response.success) {
-                    // Update button appearance
-                    $button.toggleClass('liked', response.action === 'liked'); // Add/remove 'liked' class based on action
-
-                    // Update like count using the count from the response
+                    // Met à jour l'apparence du bouton (classe 'liked')
+                    $button.toggleClass('liked', response.action === 'liked');
+                    // Met à jour le compteur de likes
                     const likeCount = response.likeCount !== undefined ? response.likeCount : 0;
                     $button.find('.like-count').text(likeCount);
-
-                     // Update the like status in the global allRecipes array (optional but good for consistency)
-                     const recipeIndex = allRecipes.findIndex(r => r && r.id == recipeId);
-                     if (recipeIndex > -1) {
-                         if (!Array.isArray(allRecipes[recipeIndex].likes)) {
-                             allRecipes[recipeIndex].likes = [];
-                         }
-                         if (response.action === 'liked') {
-                              if (!allRecipes[recipeIndex].likes.includes(currentUser)) {
-                                 allRecipes[recipeIndex].likes.push(currentUser);
-                              }
-                         } else { // unliked
-                             const userIndex = allRecipes[recipeIndex].likes.indexOf(currentUser);
-                             if (userIndex > -1) {
-                                 allRecipes[recipeIndex].likes.splice(userIndex, 1);
-                             }
-                         }
-                     }
-
                 }
+                // Pas de gestion d'erreur explicite ici si response.success est false
             },
-            complete: function() {
-                 // Re-enable button after request completes (success or error)
+            // Pas de .fail() ici
+            complete: function() { // Après succès ou échec
+                 // Réactive le bouton
                  $button.prop('disabled', false);
             }
         });

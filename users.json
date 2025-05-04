@@ -1,1 +1,18 @@
-{"admin":{"password":"$2y$10$KIQA6K3TjqwFzNumb8AVzuoQYGuwxpClA1Tuqplw5x\/7PjSwHsEPa","role":"Administrateur"},"trad":{"password":"$2y$10$eSKwj9w9oMektLPN1Ky5zOpj.JlqrR6s2eeX81CmQ0.gIca\/Zz6TO","role":"Traducteur"},"chef":{"password":"$2y$10$RzkVMN1pvulSLu.4XLMDkub2OcvNE.5S1AMDXciP76D9edA9LeB5u","role":"Chef"},"Bogdan":{"password":"$2y$10$tzbhCbEB3Noq76WuwqIOm.s0wArzN1kGjNVNkXLJ8KRYcP9eKePqy","role":"DemandeTraducteur"}}
+{
+    "admin": {
+        "password": "$2y$10$KIQA6K3TjqwFzNumb8AVzuoQYGuwxpClA1Tuqplw5x\/7PjSwHsEPa",
+        "role": "Administrateur"
+    },
+    "trad": {
+        "password": "$2y$10$eSKwj9w9oMektLPN1Ky5zOpj.JlqrR6s2eeX81CmQ0.gIca\/Zz6TO",
+        "role": "Traducteur"
+    },
+    "chef": {
+        "password": "$2y$10$RzkVMN1pvulSLu.4XLMDkub2OcvNE.5S1AMDXciP76D9edA9LeB5u",
+        "role": "Chef"
+    },
+    "Bogdan": {
+        "password": "$2y$10$hmsIbAQ83.QQC5EFJX3XIOtfOAwpu02KpAAZM50LdYnM1f9zqb\/L.",
+        "role": "Cuisinier"
+    }
+}

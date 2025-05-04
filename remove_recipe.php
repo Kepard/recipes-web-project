@@ -25,11 +25,12 @@ foreach ($recipes as $key => $recipe) {
 // Reindex array (optional, removes gaps in array keys)
 $recipes = array_values($recipes);
 
-// Save back to file
+
 file_put_contents($recipesFile, json_encode($recipes, JSON_PRETTY_PRINT));
 
 // Envoyer un message de success au AJAX
 echo json_encode(['success' => true]);
 
+// Rediriger vers l'index
 header('Location: index.php');
 exit;

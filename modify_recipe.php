@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // Get recipe ID from URL and validate
-$recipeId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+$recipeId = (int) $_GET['id'];
 
 // Check if user is logged in
 if (!isset($_SESSION['username'])) {
@@ -109,14 +109,15 @@ function generateDynamicFields($data, $type, $lang = '') {
 
     if (!empty($data) && is_array($data)) {
         foreach ($data as $index => $item) {
-            $removeButton = '<button type="button" class="remove-field button button-danger">×</button>';
-            $fieldContent = '';
+        // Ajoute l'attribut data-sync-type basé sur le $type ('ingredients', 'steps', 'timers')
+        $syncType = ($type === 'ingredients' || $type === 'steps') ? strtolower(rtrim($type, 's')) : 'timer'; // Simplifie 'ingredients'->'ingredient', 'steps'->'step', 'timers'->'timer'
+        $removeButton = '<button type="button" class="remove-field button button-danger" data-sync-type="' . $syncType . '">×</button>';            $fieldContent = '';
 
             if ($type === 'ingredients') {
                  $item = (array) $item; // Ensure item is an array
                  $quantity = htmlspecialchars($item['quantity'] ?? '');
                  $name = htmlspecialchars($item['name'] ?? '');
-                 $ftype = htmlspecialchars($item['type'] ?? ''); // 'type' is a reserved word, use $ftype
+                 $type = htmlspecialchars($item['type'] ?? ''); 
                  $placeholderQty = ($lang === 'FR' ? 'Quantité' : 'Quantity');
                  $placeholderName = ($lang === 'FR' ? 'Nom ingrédient' : 'Ingredient Name');
                  $placeholderType = ($lang === 'FR' ? 'Type' : 'Type');
@@ -125,7 +126,7 @@ function generateDynamicFields($data, $type, $lang = '') {
                     <div class="ingredient">
                         <input type="text" name="' . $namePrefix . '[' . $index . '][quantity]" value="' . $quantity . '" placeholder="'.$placeholderQty.'">
                         <input type="text" name="' . $namePrefix . '[' . $index . '][name]" value="' . $name . '" placeholder="'.$placeholderName.'">
-                        <input type="text" name="' . $namePrefix . '[' . $index . '][type]" value="' . $ftype . '" placeholder="'.$placeholderType.'">
+                        <input type="text" name="' . $namePrefix . '[' . $index . '][type]" value="' . $type . '" placeholder="'.$placeholderType.'">
                     </div>';
             } elseif ($type === 'steps') {
                 $stepText = htmlspecialchars($item ?? '');
