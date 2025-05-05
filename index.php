@@ -38,8 +38,6 @@ let currentUser = <?php echo json_encode($username); ?>; // Passe le nom d'utili
 /**
  * Fonction appelée par header.php après chargement des traductions.
  * Charge les recettes via AJAX et initialise l'affichage et les interactions.
- * @param {object} translations - Traductions pour la langue courante.
- * @param {string} lang - Code langue ('fr' ou 'en').
  */
 function initializePageContent(translations, lang) {
     // Stocke les traductions pour usage global dans ce script
@@ -55,8 +53,7 @@ function initializePageContent(translations, lang) {
 
         // console.log("Recipes loaded successfully.");
 
-        // S'assure que 'recipes' est un tableau
-        allRecipes = Array.isArray(recipes) ? recipes : Object.values(recipes);
+        allRecipes = recipes; // Stocke les recettes dans la variable globale pour eviter de appeler getJSON a chaque fois
 
         // Cache le message de chargement
         loadingMessage.hide();
@@ -75,15 +72,13 @@ function initializePageContent(translations, lang) {
 /**
  * Affiche les recettes fournies dans la grille.
  * Filtre pour ne montrer que les recettes validées.
- * @param {array} recipesToDisplay - Tableau des recettes à potentiellement afficher.
- * @param {string} lang - Code langue ('fr' ou 'en').
  */
 function displayRecipes(recipesToDisplay, lang) {
     const gridContainer = $("#recipe-grid");
     gridContainer.empty(); // Vide la grille avant d'ajouter les nouvelles cartes
 
     // Filtre pour ne garder que les recettes validées (validated === 1)
-    const validatedRecipes = recipesToDisplay.filter(recipe => recipe && recipe.validated === 1);
+    const validatedRecipes = recipesToDisplay.filter(recipe => recipe.validated === 1);
 
     // Si aucune recette validée (ou après filtrage), affiche un message
     if (validatedRecipes.length === 0) {
@@ -96,21 +91,19 @@ function displayRecipes(recipesToDisplay, lang) {
         // Choix du nom selon la langue
         const recipeName = lang === "fr" && recipe.nameFR ? recipe.nameFR : recipe.name;
         // Sécurité : vérifie que likes/comments sont des tableaux
-        const likesArray = Array.isArray(recipe.likes) ? recipe.likes : [];
-        const commentsArray = Array.isArray(recipe.comments) ? recipe.comments : [];
+        const likesArray = recipe.likes;
+        const commentsArray = recipe.comments;
 
         // Détermine si l'utilisateur actuel a liké cette recette
         const hasLiked = currentUser && likesArray.includes(currentUser);
         const likedClass = hasLiked ? 'liked' : ''; // Classe CSS pour le bouton like
 
-        // Calcul du temps total (sécurisé)
-        let totalTime = 0;
-        if (Array.isArray(recipe.timers)) {
-            totalTime = recipe.timers.reduce((sum, timer) => sum + (parseInt(timer, 10) || 0), 0);
-        }
+        // Calcul du temps total 
+        let totalTime = recipe.timers.reduce((sum, timer) => sum + (parseInt(timer, 10) || 0), 0);
+        
 
         // Affichage des restrictions (texte simple ici, pourrait être les icônes)
-        const restrictions = Array.isArray(recipe.Without) && recipe.Without.length > 0
+        const restrictions = recipe.Without.length > 0
             ? recipe.Without.join(", ") // Liste séparée par virgules
             : (currentTranslations.labels.none); // Texte "None" traduit si vide
 
@@ -172,9 +165,6 @@ function performSearch() {
 
     // Filtre le tableau `allRecipes`
     const filteredRecipes = allRecipes.filter(recipe => {
-        // Ignore les entrées potentiellement invalides dans le JSON
-        if (!recipe) return false;
-
         // Vérifie si le terme est inclus (insensible à la casse) dans :
         // Nom (FR/EN)
         const nameMatch = (recipe.name && recipe.name.toLowerCase().includes(searchTerm)) ||
@@ -182,28 +172,25 @@ function performSearch() {
         // Auteur
         const authorMatch = recipe.Author && recipe.Author.toLowerCase().includes(searchTerm);
         // Ingrédients EN (nom)
-        const ingredientsMatch = Array.isArray(recipe.ingredients) && recipe.ingredients.some(ingredient => {
-            if (typeof ingredient === 'object' && ingredient !== null) { // Vérifie si c'est un objet {name, quantity...}
+        const ingredientsMatch = recipe.ingredients.some(ingredient => {
+            if (ingredient !== null) { 
                 return (ingredient.name && ingredient.name.toLowerCase().includes(searchTerm));
-                       // Note : la recherche sur ingredient.nameFR est redondante si ingredientsFRMatch est fait ensuite
-            } else if (typeof ingredient === 'string') { // Gère le cas où c'est juste une chaîne
-                return ingredient.toLowerCase().includes(searchTerm);
-            }
+                       
+            } 
             return false;
         });
          // Ingrédients FR (nom)
-        const ingredientsFRMatch = Array.isArray(recipe.ingredientsFR) && recipe.ingredientsFR.some(ingredient => {
-            if (typeof ingredient === 'object' && ingredient !== null) {
+        const ingredientsFRMatch = recipe.ingredientsFR.some(ingredient => {
+            if (ingredient !== null) {
                 return (ingredient.name && ingredient.name.toLowerCase().includes(searchTerm));
             }
             return false;
         });
         // Étapes (FR/EN)
-        const stepsMatch = (Array.isArray(recipe.steps) && recipe.steps.some(step => typeof step === 'string' && step.toLowerCase().includes(searchTerm))) ||
-                          (Array.isArray(recipe.stepsFR) && recipe.stepsFR.some(step => typeof step === 'string' && step.toLowerCase().includes(searchTerm)));
+        const stepsMatch = (recipe.steps.some(step => step.toLowerCase().includes(searchTerm))) ||
+                          (recipe.stepsFR.some(step => step.toLowerCase().includes(searchTerm)));
         // Restrictions (éléments du tableau Without)
-        const restrictionsMatch = Array.isArray(recipe.Without) &&
-                               recipe.Without.some(restriction => typeof restriction === 'string' && restriction.toLowerCase().includes(searchTerm));
+        const restrictionsMatch = recipe.Without.some(restriction => restriction.toLowerCase().includes(searchTerm));
 
         // Retourne true si AU MOINS UN des critères correspond
         return nameMatch || authorMatch || ingredientsMatch || ingredientsFRMatch || stepsMatch || restrictionsMatch;
@@ -248,9 +235,7 @@ function setupLikeButtons() {
                     const likeCount = response.likeCount !== undefined ? response.likeCount : 0;
                     $button.find('.like-count').text(likeCount);
                 }
-                // Pas de gestion d'erreur explicite ici si response.success est false
             },
-            // Pas de .fail() ici
             complete: function() { // Après succès ou échec
                  // Réactive le bouton
                  $button.prop('disabled', false);

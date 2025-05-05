@@ -40,10 +40,8 @@ foreach ($recipes as &$recipe) {
     }
 }
 
-// Save updated recipes
 file_put_contents($recipesFile, json_encode($recipes, JSON_PRETTY_PRINT));
 
-// Return success response
 echo json_encode([
     'success' => true,
     'action' => $action,

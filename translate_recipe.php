@@ -6,7 +6,6 @@
  */
 
 // Démarrer la session seulement si aucune session n'est déjà active.
-// Essentiel pour accéder aux variables $_SESSION.
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -14,7 +13,6 @@ if (session_status() === PHP_SESSION_NONE) {
 // --- Récupération des informations nécessaires ---
 
 // Récupérer l'ID de la recette depuis les paramètres GET de l'URL.
-// Convertir en entier pour la cohérence.
 $recipeId = (int) $_GET['id']; 
 
 // Récupérer le nom d'utilisateur et le rôle de l'utilisateur actuellement connecté.
@@ -28,7 +26,7 @@ $currentRole = $_SESSION['role'] ?? null;
 if (!isset($currentUser)) {
     $_SESSION['flash_message'] = ['type' => 'error', 'key' => 'messages.login_required']; // Utilise une clé de traduction
     header('Location: index.php');
-    exit; // Toujours utiliser exit après une redirection header.
+    exit; 
 }
 
 // --- Chargement et validation de la recette ---
@@ -37,9 +35,7 @@ $recipesFile = 'recipes.json';
 $recipe = null;      // Contiendra les données de la recette à traduire.
 $recipeIndex = null; // Contiendra l'index (clé) de la recette dans le tableau $recipes.
 
-// Vérifier si le fichier de recettes existe.
-    $recipesData = file_get_contents($recipesFile);
-    $recipes = json_decode($recipesData, true);
+    $recipes = json_decode(file_get_contents($recipesFile), true);
     // Chercher la recette par son ID et récupérer son index.
     foreach ($recipes as $index => $r) {
         // Comparaison lâche (==) intentionnelle ici pour gérer les types mixtes potentiels.
@@ -51,7 +47,7 @@ $recipeIndex = null; // Contiendra l'index (clé) de la recette dans le tableau 
     }
     
 
-// Si la recette n'a pas été trouvée (ID invalide ou fichier corrompu/inexistant).
+// Si la recette n'a pas été trouvée 
 if ($recipe === null || $recipeIndex === null) {
     // Stocker un message d'erreur dans la session pour l'afficher après la redirection.
     $_SESSION['flash_message'] = ['type' => 'error', 'key' => 'messages.recipe_not_found'];
@@ -75,10 +71,8 @@ $canAccessPage = $isTranslator || $isAllowedEditor;
 
 // Si l'utilisateur n'a pas les droits suffisants pour accéder à cette page.
 if (!$canAccessPage) {
-    // Envoyer un statut HTTP 403 (Forbidden) et arrêter l'exécution.
     header('HTTP/1.1 403 Forbidden');
-    // Afficher un message simple (pourrait être une page d'erreur dédiée).
-    die('Access Denied. You do not have permission to translate this recipe.');
+    die();
 }
 
 // --- Fonctions Utilitaires ---
@@ -111,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // 1. Mettre à jour le nom français (NameFR)
     // Utilise htmlspecialchars pour prévenir les attaques XSS si cette donnée est réaffichée quelque part.
     $postedNameFR = trim(htmlspecialchars($_POST['nameFR'] ?? '', ENT_QUOTES, 'UTF-8'));
-    $recipe['nameFR'] = $postedNameFR; // Met à jour la variable $recipe (qui sera sauvegardée)
+    $recipe['nameFR'] = $postedNameFR;
 
     // 2. Mettre à jour les ingrédients français (IngredientsFR)
     if (isset($_POST['ingredientsFR'])) {
@@ -119,46 +113,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $originalIngredientsFR = $recipeBeforeUpdate['ingredientsFR'] ?? []; // Tableau FR avant modif (pour garder valeurs non modifiées)
         $newIngredientsFR = $recipe['ingredientsFR'] ?? []; // Tableau FR à mettre à jour
 
-        // Sécurité : S'assurer que le nombre d'ingrédients soumis correspond au nombre d'ingrédients EN.
-        // Empêche l'ajout/suppression d'ingrédients via ce formulaire (doit se faire via create/modify).
-        if (count($_POST['ingredientsFR']) === count($originalIngredients)) {
-            foreach ($_POST['ingredientsFR'] as $index => $postedIngredient) {
-                // Vérifier si l'index existe dans les ingrédients originaux EN.
-                if (!isset($originalIngredients[$index])) continue; // Passer à l'ingrédient suivant si incohérence
+        foreach ($_POST['ingredientsFR'] as $index => $postedIngredient) {
+            // Vérifier si l'index existe dans les ingrédients originaux EN.
+            if (!isset($originalIngredients[$index])) continue; // Passer à l'ingrédient suivant si incohérence
 
-                // Assurer que ce sont des tableaux pour éviter les erreurs.
-                $originalENIngredient = (array) $originalIngredients[$index];
-                $originalFRIngredient = (array) ($originalIngredientsFR[$index] ?? []); // Utiliser le FR d'avant ou un tableau vide
+            // Assurer que ce sont des tableaux pour éviter les erreurs.
+            $originalENIngredient = $originalIngredients[$index];
+            $originalFRIngredient = ($originalIngredientsFR[$index] ?? []); // Utiliser le FR d'avant ou un tableau vide
 
-                // Récupérer les données soumises pour cet ingrédient FR, en les protégeant.
-                $postedUnitLabel = trim(htmlspecialchars($postedIngredient['quantity'] ?? '', ENT_QUOTES, 'UTF-8')); // Seul le label est soumis
-                $postedName = trim(htmlspecialchars($postedIngredient['name'] ?? '', ENT_QUOTES, 'UTF-8'));
-                $postedType = trim(htmlspecialchars($postedIngredient['type'] ?? '', ENT_QUOTES, 'UTF-8'));
+            // Récupérer les données soumises pour cet ingrédient FR, en les protégeant.
+            $postedUnitLabel = trim(htmlspecialchars($postedIngredient['quantity'] ?? '', ENT_QUOTES, 'UTF-8')); // Seul le label est soumis
+            $postedName = trim(htmlspecialchars($postedIngredient['name'] ?? '', ENT_QUOTES, 'UTF-8'));
+            $postedType = trim(htmlspecialchars($postedIngredient['type'] ?? '', ENT_QUOTES, 'UTF-8'));
 
-                // Récupérer la partie *valeur numérique* de la quantité EN originale.
-                $originalQuantityValue = splitQuantityLabel($originalENIngredient['quantity'] ?? '')['value'];
+            // Récupérer la partie *valeur numérique* de la quantité EN originale.
+            $originalQuantityValue = splitQuantityLabel($originalENIngredient['quantity'] ?? '')['value'];
 
-                // Reconstruire la chaîne 'quantity' pour le JSON FR:
-                // On garde la valeur numérique EN et on ajoute le label FR soumis.
-                $finalTranslatedQuantity = trim($originalQuantityValue . ' ' . $postedUnitLabel);
+            // Reconstruire la chaîne 'quantity' pour le JSON FR:
+            // On garde la valeur numérique EN et on ajoute le label FR soumis.
+            $finalTranslatedQuantity = trim($originalQuantityValue . ' ' . $postedUnitLabel);
 
-                // Assigner les nouvelles valeurs FR (ou les anciennes si non soumises/vides ?)
-                // Ici, on écrase avec les valeurs soumises.
-                $finalTranslatedName = $postedName;
-                $finalTranslatedType = $postedType;
+            // Assigner les nouvelles valeurs FR (ou les anciennes si non soumises/vides ?)
+            // Ici, on écrase avec les valeurs soumises.
+            $finalTranslatedName = $postedName;
+            $finalTranslatedType = $postedType;
 
-                // Mettre à jour le tableau $newIngredientsFR à l'index courant.
-                $newIngredientsFR[$index] = [
-                    'quantity' => $finalTranslatedQuantity,
-                    'name' => $finalTranslatedName,
-                    'type' => $finalTranslatedType
-                ];
-            }
-            // Remplacer l'ancien tableau d'ingrédients FR par le nouveau dans la recette.
-            $recipe['ingredientsFR'] = $newIngredientsFR;
-        } else {
-             // TODO: Gérer l'erreur: le nombre d'ingrédients ne correspond pas.
+            // Mettre à jour le tableau $newIngredientsFR à l'index courant.
+            $newIngredientsFR[$index] = [
+                'quantity' => $finalTranslatedQuantity,
+                'name' => $finalTranslatedName,
+                'type' => $finalTranslatedType
+            ];
         }
+        // Remplacer l'ancien tableau d'ingrédients FR par le nouveau dans la recette.
+        $recipe['ingredientsFR'] = $newIngredientsFR;
+        
     }
 
     // 3. Mettre à jour les étapes françaises (StepsFR)
@@ -167,22 +156,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $originalStepsFR = $recipeBeforeUpdate['stepsFR'] ?? []; // Étapes FR avant modif
         $newStepsFR = $recipe['stepsFR'] ?? []; // Étapes FR à mettre à jour
 
-        // Sécurité : Vérifier la cohérence du nombre d'étapes.
-        if (count($_POST['stepsFR']) === count($originalSteps)) {
-            foreach ($_POST['stepsFR'] as $index => $postedValue) {
-                if (!isset($originalSteps[$index])) continue; // Ignorer si incohérence
+        foreach ($_POST['stepsFR'] as $index => $postedValue) {
+            if (!isset($originalSteps[$index])) continue; // Ignorer si incohérence
 
-                // Récupérer et protéger l'étape soumise.
-                $postedStep = trim(htmlspecialchars($postedValue ?? '', ENT_QUOTES, 'UTF-8'));
+            // Récupérer et protéger l'étape soumise.
+            $postedStep = trim(htmlspecialchars($postedValue ?? '', ENT_QUOTES, 'UTF-8'));
 
-                // Mettre à jour l'étape dans le tableau $newStepsFR.
-                $newStepsFR[$index] = $postedStep;
-            }
-            // Remplacer l'ancien tableau d'étapes FR par le nouveau.
-            $recipe['stepsFR'] = $newStepsFR;
-        } else {
-             // TODO : Gérer l'erreur: le nombre d'étapes ne correspond pas.
+            // Mettre à jour l'étape dans le tableau $newStepsFR.
+            $newStepsFR[$index] = $postedStep;
         }
+        // Remplacer l'ancien tableau d'étapes FR par le nouveau.
+        $recipe['stepsFR'] = $newStepsFR;
     }
 
     // --- Sauvegarde et Redirection ---
@@ -192,21 +176,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Écrire le tableau $recipes complet mis à jour dans le fichier JSON.
     // Utilise les flags pour une meilleure lisibilité et gestion des caractères spéciaux/URLs.
-    $saveResult = file_put_contents(
+    file_put_contents(
         $recipesFile,
         json_encode($recipes, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
     );
 
-    // Vérifier si l'écriture a réussi.
-    if ($saveResult !== false) {
-         $_SESSION['flash_message'] = ['type' => 'success', 'key' => 'messages.translation_saved'];
-    } else {
-         $_SESSION['flash_message'] = ['type' => 'error', 'key' => 'messages.translation_saving_error'];
-         // TODO: Logger l'erreur d'écriture fichier.
-    }
-
-    // Rediriger l'utilisateur vers la page de visualisation de la recette, qu'il y ait eu erreur ou non.
-    // Le message flash informera du résultat.
+    // Rediriger l'utilisateur vers la page de visualisation de la recette
     header("Location: recipe.php?id=" . $recipeId);
     exit; // Terminer le script après la redirection.
 }
@@ -214,7 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // --- Génération du Contenu HTML pour l'affichage de la page ---
 
 // Protéger le nom de la recette pour l'affichage dans le titre H1.
-$recipeNamePHP = htmlspecialchars($recipe['name'] ?? 'Unnamed Recipe', ENT_QUOTES, 'UTF-8');
+$recipeNamePHP = htmlspecialchars($recipe['name'], ENT_QUOTES, 'UTF-8');
 
 // Début de la construction de la chaîne HTML pour le contenu principal de la page.
 $content = '
@@ -240,7 +215,6 @@ $content = '
                     // Vérifier s'il y a des ingrédients EN à afficher.
                     if (!empty($recipe['ingredients'])) {
                         foreach ($recipe['ingredients'] as $index => $ingredient) {
-                            $ingredient = (array) $ingredient; // Assurer que c'est un tableau
                             // Séparer quantité et unité pour un affichage plus clair.
                             $quantityParts = splitQuantityLabel($ingredient['quantity'] ?? '');
                             $content .= '
@@ -277,7 +251,7 @@ $content .= '
             </div>
 
             <div class="translation-column translation-form-column">
-                <h2 data-translate="labels.translation_french">Translation (Français)</h2>
+                <h2 data-translate="labels.translation_french">Translation (French)</h2>
                 <p><small data-translate="messages.translator_edit_hint">Edit only empty fields where English source exists.</small></p>
 
                  <div class="form-group">';
@@ -288,12 +262,11 @@ $content .= '
                     // OU si l'utilisateur n'est PAS un éditeur autorisé (Admin ou Chef Auteur).
                     $nameReadonly = !$isAllowedEditor && ($isTranslator && (!empty($nameFR) || empty($nameEN)));
                     // Définir la clé de traduction pour le tooltip (title).
-                    $nameTitleKey = $nameReadonly ? 'messages.translator_readonly_hint' : 'placeholders.translate_name';
                     $nameClass = $nameReadonly ? 'readonly-translator' : ''; // Classe CSS pour le style readonly.
                     $content .= '
                     <label for="nameFR" data-translate="labels.recipe_name">Nom de la recette:</label>
                     <input type="text" id="nameFR" name="nameFR" value="' . htmlspecialchars($nameFR, ENT_QUOTES, 'UTF-8') . '"
-                           data-translate-placeholder="placeholders.translate_name" data-translate-title="' . $nameTitleKey . '"
+                           data-translate-placeholder="placeholders.translate_name" data-translate-title="' . '"
                            ' . ($nameReadonly ? 'readonly' : '') . ' class="' . $nameClass . '">';
 $content .= '
                 </div>
@@ -303,8 +276,7 @@ $content .= '
                      // Générer les champs FR seulement s'il y a des ingrédients EN correspondants.
                      if (!empty($recipe['ingredients'])) {
                         foreach ($recipe['ingredients'] as $index => $ingredientEN) {
-                             $ingredientEN = (array) $ingredientEN;
-                             $ingredientFR = (array) ($recipe['ingredientsFR'][$index] ?? []); // FR actuel ou tableau vide
+                             $ingredientFR = $recipe['ingredientsFR'][$index] ?? []; // FR actuel ou tableau vide
                              $quantityPartsEN = splitQuantityLabel($ingredientEN['quantity'] ?? '');
                              $quantityPartsFR = splitQuantityLabel($ingredientFR['quantity'] ?? ''); // Label FR actuel
 
@@ -324,23 +296,18 @@ $content .= '
                              $nameReadonly = !$isAllowedEditor && ($isTranslator && (!$frNameEmpty || !$enNameFilled));
                              $typeReadonly = !$isAllowedEditor && ($isTranslator && (!$frTypeEmpty || !$enTypeFilled)); // Règle pour le type
 
-                             // Clés pour les tooltips (titles).
-                             $unitTitleKey = $unitReadonly ? 'messages.translator_readonly_hint' : 'placeholders.translate_unit';
-                             $nameTitleKey = $nameReadonly ? 'messages.translator_readonly_hint' : 'placeholders.translate_ing_name';
-                             $typeTitleKey = $typeReadonly ? 'messages.translator_readonly_hint' : 'placeholders.translate_ing_type';
-
                              // Générer la ligne de formulaire pour cet ingrédient FR.
                             $content .= '
                             <div class="translation-row">
                                 <input type="text" class="quantity-value" value="' . htmlspecialchars($quantityPartsEN['value'], ENT_QUOTES, 'UTF-8') . '" readonly title="Original Quantity Value (Readonly)">
                                 <input type="text" name="ingredientsFR[' . $index . '][quantity]" value="' . htmlspecialchars($quantityPartsFR['label'], ENT_QUOTES, 'UTF-8') . '"
-                                       data-translate-placeholder="placeholders.translate_unit" data-translate-title="' . $unitTitleKey . '"
+                                       data-translate-placeholder="placeholders.translate_unit" data-translate-title="' . '"
                                        class="quantity-unit ' . ($unitReadonly ? 'readonly-translator' : '') . '" ' . ($unitReadonly ? 'readonly' : '') . '>
                                 <input type="text" name="ingredientsFR[' . $index . '][name]" value="' . htmlspecialchars($ingredientFR['name'] ?? '', ENT_QUOTES, 'UTF-8') . '"
-                                       data-translate-placeholder="placeholders.translate_ing_name" data-translate-title="' . $nameTitleKey . '"
+                                       data-translate-placeholder="placeholders.translate_ing_name" data-translate-title="' . '"
                                        ' . ($nameReadonly ? 'readonly' : '') . ' class="' . ($nameReadonly ? 'readonly-translator' : '') . '">
                                 <input type="text" name="ingredientsFR[' . $index . '][type]" value="' . htmlspecialchars($ingredientFR['type'] ?? '', ENT_QUOTES, 'UTF-8') . '"
-                                       data-translate-placeholder="placeholders.translate_ing_type" data-translate-title="' . $typeTitleKey . '"
+                                       data-translate-placeholder="placeholders.translate_ing_type" data-translate-title="' . '"
                                        ' . ($typeReadonly ? 'readonly' : '') . ' class="' . ($typeReadonly ? 'readonly-translator' : '') . '">
                             </div>';
                         }
@@ -362,7 +329,6 @@ $content .= '
                             // Déterminer le statut readonly pour le textarea de l'étape FR.
                             // Readonly si PAS éditeur autorisé ET (est Traducteur ET (étape FR NON vide OU étape EN EST vide))
                             $stepReadonly = !$isAllowedEditor && ($isTranslator && (!empty($stepFR) || empty($stepEN)));
-                            $stepTitleKey = $stepReadonly ? 'messages.translator_readonly_hint' : 'placeholders.translate_step_n'; // Clé pour tooltip
                             $stepPlaceholderKey = 'placeholders.translate_step_n'; // Clé pour placeholder
                             $stepClass = $stepReadonly ? 'readonly-translator' : ''; // Classe CSS
 
@@ -372,7 +338,7 @@ $content .= '
                                 <textarea name="stepsFR[' . $index . ']"
                                           data-translate-placeholder="' . $stepPlaceholderKey . '"
                                           data-placeholder-index="' . ($index + 1) . '" {/* Index pour JS */}
-                                          data-translate-title="' . $stepTitleKey . '"
+                                          data-translate-title="' . '"
                                           ' . ($stepReadonly ? 'readonly' : '') . ' class="' . $stepClass . '">'
                                           . htmlspecialchars($stepFR, ENT_QUOTES, 'UTF-8') . /* Afficher le contenu FR actuel */
                                 '</textarea>
@@ -400,7 +366,6 @@ $title = "Translate Recipe";
 include 'header.php';
 ?>
 
-<!-- Section JavaScript spécifique à cette page -->
 <script>
 // Cette fonction est appelée par le script dans header.php une fois que
 // les traductions globales (data.json) sont chargées.
@@ -418,21 +383,11 @@ function initializePageContent(translations, lang) {
             $el.attr('placeholder', placeholderText || ''); // Appliquer le texte traduit comme placeholder.
       });
 
-      // Traduire les tooltips dynamiques (attribut title) comme les indices readonly.
-       $('[data-translate-title]').each(function() {
-            const $el = $(this);
-            const key = $el.data('translate-title'); // Clé de traduction (ex: 'messages.translator_readonly_hint')
-            const titleText = getNestedTranslation(translations, key); // Fonction de header.php
-            if (titleText) {
-                $el.attr('title', titleText); // Appliquer le texte traduit comme title.
-            }
-       });
-
       // Le reste des éléments statiques (boutons, labels H2...) est traduit
       // automatiquement par la fonction translatePage() de header.php.
  }
 
-// Exécuter ce code une fois que le DOM est entièrement chargé.
+// Exécuter ce code une fois que la page est entièrement chargé.
 $(document).ready(function() {
 
     // --- Validation du formulaire avant soumission ---

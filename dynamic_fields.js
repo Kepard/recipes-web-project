@@ -132,7 +132,6 @@ $(document).ready(function () {
                     const newName = oldName.replace(/\[\d+\]/, `[${newIndex}]`);
                     $(this).attr('name', newName);
                 });
-                // Optionnel: Mettre à jour les placeholders si nécessaire (normalement géré par la traduction globale)
             }
             // --- Mise à jour pour les ingrédients (Français) ---
             else if (containerId === 'ingredients-fr-container') {
@@ -149,10 +148,7 @@ $(document).ready(function () {
                 // Met à jour l'index dans le 'name'
                 const newName = oldName.replace(/\[\d+\]/, `[${newIndex}]`);
                 $textarea.attr('name', newName);
-                // Met à jour l'attribut data-placeholder-index pour la traduction future
                 $textarea.attr('data-placeholder-index', newIndex + 1);
-                // Met à jour le placeholder immédiatement (si besoin, mais la traduction le fera aussi)
-                // $textarea.attr('placeholder', `Step ${newIndex + 1}`); // Version non traduite
             }
             // --- Mise à jour pour les étapes (Français) ---
             else if (containerId === 'steps-fr-container') {
@@ -161,7 +157,6 @@ $(document).ready(function () {
                 const newName = oldName.replace(/\[\d+\]/, `[${newIndex}]`);
                 $textarea.attr('name', newName);
                 $textarea.attr('data-placeholder-index', newIndex + 1);
-                // $textarea.attr('placeholder', `Étape ${newIndex + 1}`); // Version non traduite
             }
             // --- Mise à jour pour les minuteurs ---
             else if (containerId === 'timers-container') {
@@ -170,7 +165,6 @@ $(document).ready(function () {
                 const newName = oldName.replace(/\[\d+\]/, `[${newIndex}]`);
                 $input.attr('name', newName);
                 $input.attr('data-placeholder-index', newIndex + 1);
-                 // $input.attr('placeholder', `Timer for Step ${newIndex + 1}`); // Version non traduite
             }
         });
 
@@ -298,10 +292,7 @@ $(document).ready(function () {
             // Réindexe seulement le conteneur des minuteurs
             reindexFields($container);
         }
-        // 3. Cas d'erreur (ne devrait pas arriver si data-sync-type est toujours présent)
-        else {
-             console.error("Type de synchronisation inconnu ou attribut data-sync-type manquant sur le bouton.");
-         }
+        
     });
 
     // --- Réindexation Initiale au Chargement de la Page ---

@@ -30,7 +30,7 @@
             "unknown_ingredient": "Unknown Ingredient",
             "translate_recipe_title_base": "Translate Recipe",
             "original_english": "Original (English)",
-            "translation_french": "Translation (Français)",
+            "translation_french": "Translation (French)",
             "create_recipe_title": "Create a New Recipe",
             "recipe_name_en_req": "Recipe Name (English): *",
             "recipe_name_fr": "Recipe Name (French):",
@@ -48,7 +48,8 @@
             "required_fields_note": "* Required fields",
             "chef_pending_recipes_title": "My Recipes Pending Validation",
             "status": "Status",
-            "pending_validation": "Pending Validation"
+            "pending_validation": "Pending Validation",
+            "tip_prefix": "Tip:"
         },
         "buttons": {
             "login": "Log In",
@@ -59,7 +60,6 @@
             "profile": "My Profile",
             "logout": "Logout",
             "validate": "Validate",
-            "validating": "Validating...",
             "update_password": "Update Password",
             "remove_user": "Remove User",
             "search": "Search",
@@ -88,8 +88,6 @@
             "ingredient_type": "Type (e.g., Meat)",
             "step_n": "Step {n}",
             "timer_n": "Timer for Step {n}",
-            "recipe_name_en": "Recipe Name (English)",
-            "recipe_name_fr": "Recipe Name (French)",
             "image_url_recipe": "https://example.com/image.jpg",
             "original_url_recipe": "https://source-website.com/recipe",
             "translate_unit": "Unit/Label (e.g., cup)",
@@ -97,14 +95,7 @@
             "translate_ing_type": "Type",
             "translate_step": "Translate step {n}",
             "translate_name": "Translate name here...",
-            "translate_step_n": "Translate step {n}",
-            "ingredient_type_en": "Type (e.g., Meat)",
-            "quantity_fr": "Quantité",
-            "ingredient_name_fr": "Nom ingrédient",
-            "ingredient_type_fr": "Type (e.g., Viande)",
-            "step_1": "Step 1",
-            "step_1_fr": "Étape 1",
-            "timer_1": "Timer for Step 1"
+            "translate_step_n": "Translate step {n}"
         },
         "roles": {
             "Administrateur": "Administrator",
@@ -151,9 +142,7 @@
             "steps_timers_mismatch": "Number of steps ({stepCount}) must match number of timers ({timerCount}). Add 0 for steps without a timer.",
             "translation_missing_fields": "Please fill in at least one translation field.",
             "translation_saved": "Translation saved successfully!",
-            "translation_error_saving": "Error saving translation.",
             "recipe_created": "Recipe created successfully!",
-            "recipe_updated": "Recipe updated successfully!",
             "error_saving_recipe": "Error saving the recipe. Could not write to file.",
             "permission_denied": "You do not have permission for this action.",
             "no_comments" : "No comments yet.",
@@ -169,7 +158,17 @@
             "no_pending_recipes": "You have no recipes currently awaiting validation.",
             "error_loading_pending_recipes": "Could not load pending recipes."
 
-        }
+        },
+        "tips": [
+            "Taste and season your dish throughout the cooking process.",
+            "Let cooked meat rest for 5-10 minutes before slicing.",
+            "Always use a sharp knife for safer and cleaner cuts.",
+            "Read the recipe fully before starting to cook.",
+            "Don't overcrowd the pan; cook in batches if needed.",
+            "Use cold butter for flaky pastry and pie crusts.",
+            "Toast nuts and spices briefly to enhance their flavor.",
+            "Clean as you go to make cleanup easier later."
+        ]
     },
     "fr": {
         "labels": {
@@ -220,7 +219,8 @@
             "required_fields_note": "* Champs requis",
             "chef_pending_recipes_title": "Mes Recettes en Attente de Validation",
             "status": "Statut",
-            "pending_validation": "En attente de validation"
+            "pending_validation": "En attente de validation",
+            "tip_prefix": "Astuce :"
   
         },
         "buttons": {
@@ -232,7 +232,6 @@
             "profile": "Mon Profil",
             "logout": "Déconnexion",
             "validate": "Valider",
-            "validating": "Validation...",
             "update_password": "M.à.j. Mot de passe",
             "remove_user": "Supprimer l'utilisateur",
             "search": "Rechercher",
@@ -261,8 +260,6 @@
             "ingredient_type": "Type (ex: Viande)",
             "step_n": "Étape {n}",
             "timer_n": "Minuterie Étape {n}",
-            "recipe_name_en": "Nom Recette (Anglais)",
-            "recipe_name_fr": "Nom Recette (Français)",
             "image_url_recipe": "https://exemple.com/image.jpg",
             "original_url_recipe": "https://site-source.com/recette",
             "translate_unit": "Unité/Label (ex: tasse)",
@@ -270,14 +267,7 @@
             "translate_ing_type": "Type",
             "translate_step": "Traduire étape {n}",
             "translate_name": "Traduire le nom ici...",
-            "translate_step_n": "Traduire l'étape {n}" ,
-            "ingredient_type_en": "Type (ex: Meat)", 
-            "quantity_fr": "Quantité",
-            "ingredient_name_fr": "Nom ingrédient",
-            "ingredient_type_fr": "Type (ex: Viande)",
-            "step_1": "Step 1", 
-            "step_1_fr": "Étape 1",
-            "timer_1": "Minuterie Étape 1" 
+            "translate_step_n": "Traduire l'étape {n}" 
         },
         "roles": {
             "Administrateur": "Administrateur",
@@ -324,9 +314,7 @@
             "steps_timers_mismatch": "Le nombre d'étapes ({stepCount}) doit correspondre au nombre de minuteurs ({timerCount}). Mettez 0 pour les étapes sans minuteur.",
             "translation_missing_fields": "Veuillez remplir au moins un champ de traduction.",
             "translation_saved": "Traduction sauvegardée avec succès !",
-            "translation_error_saving": "Erreur lors de la sauvegarde de la traduction.",
             "recipe_created": "Recette créée avec succès !",
-            "recipe_updated": "Recette mise à jour avec succès !",
             "error_saving_recipe": "Erreur lors de la sauvegarde de la recette. Impossible d'écrire dans le fichier.",
             "permission_denied": "Vous n'avez pas la permission pour cette action.",
             "no_comments" : "Aucun commentaire.",
@@ -341,6 +329,16 @@
             "missing_fields_create": "Veuillez remplir tous les champs requis (Nom, Ingrédients, Étapes, Minuteries).",
             "no_pending_recipes": "Vous n'avez aucune recette en attente de validation.",
             "error_loading_pending_recipes": "Impossible de charger les recettes en attente."
-        }
+        },
+        "tips": [
+            "Goûtez et assaisonnez votre plat tout au long de la cuisson.",
+            "Laissez reposer la viande cuite 5-10 minutes avant de la trancher.",
+            "Utilisez toujours un couteau bien aiguisé pour des coupes plus sûres et nettes.",
+            "Lisez entièrement la recette avant de commencer à cuisiner.",
+            "Ne surchargez pas la poêle ; cuisinez en plusieurs fois si nécessaire.",
+            "Utilisez du beurre froid pour obtenir des pâtes feuilletées et brisées croustillantes.",
+            "Torréfiez brièvement noix et épices pour rehausser leur saveur.",
+            "Nettoyez au fur et à mesure pour faciliter le nettoyage final."
+        ]
     }
 }

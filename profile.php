@@ -20,7 +20,8 @@ if (!isset($_SESSION['username'])) {
     </div>
     ';
     $title = "Profil"; // Titre pour utilisateur non connecté
-} else {
+} 
+
     // Si connecté, récupère les informations de l'utilisateur depuis la session.
     // htmlspecialchars est utilisé pour sécuriser l'affichage.
     $username = htmlspecialchars($_SESSION['username']);
@@ -67,7 +68,7 @@ if (!isset($_SESSION['username'])) {
     </div>
     '; // Ferme div.profile-container
     $title = "Mon Profil"; // Titre pour utilisateur connecté
-}
+
 
 // Inclusion de l'en-tête (qui affichera $content)
 include 'header.php';
@@ -82,9 +83,8 @@ function initializePageContent(translations, lang) {
 
     // Vérifie si le conteneur du profil existe (càd, si l'utilisateur est connecté)
     if ($("#profile-container").length) {
-        const userRoleElement = $("#userRole");
         // Récupère le rôle actuel affiché pour la logique JS
-        const currentRole = userRoleElement.text();
+        const currentRole = $("#userRole").text();
         const requestChefBtn = $("#requestChef");
         const requestTranslatorBtn = $("#requestTranslator");
 
@@ -135,7 +135,6 @@ function loadChefPendingRecipes(translations, lang) {
 
         // Filtre les recettes pour ne garder que celles de ce chef et non validées
         const pendingRecipes = recipes.filter(recipe =>
-            recipe &&
             recipe.Author === chefUsername &&
             (recipe.validated === 0 || recipe.validated === "0") // Gère 0 numérique ou chaîne
         );
@@ -207,8 +206,6 @@ function updateRoleRequest(newRole, translations) {
 
 /**
  * Fonction utilitaire pour mettre à jour l'état des boutons de demande de rôle.
- * (Dupliquée ici pour être accessible hors de initializePageContent si nécessaire,
- * mais pourrait être structurée différemment pour éviter la duplication).
  */
 function updateButtonStates(role) {
     $("#requestChef").prop("disabled", role === "Chef" || role === "Administrateur" || role === "DemandeChef");

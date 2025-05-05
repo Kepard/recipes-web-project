@@ -64,8 +64,7 @@ function initializePageContent(translations, lang) {
     // Chargement AJAX des données de recettes (avec cache busting)
     $.getJSON("recipes.json?v=" + Date.now(), function(recipes) {
         // Recherche de la recette spécifique
-        const recipeArray = Array.isArray(recipes) ? recipes : Object.values(recipes);
-        const recipe = recipeArray.find(r => r && r.id === recipeId);
+        const recipe = recipes.find(r => r.id === recipeId);
 
         // Gestion recette non trouvée
         if (!recipe) {
@@ -77,14 +76,14 @@ function initializePageContent(translations, lang) {
         const recipeName = lang === 'fr' && recipe.nameFR ? recipe.nameFR : recipe.name;
         document.title = recipeName; // Met à jour titre onglet
         // Choix des ingrédients/étapes selon la langue
-        const ingredients = (lang === 'fr' && Array.isArray(recipe.ingredientsFR) && recipe.ingredientsFR.length > 0) ? recipe.ingredientsFR : (recipe.ingredients || []);
-        const steps = (lang === 'fr' && Array.isArray(recipe.stepsFR) && recipe.stepsFR.length > 0) ? recipe.stepsFR : (recipe.steps || []);
+        const ingredients = (lang === 'fr' && recipe.ingredientsFR.length > 0) ? recipe.ingredientsFR : (recipe.ingredients || []);
+        const steps = (lang === 'fr' && recipe.stepsFR.length > 0) ? recipe.stepsFR : (recipe.steps || []);
         const without = recipe.Without || [];
         const likes = recipe.likes || [];
         const comments = recipe.comments || [];
 
         // --- Détermination des permissions/états utilisateur ---
-        const hasLiked = currentUser && Array.isArray(likes) && likes.includes(currentUser);
+        const hasLiked = currentUser && likes.includes(currentUser);
         const isAuthor = currentUser && recipe.Author === currentUser;
         const isAdmin = currentRole === 'Administrateur';
         const isTranslator = currentRole === 'Traducteur';
@@ -105,10 +104,7 @@ function initializePageContent(translations, lang) {
         }
         roleActionsHTML += '</div>';
 
-        let totalTime = 0;
-        if (Array.isArray(recipe.timers)) {
-            totalTime = recipe.timers.reduce((sum, timer) => sum + (parseInt(timer, 10) || 0), 0);
-        }
+        let totalTime = recipe.timers.reduce((sum, timer) => sum + (parseInt(timer, 10) || 0), 0);
 
         const ingredientsListHTML = ingredients.map(ing => {
             const ingredientText = `${ing.quantity || ''} ${ing.name || ''}`.trim();
@@ -169,7 +165,7 @@ function initializePageContent(translations, lang) {
 
             <div class="comments-section">
                 <h2><span data-translate="labels.comments">${translations.labels.comments}</span> <span id="commentCount">(${comments.length})</span></h2>
-                <div id="commentsList">${commentsListHTML || `<p>${translations.messages?.no_comments}</p>`}</div>
+                <div id="commentsList">${commentsListHTML || `<p>${translations.messages.no_comments}</p>`}</div>
                 ${commentFormHTML}
             </div>
         `;
@@ -243,7 +239,7 @@ function setupCommentForm(recipeId, currentUser, translations) {
         // Feedback bouton submit
         const $submitButton = $(this).find('button[type="submit"]');
         const originalButtonText = $submitButton.html();
-        $submitButton.prop('disabled', true).html(translations.buttons.posting_comment || 'Envoi...');
+        $submitButton.prop('disabled', true).html(translations.buttons.posting_comment);
 
         // Appel AJAX vers comment.php
         $.ajax({

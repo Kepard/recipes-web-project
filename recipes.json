@@ -640,7 +640,9 @@
         ],
         "imageURL": "http:\/\/s3.amazonaws.com\/gmi-digital-library\/65caecf7-a8f7-4a09-8513-2659cf92871e.jpg",
         "originalURL": "#",
-        "likes": [],
+        "likes": [
+            "chef"
+        ],
         "comments": [
             {
                 "id": 1,
@@ -648,6 +650,13 @@
                 "author": "chef",
                 "content": "Bien!",
                 "imageurl": null
+            },
+            {
+                "id": 2,
+                "date": "2025-05-05 20:21:41",
+                "author": "Vernier",
+                "content": "Je valide",
+                "imageurl": "https:\/\/img.freepik.com\/vecteurs-libre\/icone-facebook-like_1017-8081.jpg?semt=ais_hybrid&w=740"
             }
         ],
         "validated": 1
@@ -760,35 +769,47 @@
         ],
         "ingredients": [
             {
-                "quantity": "2",
-                "name": "Pelmen",
+                "quantity": "1 ",
+                "name": "Meat",
                 "type": "Meat"
+            },
+            {
+                "quantity": "1",
+                "name": "Salt",
+                "type": "Addjustements"
             }
         ],
         "ingredientsFR": [
             {
-                "quantity": "2",
-                "name": "Pelmenni",
+                "quantity": "1",
+                "name": "Viande",
                 "type": "Viande"
+            },
+            {
+                "quantity": "1",
+                "name": "Sel",
+                "type": "Condiments"
+            },
+            {
+                "quantity": "",
+                "name": "",
+                "type": ""
             }
         ],
         "steps": [
-            "Bake bro",
-            "Eat bro",
-            "Sleep"
+            "Cook",
+            "Salt"
         ],
         "stepsFR": [
-            "Cuisiner",
-            "Manger",
-            "Dormir"
+            "Cuire",
+            "Saler"
         ],
         "timers": [
             "15",
-            "30",
-            "120"
+            "5"
         ],
         "imageURL": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/d\/df\/Pelmeni_Russian.jpg\/640px-Pelmeni_Russian.jpg",
-        "originalURL": "",
+        "originalURL": "https:\/\/russieautrement.com\/nouvelles\/recettes-de-cuisine\/les-pelmenis-ou-raviolis-russes\/",
         "likes": [],
         "comments": [
             {
@@ -866,7 +887,7 @@
                 "type": "L\u00e9gume"
             },
             {
-                "quantity": "1\/2",
+                "quantity": "1\/2 tetes",
                 "name": "chou, \u00e9minc\u00e9",
                 "type": "L\u00e9gume"
             },
@@ -886,7 +907,7 @@
                 "type": "L\u00e9gume"
             },
             {
-                "quantity": "1.5 litre",
+                "quantity": "6 litre",
                 "name": "bouillon de boeuf ou l\u00e9gumes",
                 "type": "Divers"
             },
@@ -919,11 +940,11 @@
             "Serve hot, garnished with a dollop of sour cream and fresh dill."
         ],
         "stepsFR": [
-            "Dans une grande marmite, faire revenir les oignons et les carottes jusqu'\u00e0 ce qu'ils soient tendres.",
-            "Ajouter le bouillon, les pommes de terre et le chou. Porter \u00e0 \u00e9bullition, puis laisser mijoter jusqu'\u00e0 ce que les pommes de terre soient tendres.",
+            "Dans une grande marmite, faire revenir les oignons et les carottes jusqu&#039;\u00e0 ce qu&#039;ils soient tendres.",
+            "Ajouter le bouillon, les pommes de terre et le chou. Porter \u00e0 \u00e9bullition, puis laisser mijoter jusqu&#039;\u00e0 ce que les pommes de terre soient tendres.",
             "Ajouter les betteraves r\u00e2p\u00e9es, le concentr\u00e9 de tomate et le vinaigre. Laisser mijoter encore 10-15 minutes.",
             "Assaisonner avec sel et poivre au go\u00fbt.",
-            "Servir chaud, garni d'une cuiller\u00e9e de cr\u00e8me aigre et d'aneth frais."
+            "Servir chaud, garni d&#039;une cuiller\u00e9e de cr\u00e8me aigre et d&#039;aneth frais."
         ],
         "timers": [
             "5",
@@ -1210,7 +1231,9 @@
         ],
         "imageURL": "https:\/\/img.cuisineaz.com\/660x660\/2022\/07\/05\/i184567-boeuf-stroganoff.jpeg",
         "originalURL": "#",
-        "likes": [],
+        "likes": [
+            "chef"
+        ],
         "comments": [],
         "validated": 1
     },
@@ -1509,7 +1532,8 @@
         "originalURL": "#",
         "likes": [
             "admin",
-            "chef"
+            "chef",
+            "Bogdan"
         ],
         "comments": [],
         "validated": 1
@@ -1662,49 +1686,15 @@
                 "quantity": "8 oz",
                 "name": "mixed cooked meats (ham, sausage, beef), chopped",
                 "type": "Meat"
-            },
-            {
-                "quantity": "1 large",
-                "name": "onion, chopped",
-                "type": "Produce"
-            },
-            {
-                "quantity": "2",
-                "name": "dill pickles, chopped",
-                "type": "Produce"
-            },
-            {
-                "quantity": "2 tbsp",
-                "name": "capers, rinsed",
-                "type": "Condiments"
-            },
-            {
-                "quantity": "1\/2 cup",
-                "name": "pitted olives (green or black), sliced",
-                "type": "Produce"
-            },
-            {
-                "quantity": "2 tbsp",
-                "name": "tomato paste",
-                "type": "Condiments"
-            },
-            {
-                "quantity": "6 cups",
-                "name": "beef or chicken broth",
-                "type": "Misc"
-            },
-            {
-                "quantity": "1 tbsp",
-                "name": "butter or oil",
-                "type": "Dairy\/Condiments"
-            },
-            {
-                "quantity": "for serving",
-                "name": "lemon slices, sour cream, fresh dill",
-                "type": "Produce\/Dairy"
             }
         ],
-        "ingredientsFR": [],
+        "ingredientsFR": [
+            {
+                "quantity": "",
+                "name": "",
+                "type": ""
+            }
+        ],
         "steps": [
             "In a large pot or Dutch oven, melt butter\/oil over medium heat. Saut\u00e9 onions until translucent.",
             "Add the chopped mixed meats and cook for a few minutes.",
@@ -1714,7 +1704,9 @@
             "Season with salt and pepper if necessary (be mindful of salty ingredients).",
             "Serve hot, garnished with lemon slices, a dollop of sour cream, and fresh dill."
         ],
-        "stepsFR": [],
+        "stepsFR": [
+            ""
+        ],
         "timers": [
             "5",
             "3",
@@ -1725,10 +1717,10 @@
             "0"
         ],
         "imageURL": "https:\/\/cdn.lifehacker.ru\/wp-content\/uploads\/2020\/06\/6_1592925463-scaled.jpg",
-        "originalURL": "#",
+        "originalURL": "",
         "likes": [],
         "comments": [],
-        "validated": 1
+        "validated": 0
     },
     {
         "id": 19,

@@ -1,18 +1,17 @@
 <?php
-// Start session only if not already started
+// Démarrer la session seulement si aucune session n'est déjà active.
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Check if the user is an admin
-// Use strict comparison and check if session variable exists
+// Verifier que l'utilisateur a le role d'administrateur
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'Administrateur') {
     header('HTTP/1.1 403 Forbidden');
     die();
-    
-} else {
-    // Basic HTML structure - content will be generated dynamically inside corresponding containers
-    $content = '
+}
+
+// Structure HTML basique dans laquelle sera genere le contenu
+$content = '
     <div class="admin-container">
         <h1 data-translate="labels.manage_users">Manage Users</h1>
         <table id="users-table">
@@ -39,35 +38,34 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'Administrateur') {
         </table>
     </div>
     ';
-}
 
-$title = "Admin Panel"; // Set a title for the page
-include 'header.php'; // Include header AFTER setting content
+
+$title = "Admin Panel"; // Titre de la page
+include 'header.php'; 
 ?>
 
 <script>
-// This function is called by header.php after translations are loaded
+    // Fonction d'initialisation appellee directement dans header.php
 function initializePageContent(translations, lang) {
     const adminContainer = $(".admin-container");
     const usersTableBody = $("#users-table tbody");
     const recipesTableBody = $("#recipes-table tbody");
 
-    // Clear previous content to prevent duplication on language change
+    // Nettoyer le contenu precedent pour eviter la duplication lors du changement de la langue
     usersTableBody.empty();
     recipesTableBody.empty();
 
-    // --- Load Users ---
-    $.getJSON("users.json?v=" + Date.now(), function (users) { // Add cache buster
+    // Charger les utilisateurs depuis le JSON en utilisant un cache buster
+    $.getJSON("users.json?v=" + Date.now(), function (users) { // Date.now pour interdire de charger depuis le cache (bugs d'affichage)
         const availableRoles = ["Administrateur", "Traducteur", "Chef", "DemandeChef", "DemandeTraducteur", "Cuisinier"];
 
         for (const username in users) {
-            if (users.hasOwnProperty(username)) {
                  const user = users[username];
                  const currentRole = user.role;
 
-                 // Create role options, translating the display text
+                 // Creation d'option de roles avec les traductions
                  const roleOptions = availableRoles.map(availableRole => {
-                     const translatedRole = translations.roles?.[availableRole] || availableRole;
+                     const translatedRole = translations.roles?.[availableRole];
                      const selected = availableRole === currentRole ? "selected" : "";
                      return `<option value="${availableRole}" ${selected}>${translatedRole}</option>`;
                  }).join("");
@@ -87,15 +85,12 @@ function initializePageContent(translations, lang) {
                     </tr>
                 `;
                 usersTableBody.append(row);
-            }
         }
     });
 
-     // --- Load Unvalidated Recipes ---
+     // --- Charger les recettes en attente de validation ---
      $.getJSON("recipes.json?v=" + Date.now(), function (recipes) { // Add cache buster
-        // Ensure recipes is an array
-        const recipeArray = Array.isArray(recipes) ? recipes : Object.values(recipes);
-        const unvalidatedRecipes = recipeArray.filter(recipe => recipe && recipe.validated == 0); // Check recipe exists
+        const unvalidatedRecipes = recipes.filter(recipe => recipe.validated == 0); 
 
         if (unvalidatedRecipes.length === 0) {
              recipesTableBody.html(`<tr><td colspan="3">${translations.messages.no_unvalidated_recipes}</td></tr>`);
@@ -117,9 +112,9 @@ function initializePageContent(translations, lang) {
      });
 
 
-    // --- Event Handlers (using event delegation) ---
+    // Event Handlers 
 
-    // Handle role changes
+    // Changer le role
     usersTableBody.on("change", ".role-select", function() {
         const username = $(this).closest("tr").attr("data-username");
         const newRole = $(this).val();
@@ -141,7 +136,7 @@ function initializePageContent(translations, lang) {
         });
     });
 
-    // Handle password updates
+    // Mettre a jour le mot de passe
     usersTableBody.on("click", ".update-password", function() {
         const username = $(this).attr("data-username");
         const promptMessage = (translations.messages.enter_new_password).replace('{username}', username);
@@ -166,7 +161,7 @@ function initializePageContent(translations, lang) {
         }
     });
 
-    // Handle user removal
+    // Supprimer l'utilisateur
     usersTableBody.on("click", ".remove-user", function() {
         const username = $(this).attr("data-username");
         const confirmMessage = (translations.messages.confirm_remove_user).replace('{username}', username);
@@ -183,7 +178,7 @@ function initializePageContent(translations, lang) {
                 success: function(response) {
                     if (response.success) {
                         showMessage(translations.messages.user_removed, 'success');
-                        // Remove the row from the table
+                        // Supprimer la ligne dans le tableau avec une animation
                         $(`tr[data-username="${username}"]`).fadeOut(500, function() { $(this).remove(); });
                     }
                 },
@@ -191,21 +186,20 @@ function initializePageContent(translations, lang) {
         }
     });
 
-     // Handle recipe validation
+     // Valider une recette en attente
     recipesTableBody.on("click", ".validate-recipe", function() {
         const recipeId = $(this).attr("data-id");
-        const $button = $(this); // Reference the button
+        const $button = $(this); // Reference button
         const $row = $button.closest("tr");
 
         $.ajax({
             url: "update_recipes.php",
             method: "POST",
             data: { id: recipeId },
-            // dataType: "text", // Expecting simple text response based on update_recipes.php
             success: function(response) {
                 showMessage(translations.messages.recipe_validated, 'success');
                 $row.fadeOut(500, function() { $(this).remove(); });
-                 // Check if table is empty after removal
+                 // Verifier qu'il reste des recettes en attente, sinon afficher le message
                  if (recipesTableBody.find('tr').length === 0) {
                      recipesTableBody.html(`<tr><td colspan="3">${translations.messages.no_unvalidated_recipes}</td></tr>`);
                  }

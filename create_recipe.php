@@ -1,11 +1,11 @@
 <?php
-// Start session only if not already started
+// Démarrer la session seulement si elle n'est pas déjà démarrée
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Check if the user is logged in and has the role of Chef or Admin
-$isAllowed = isset($_SESSION['role']) && ($_SESSION['role'] == 'Chef' || $_SESSION['role'] == 'Administrateur'); // Allow Admin too
+// Vérifier si l'utilisateur est connecté et a le rôle de Chef ou Admin
+$isAllowed = isset($_SESSION['role']) && ($_SESSION['role'] == 'Chef' || $_SESSION['role'] == 'Administrateur'); // Autoriser aussi l'Admin
 if (!$isAllowed) {
     header('HTTP/1.1 403 Forbidden');
     die();
@@ -13,7 +13,7 @@ if (!$isAllowed) {
 
 $authorUsername = $_SESSION['username'];
 
-// Handle form submission
+// Gérer la soumission du formulaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = trim(htmlspecialchars($_POST['name'] ?? ''));
     $nameFR = trim(htmlspecialchars($_POST['nameFR'] ?? ''));
@@ -26,12 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $imageURL = filter_var(trim($_POST['imageURL'] ?? ''), FILTER_SANITIZE_URL);
     $originalURL = filter_var(trim($_POST['originalURL'] ?? ''), FILTER_SANITIZE_URL);
 
-
-
-    // ... (Load recipes, find max ID logic remains the same) ...
     $recipesFile = 'recipes.json';
-    $recipesData = file_get_contents($recipesFile);
-    $recipes = json_decode($recipesData, true);
+    $recipes = json_decode(file_get_contents($recipesFile), true);
 
     $maxId = 0;
     foreach ($recipes as $recipe) {
@@ -39,42 +35,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $maxId = max($maxId, (int)$recipe['id']);
         }
     }
-    // Calculate the new ID
-    $newId = $maxId + 1; // Define new ID before using it
+    // Calculer le nouvel ID
+    $newId = $maxId + 1; // Définir le nouvel ID avant de l'utiliser
 
-    // --- *** FIX: Define the actual $newRecipe array *** ---
     $newRecipe = [
-        "id" => $newId,                 // Use the calculated new ID
+        "id" => $newId,                 // Utiliser le nouvel ID calculé
         "name" => $name,
         "nameFR" => $nameFR,
-        "Author" => $authorUsername,    // Set the author from session
-        "Without" => $without,          // Dietary restrictions array
-        "ingredients" => $ingredients,    // Processed ingredients array
-        "ingredientsFR" => $ingredientsFR,  // Processed French ingredients array
-        "steps" => $steps,              // Processed steps array
-        "stepsFR" => $stepsFR,          // Processed French steps array
-        "timers" => $timers,            // Processed timers array
+        "Author" => $authorUsername,    // Définir l'auteur à partir de la session
+        "Without" => $without,          // Tableau des restrictions alimentaires
+        "ingredients" => $ingredients,    // Tableau des ingrédients traités
+        "ingredientsFR" => $ingredientsFR,  // Tableau des ingrédients français traités
+        "steps" => $steps,              // Tableau des étapes traitées
+        "stepsFR" => $stepsFR,          // Tableau des étapes françaises traitées
+        "timers" => $timers,            // Tableau des minuteurs traités
         "imageURL" => $imageURL,
         "originalURL" => $originalURL,
-        "likes" => [],                  // Initialize likes as empty array
-        "comments" => [],               // Initialize comments as empty array
-        "validated" => 0                // Default to not validated
+        "likes" => [],                  // Initialiser les likes comme un tableau vide
+        "comments" => [],               // Initialiser les commentaires comme un tableau vide
+        "validated" => 0                // Par défaut non validé
     ];
     // ----------------------------------------------------------
 
-    // Add the newly defined recipe to the array
+    // Ajouter la recette nouvellement définie au tableau
     $recipes[] = $newRecipe;
 
-    // Save updated recipes back to the JSON file
+    // Sauvegarder les recettes mises à jour dans le fichier JSON
     file_put_contents($recipesFile, json_encode($recipes, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
 
-    header("Location: profile.php"); 
+    header("Location: profile.php");
 }
 
 
 
-// --- HTML Form Generation with data-translate attributes ---
-// (Keep the rest of the file exactly as you provided it in the previous message)
+// --- Génération du formulaire HTML avec les attributs data-translate ---
 $content = '
 <div class="create-recipe-container">
     <h1 data-translate="labels.create_recipe_title">Create a New Recipe</h1>
@@ -113,9 +107,8 @@ $content = '
                     <div class="ingredient">
                         <input type="text" name="ingredients[0][quantity]" data-translate-placeholder="placeholders.quantity" required>
                         <input type="text" name="ingredients[0][name]" data-translate-placeholder="placeholders.ingredient_name" required>
-                        <input type="text" name="ingredients[0][type]" data-translate-placeholder="placeholders.ingredient_type_en">
+                        <input type="text" name="ingredients[0][type]" data-translate-placeholder="placeholders.ingredient_type">
                     </div>
-                    <!-- Button text is handled by dynamic_fields.js now -->
                     <button type="button" class="remove-field button button-danger" data-sync-type="ingredient">×</button>
                 </div>
             </div>
@@ -127,9 +120,9 @@ $content = '
             <div id="ingredients-fr-container">
                  <div class="dynamic-field">
                     <div class="ingredient">
-                        <input type="text" name="ingredientsFR[0][quantity]" data-translate-placeholder="placeholders.quantity_fr">
-                        <input type="text" name="ingredientsFR[0][name]" data-translate-placeholder="placeholders.ingredient_name_fr">
-                        <input type="text" name="ingredientsFR[0][type]" data-translate-placeholder="placeholders.ingredient_type_fr">
+                        <input type="text" name="ingredientsFR[0][quantity]" data-translate-placeholder="placeholders.quantity">
+                        <input type="text" name="ingredientsFR[0][name]" data-translate-placeholder="placeholders.ingredient_name">
+                        <input type="text" name="ingredientsFR[0][type]" data-translate-placeholder="placeholders.ingredient_type">
                     </div>
                     <button type="button" class="remove-field button button-danger" data-sync-type="ingredient">×</button>
                 </div>
@@ -141,7 +134,7 @@ $content = '
             <label data-translate="labels.steps_en_req">Steps (English): *</label>
             <div id="steps-container">
                 <div class="dynamic-field">
-                    <textarea name="steps[0]" data-translate-placeholder="placeholders.step_1" data-placeholder-index="1" required></textarea>
+                    <textarea name="steps[0]" data-translate-placeholder="placeholders.step_n" data-placeholder-index="1" required></textarea>
                     <button type="button" class="remove-field button button-danger" data-sync-type="step">×</button>
                 </div>
             </div>
@@ -152,18 +145,18 @@ $content = '
              <label data-translate="labels.steps_fr">Steps (French):</label>
              <div id="steps-fr-container">
                  <div class="dynamic-field">
-                    <textarea name="stepsFR[0]" data-translate-placeholder="placeholders.step_1_fr" data-placeholder-index="1"></textarea>
+                    <textarea name="stepsFR[0]" data-translate-placeholder="placeholders.step_n" data-placeholder-index="1"></textarea>
                     <button type="button" class="remove-field button button-danger" data-sync-type="step">×</button>
                  </div>
              </div>
-             <button type="button" id="add-step-fr" class="button button-secondary" data-translate="buttons.add_step_fr">Add Step (French)</button>
+             <button type="button" id="add-step-fr" class="button button-secondary" data-translate="buttons.add_step">Add Step (French)</button>
         </div>
 
         <div class="dynamic-fields-section">
             <label data-translate="labels.timers_req">Timers (in minutes, one per step): *</label>
             <div id="timers-container">
                  <div class="dynamic-field">
-                     <input type="number" name="timers[0]" data-translate-placeholder="placeholders.timer_1" data-placeholder-index="1" min="0" required>
+                     <input type="number" name="timers[0]" data-translate-placeholder="placeholders.timer_n" data-placeholder-index="1" min="0" required>
                      <button type="button" class="remove-field button button-danger" data-sync-type="timer">×</button>
                  </div>
             </div>
@@ -184,40 +177,39 @@ $content = '
 </div>
 ';
 
-$title = "Create Recipe"; // Default title, JS can update later if needed
+$title = "Create Recipe"; // Titre par défaut
 include 'header.php';
 ?>
 
-<!-- Include the shared dynamic fields script -->
+<!-- Inclure le script partagé des champs dynamiques -->
 <script src="dynamic_fields.js"></script>
 
-<!-- Specific JS for this page (remains the same) -->
 <script>
-// This function is called by header.php after translations are loaded
+// Cette fonction est appelée par header.php après le chargement des traductions
 function initializePageContent(translations, lang) {
-     // Translate dynamic placeholders for the *initial* fields added by PHP
+     // Traduire les placeholders dynamiques pour les champs *initiaux* ajoutés par PHP
      translateDynamicPlaceholders(translations);
 
-     // Translate the page title (optional)
+     // Traduire le titre de la page (optionnel)
      const pageTitle = getNestedTranslation(translations, 'labels.create_recipe_title');
      document.title = pageTitle;
 }
 
-// Helper function to translate dynamic placeholders (can be shared or page-specific)
+// Fonction d'aide pour traduire les placeholders dynamiques (peut être partagée ou spécifique à la page)
 function translateDynamicPlaceholders(translations) {
     $('[data-translate-placeholder][data-placeholder-index]').each(function() {
         const $el = $(this);
         const key = $el.data('translate-placeholder');
         const index = $el.data('placeholder-index');
         let placeholderText = getNestedTranslation(translations, key) || '';
-        // Basic replacement, assumes placeholder key doesn't need {n}
-        // If keys like 'placeholders.step_n' are used, this needs updating
-        if (placeholderText.includes('{n}')) { // Simpler check
-             placeholderText = placeholderText.replace(/\{n\}/g, index); // Use regex global replace
+        // Remplacement basique, suppose que la clé du placeholder n'a pas besoin de {n}
+        // Si des clés comme 'placeholders.step_n' sont utilisées, ceci doit être mis à jour
+        if (placeholderText.includes('{n}')) { // Vérification plus simple
+             placeholderText = placeholderText.replace(/\{n\}/g, index); // Utiliser le remplacement global regex
         }
         $el.attr('placeholder', placeholderText);
     });
-     // Translate static placeholders too
+     // Traduire aussi les placeholders statiques
      $('[data-translate-placeholder]:not([data-placeholder-index])').each(function() {
          const $el = $(this);
          const key = $el.data('translate-placeholder');
@@ -228,18 +220,18 @@ function translateDynamicPlaceholders(translations) {
 
 
 $(document).ready(function() {
-    // Validation logic remains the same, but use translated message
+    // La logique de validation reste la même, mais utilise le message traduit
     $('form').submit(function(e) {
         const stepCount = $('#steps-container .dynamic-field').length;
         const timerCount = $('#timers-container .dynamic-field').length;
 
         if (stepCount !== timerCount) {
-            e.preventDefault(); // Prevent submission
+            e.preventDefault(); // Empêcher la soumission
             showMessage(currentTranslations.messages.steps_timers_mismatch, 'error');
 
             return false;
         }
-        return true; // Allow submission
+        return true; // Autoriser la soumission
     });
 });
 </script>
