@@ -230,7 +230,6 @@ nav {
 }
 
 
-/* --- Forms --- */
 input[type="text"],
 input[type="password"],
 input[type="email"],
@@ -261,7 +260,6 @@ label {
     color: #D4AF37;
 }
 
-/* Search Container */
 .search-container {
     margin: 20px 0;
     width: 100%;
@@ -417,7 +415,6 @@ label {
     padding-left: 0;
 }
 
-/* Added Numbered List Styles */
 .recipe-details ol {
     counter-reset: step-counter;
 }
@@ -432,7 +429,6 @@ label {
     padding-left: 2.5em;
 }
 
-/* Add number specifically to OL list items */
 .recipe-details ol > li {
      counter-increment: step-counter;
 }
@@ -606,7 +602,7 @@ label {
 #users-table .button, #recipes-table .button {
     margin-left: 5px;
 }
-select.role-select { /* Style dropdown */
+select.role-select { 
     padding: 8px;
     border-radius: 4px;
     background-color: #243b52;
@@ -968,11 +964,11 @@ footer {
     max-width: 200px;
     max-height: 200px;
     margin-top: 2em;
-    border-radius: 50%; /* Rond */
+    border-radius: 50%; 
 }
 
 .logo:hover img {
-    transform: rotate(-360deg) scale(1.20); /* Légère rotation et agrandissement */
+    transform: rotate(-360deg) scale(1.20); 
     transition: transform 0.2s ease-in-out;
   }
 

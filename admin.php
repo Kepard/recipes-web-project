@@ -45,7 +45,7 @@ include 'header.php';
 ?>
 
 <script>
-    // Fonction d'initialisation appellee directement dans header.php
+// Fonction d'initialisation appellee directement dans header.php
 function initializePageContent(translations, lang) {
     const adminContainer = $(".admin-container");
     const usersTableBody = $("#users-table tbody");
@@ -89,7 +89,7 @@ function initializePageContent(translations, lang) {
     });
 
      // --- Charger les recettes en attente de validation ---
-     $.getJSON("recipes.json?v=" + Date.now(), function (recipes) { // Add cache buster
+     $.getJSON("recipes.json?v=" + Date.now(), function (recipes) { // cache buster pour resoudre le bug d'affichage lors du F5
         const unvalidatedRecipes = recipes.filter(recipe => recipe.validated == 0); 
 
         if (unvalidatedRecipes.length === 0) {
@@ -140,9 +140,9 @@ function initializePageContent(translations, lang) {
     usersTableBody.on("click", ".update-password", function() {
         const username = $(this).attr("data-username");
         const promptMessage = (translations.messages.enter_new_password).replace('{username}', username);
-        const newPassword = prompt(promptMessage);
+        const newPassword = prompt(promptMessage); // Prompt : ouvre un message avec un input dans le navigateur
 
-        if (newPassword) { // Only proceed if a password was entered
+        if (newPassword) { 
             $.ajax({
                 url: "update_users.php",
                 method: "POST",

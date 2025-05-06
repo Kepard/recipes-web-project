@@ -10,7 +10,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// --- Vérification de connexion ---
+
 // Vérifie si l'utilisateur est connecté.
 if (!isset($_SESSION['username'])) {
     // Si non connecté, affiche un message d'erreur.
@@ -19,15 +19,15 @@ if (!isset($_SESSION['username'])) {
         <div class="message error" data-translate="messages.login_to_view_profile">Veuillez vous connecter pour voir votre profil.</div>
     </div>
     ';
-    $title = "Profil"; // Titre pour utilisateur non connecté
+    $title = "Profile"; // Titre pour utilisateur non connecté
 } 
 
     // Si connecté, récupère les informations de l'utilisateur depuis la session.
-    // htmlspecialchars est utilisé pour sécuriser l'affichage.
+    // htmlspecialchars est utilisé pour sécuriser l'affichage et evier les attaques XSS (vu sur des tutoriels).
     $username = htmlspecialchars($_SESSION['username']);
     $role = htmlspecialchars($_SESSION['role']);
 
-    // --- Construction du contenu HTML pour utilisateur connecté ---
+    // Construction du contenu HTML pour utilisateur connecté 
     $content = '
     <div class="profile-container" id="profile-container">
         <h1 data-translate="labels.user_profile">Profil Utilisateur</h1>
@@ -40,8 +40,8 @@ if (!isset($_SESSION['username'])) {
             <button id="requestTranslator" class="button button-primary action-button" data-translate="buttons.request_translator">Demander Rôle Traducteur</button>
         </div>'; // Le div principal reste ouvert pour ajouter la section Chef potentiellement
 
-    // --- Section spécifique pour les Chefs ---
-    // Si l'utilisateur a le rôle 'Chef', ajoute une table pour ses recettes non validées.
+    // Section spécifique pour les Chefs 
+    // Si l'utilisateur a le rôle 'Chef', ajoute une table pour ses recettes en attente de validation.
     if ($role === 'Chef') {
         $content .= '
         <div class="chef-pending-recipes-section">
@@ -60,7 +60,7 @@ if (!isset($_SESSION['username'])) {
         ';
     }
 
-    // --- Fermeture du conteneur principal et Easter Egg ---
+    // Fermeture du conteneur principal et Easter Egg 
     $content .= '
         <div class="easter-egg">
             <img src="https://media1.tenor.com/m/g37xCu5wzPIAAAAd/tayomaki-hasbulla.gif" alt="Hasbulla GIF">
@@ -78,6 +78,7 @@ include 'header.php';
 /**
  * Initialise le contenu JS de la page après chargement des traductions.
  * Gère la logique des boutons de demande de rôle et le chargement des recettes en attente pour les chefs.
+ * Fonction egalement appellee dans header.php
  */
 function initializePageContent(translations, lang) {
 
@@ -87,17 +88,6 @@ function initializePageContent(translations, lang) {
         const currentRole = $("#userRole").text();
         const requestChefBtn = $("#requestChef");
         const requestTranslatorBtn = $("#requestTranslator");
-
-        /**
-         * Met à jour l'état (activé/désactivé) des boutons de demande de rôle
-         * en fonction du rôle actuel de l'utilisateur.
-         * On ne peut pas demander un rôle qu'on a déjà, ou si on est admin, ou si une demande est déjà en cours.
-         * @param {string} role Le rôle actuel de l'utilisateur.
-         */
-        function updateButtonStates(role) {
-            requestChefBtn.prop("disabled", role === "Chef" || role === "Administrateur" || role === "DemandeChef");
-            requestTranslatorBtn.prop("disabled", role === "Traducteur" || role === "Administrateur" || role === "DemandeTraducteur");
-        }
 
         // Met à jour l'état initial des boutons au chargement
         updateButtonStates(currentRole);
@@ -116,7 +106,15 @@ function initializePageContent(translations, lang) {
             loadChefPendingRecipes(translations, lang);
         }
     }
-} // Fin de initializePageContent
+} 
+
+/**
+ * Fonction utilitaire pour mettre à jour l'état des boutons de demande de rôle.
+ */
+function updateButtonStates(role) {
+    $("#requestChef").prop("disabled", role === "Chef" || role === "Administrateur" || role === "DemandeChef");
+    $("#requestTranslator").prop("disabled", role === "Traducteur" || role === "Administrateur" || role === "DemandeTraducteur");
+}
 
 
 /**
@@ -128,7 +126,7 @@ function loadChefPendingRecipes(translations, lang) {
     // Cible le corps du tableau où insérer les lignes
     const $tableBody = $("#chef-pending-recipes-table tbody");
 
-    // Charge les recettes via AJAX
+    // Charge les recettes via AJAX avec la cache busting
     $.getJSON("recipes.json?v=" + Date.now(), function (recipes) {
         // Vide le tableau avant d'ajouter les nouvelles lignes (évite duplication si rechargement)
         $tableBody.empty();
@@ -148,13 +146,11 @@ function loadChefPendingRecipes(translations, lang) {
             pendingRecipes.forEach(recipe => {
                  // Choix du nom selon la langue
                  const recipeName = lang === "fr" && recipe.nameFR ? recipe.nameFR : recipe.name;
-                 // Texte du statut (traduit)
-                 const statusText = translations.labels.pending_validation;
                  // Construction de la ligne HTML
                  const row = `
                     <tr>
                         <td><a href="recipe.php?id=${recipe.id}">${recipeName}</a></td>
-                        <td>${statusText}</td>
+                        <td>${translations.labels.pending_validation}</td>
                     </tr>
                 `;
                 // Ajoute la ligne au tableau
@@ -167,8 +163,6 @@ function loadChefPendingRecipes(translations, lang) {
 
 /**
  * Envoie une requête AJAX pour demander un nouveau rôle (DemandeChef ou DemandeTraducteur).
- * @param {string} newRole Le rôle demandé ("DemandeChef" ou "DemandeTraducteur").
- * @param {object} translations L'objet de traductions.
  */
 function updateRoleRequest(newRole, translations) {
     // Récupère le nom d'utilisateur depuis la page
@@ -184,7 +178,7 @@ function updateRoleRequest(newRole, translations) {
     // Désactive le bouton pendant l'appel AJAX
     $buttonToDisable.prop('disabled', true);
 
-    // Appel AJAX vers le script PHP qui gère la mise à jour du rôle (maintenant update_users.php)
+    // Appel AJAX vers le script PHP qui gère la mise à jour du rôle 
     $.ajax({
         url: "update_users.php", // URL du script PHP unifié
         method: "POST",
@@ -204,12 +198,5 @@ function updateRoleRequest(newRole, translations) {
     });
 }
 
-/**
- * Fonction utilitaire pour mettre à jour l'état des boutons de demande de rôle.
- */
-function updateButtonStates(role) {
-    $("#requestChef").prop("disabled", role === "Chef" || role === "Administrateur" || role === "DemandeChef");
-    $("#requestTranslator").prop("disabled", role === "Traducteur" || role === "Administrateur" || role === "DemandeTraducteur");
-}
 
 </script>

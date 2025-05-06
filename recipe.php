@@ -8,89 +8,84 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Récupération ID recette et infos utilisateur
+// Récupération données et utilisateur 
 $recipeId = (int) $_GET['id'];
 $currentUsername = $_SESSION['username'] ?? null;
 $currentRole = $_SESSION['role'] ?? null;
 
-// Chargement des recettes
-$recipesFile = 'recipes.json';
-$recipes = json_decode(file_get_contents($recipesFile), true);
-
-// --- Vérification d'accès aux recettes non validées ---
-// Bloque l'accès aux recettes non validées si l'utilisateur n'est ni l'auteur, ni admin.
-foreach ($recipes as $recipe) { 
-    if (isset($recipe['id']) && $recipe['id'] == $recipeId && $currentRole != 'Administrateur') {
-        $isAuthor = isset($recipe['Author']) && $recipe['Author'] === $currentUsername;
-        if (($recipe['validated'] ?? 1) == 0 && !$isAuthor) { // Ajout ?? 1 par sécurité
-            $content = "<div class='message error'> Vous n'avez pas la permission d'accéder à cette page.</div>"; // Message direct
-            $title = "Recette non validée";
-            include 'header.php';
-            exit;
-        }
-        break;
-    }
-    elseif (isset($recipe['id']) && $recipe['id'] == $recipeId && $currentRole == 'Administrateur') {
-         break; // L'admin a accès, on sort
-    }
+//  Vérification de connexion 
+if (!isset($currentUsername)) {
+    header("Location: index.php"); // Rediriger si non connecté
+    exit;
 }
 
-// Structure HTML de base (contenu injecté par JS)
-$content = '<div class="recipe-details" id="recipe-container"> </div>';
-$title = "Détails de la recette"; // Titre par défaut
+//  Chargement de la recette---
+$recipesFile = 'recipes.json';
+$recipes = [];
+$recipeData = null; // Contiendra les données de la recette trouvée
+$allRecipes = json_decode(file_get_contents($recipesFile), true);
 
-// Inclusion de l'en-tête
+// Recherche simplifiée de la recette par ID
+    foreach ($allRecipes as $recipe) {
+        if (isset($recipe['id']) && $recipe['id'] == $recipeId) {
+            $recipeData = $recipe;
+            break;
+        }
+    }
+
+
+//  Vérification d'accès pour recette non validée 
+$isAuthor = isset($recipeData['Author']) && $recipeData['Author'] === $currentUsername;
+$isAdmin = $currentRole === 'Administrateur';
+
+if (!$isAdmin && ($recipeData['validated'] ?? 1) == 0 && !$isAuthor) {
+    die("Vous n'avez pas la permission d'accéder à cette page.");
+}
+
+
+// Préparation structure HTML 
+$content = '<div class="recipe-details" id="recipe-container"></div>';
+$title = "Détails de la recette"; // Titre par défaut 
+
+//  Inclusion Header
 include 'header.php';
 ?>
 
 <script>
 /**
  * Initialise le contenu de la page après chargement des traductions.
- * Récupère les détails de la recette via AJAX et construit l'affichage HTML.
  */
 function initializePageContent(translations, lang) {
-    // Récupération variables PHP
     const recipeId = <?php echo json_encode($recipeId); ?>;
     const currentUser = <?php echo json_encode($currentUsername); ?>;
     const currentRole = <?php echo json_encode($currentRole); ?>;
-    const recipeContainer = $("#recipe-container"); // Conteneur cible
+    const recipeContainer = $("#recipe-container");
 
-    // Gestion ID invalide
-    if (!recipeId) {
-        recipeContainer.html(`<p class="message error">${translations.messages.recipe_not_found}</p>`);
-        return;
-    }
-
-    // Chargement AJAX des données de recettes (avec cache busting)
+   
+    // Chargement AJAX 
     $.getJSON("recipes.json?v=" + Date.now(), function(recipes) {
-        // Recherche de la recette spécifique
-        const recipe = recipes.find(r => r.id === recipeId);
+        const recipe = recipes.find(r => r.id === recipeId); 
 
-        // Gestion recette non trouvée
-        if (!recipe) {
-            recipeContainer.html(`<p class="message error">${translations.messages.recipe_not_found}</p>`);
-            return;
-        }
-
-        // --- Préparation des données pour affichage (selon langue) ---
+        // Préparation des données 
         const recipeName = lang === 'fr' && recipe.nameFR ? recipe.nameFR : recipe.name;
-        document.title = recipeName; // Met à jour titre onglet
-        // Choix des ingrédients/étapes selon la langue
-        const ingredients = (lang === 'fr' && recipe.ingredientsFR.length > 0) ? recipe.ingredientsFR : (recipe.ingredients || []);
-        const steps = (lang === 'fr' && recipe.stepsFR.length > 0) ? recipe.stepsFR : (recipe.steps || []);
+        document.title = recipeName; // Definir le titre de la page
+
+        const ingredients = (lang === 'fr' && recipe.ingredientsFR) ? recipe.ingredientsFR : (recipe.ingredients || []);
+        const steps = (lang === 'fr' && recipe.stepsFR) ? recipe.stepsFR : (recipe.steps || []);
         const without = recipe.Without || [];
         const likes = recipe.likes || [];
         const comments = recipe.comments || [];
+        const timers = recipe.timers || []; 
 
-        // --- Détermination des permissions/états utilisateur ---
         const hasLiked = currentUser && likes.includes(currentUser);
         const isAuthor = currentUser && recipe.Author === currentUser;
         const isAdmin = currentRole === 'Administrateur';
         const isTranslator = currentRole === 'Traducteur';
         const isChef = currentRole === 'Chef';
 
-        // --- Construction dynamique du HTML ---
-        // (Les commentaires sur la construction HTML PHP ont été omis comme demandé)
+        // Construction des éléments HTML (peut être optimisé)
+
+        // 1. Actions (Modify, Translate, Remove)
         let roleActionsHTML = '<div class="role-actions">';
         if (isAdmin) {
             roleActionsHTML += `<a href="modify_recipe.php?id=${recipe.id}" class="button button-primary admin-button" data-translate="buttons.modify_recipe">${translations.buttons.modify_recipe}</a>`;
@@ -104,33 +99,71 @@ function initializePageContent(translations, lang) {
         }
         roleActionsHTML += '</div>';
 
-        let totalTime = recipe.timers.reduce((sum, timer) => sum + (parseInt(timer, 10) || 0), 0);
+        // 2. Calcul temps total
+        let totalTime = timers.reduce((sum, timer) => sum + (parseInt(timer, 10) || 0), 0);
 
-        const ingredientsListHTML = ingredients.map(ing => {
-            const ingredientText = `${ing.quantity || ''} ${ing.name || ''}`.trim();
-            return `<li>${ingredientText || (translations.labels.unknown_ingredient)}</li>`;
-        }).join('');
+        // 3. Liste Ingrédients ---
+        let ingredientsSectionHTML = '';
+        // Filtre d'abord les ingrédients non vides
+        const validIngredients = ingredients.filter(ing => (ing.quantity || ing.name));
 
-        const stepsListHTML = steps.map((step, index) => {
-            const timerValue = recipe.timers && recipe.timers[index] ? parseInt(recipe.timers[index], 10) : 0;
-            const timerHTML = timerValue > 0
-                ? `<span class="timer">${timerValue} <span data-translate="labels.minutes">${translations.labels.minutes}</span></span>`
-                : '';
-            return `<li>${step}${timerHTML}</li>`;
-        }).join('');
+        if (validIngredients.length > 0) {
+            // Construit la liste UNIQUEMENT avec les ingrédients valides (car nous avons souvent des champs vides)
+            const listItems = validIngredients.map(ing => {
+                const ingredientText = `${ing.quantity || ''} ${ing.name || ''}`.trim();
+                return `<li>${ingredientText}</li>`;
+            }).join('');
 
-        const commentsListHTML = comments.map(comment => `
-            <div class="comment">
-                <strong>${comment.author}:</strong>
-                <span>${comment.content}</span>
-                ${comment.imageurl ? `
-                <div class="comment-image">
-                    <img src="${comment.imageurl}" alt="Comment image" onerror="this.style.display='none'">
-                </div>` : ''}
-                <small>${comment.date || ''}</small>
-            </div>
-        `).join('');
+            ingredientsSectionHTML = `
+                <h2><span data-translate="labels.ingredients">${translations.labels.ingredients}</span></h2>
+                <ul>${listItems}</ul>`;
+        } // Si validIngredients est vide, la section ne sera pas affichée
+        else {
+            ingredientsSectionHTML = `
+                <h2><span data-translate="labels.ingredients">${translations.labels.ingredients}</span></h2>
+                <p class="message info">${translations.messages?.no_ingredients_found}</p> `;
+        }
 
+        // 4. Liste Étapes ---
+        let stepsSectionHTML = '';
+        // Filtre d'abord les étapes non vides
+        const validSteps = steps.filter(step => step.trim()); 
+        if (validSteps.length > 0) {
+            // Construit la liste UNIQUEMENT avec les étapes valides
+            const listItems = validSteps.map((step, index) => {
+                const timerValue = timers[index] ? parseInt(timers[index], 10) : 0; 
+                const timerHTML = timerValue > 0
+                    ? `<span class="timer">${timerValue} <span data-translate="labels.minutes">${translations.labels.minutes}</span></span>`
+                    : '';
+                // Afficher l'étape (qui est forcément non vide ici)
+                return `<li>${step}${timerHTML}</li>`;
+            }).join('');
+            stepsSectionHTML = `
+                <h2><span data-translate="labels.steps">${translations.labels?.steps || 'Steps'}</span></h2>
+                <ol>${listItems}</ol>`;
+        } // Si validSteps est vide
+        else {
+            stepsSectionHTML = `
+                 <h2><span data-translate="labels.steps">${translations.labels.steps}</span></h2>
+                 <p class="message info">${translations.messages.no_steps_found}</p> `;
+        }
+
+        // 5. Liste Commentaires
+        let commentsListHTML = '';
+        if (comments.length > 0) {
+            commentsListHTML = comments.map(comment => `
+                <div class="comment">
+                    <strong>${comment.author || translations.labels.unknown}:</strong>
+                    <span>${comment.content || ''}</span>
+                    <div class="comment-image"><img src="${comment.imageurl}" alt="Comment image" onerror="this.style.display='none';"></div>
+                    <small>${comment.date || ''}</small>
+                </div>
+            `).join('');
+        } else {
+             commentsListHTML = `<p>${translations.messages.no_comments}</p>`; // Message si vide
+        }
+
+        // 6. Formulaire Commentaire
         const commentFormHTML = currentUser ? `
             <form id="commentForm">
                 <textarea id="commentInput" placeholder="${translations.placeholders.add_comment}" required></textarea>
@@ -141,23 +174,21 @@ function initializePageContent(translations, lang) {
             </form>
         ` : `<p data-translate="messages.login_to_comment">${translations.messages.login_to_comment}</p>`;
 
+        // 7. Assemblage final
         const recipeHTML = `
             ${roleActionsHTML}
             <h1>${recipeName}</h1>
-            <img src="${recipe.imageURL || 'placeholder.png'}" alt="${recipeName}" onerror="this.onerror=null;this.src='placeholder.png';">
+            <img src="${recipe.imageURL || 'placeholder.png'}" alt="${recipeName}" onerror="this.src='placeholder.png';">
 
-            <h2><span data-translate="labels.ingredients">${translations.labels.ingredients}</span></h2>
-            <ul>${ingredientsListHTML || `<li>${translations.labels.no_ingredients}</li>`}</ul>
-
-            <h2><span data-translate="labels.steps">${translations.labels.steps}</span></h2>
-            <ol>${stepsListHTML || `<li>${translations.labels.no_steps}</li>`}</ol>
+            ${ingredientsSectionHTML}
+            ${stepsSectionHTML}
 
             <div class="recipe-footer">
-                <p><strong><span data-translate="labels.author">${translations.labels.author}:</span></strong> ${recipe.Author || translations.labels.unknown}</p>
-                <p><strong><span data-translate="labels.dietary_restrictions">${translations.labels.dietary_restrictions}:</span></strong> ${without.join(', ') || translations.labels.none}</p>
+                <p><strong><span data-translate="labels.author">${translations.labels.author}:</span></strong> ${recipe.Author || (translations.labels.unknown)}</p>
+                <p><strong><span data-translate="labels.dietary_restrictions">${translations.labels.dietary_restrictions}:</span></strong> ${without.join(', ') || (translations.labels.none)}</p>
                 <p><strong><span data-translate="labels.total_time">${translations.labels.total_time}:</span></strong> ${totalTime} <span data-translate="labels.minutes">${translations.labels.minutes}</span></p>
                 <div class="like-section">
-                     <button id="like-button" class="like-button ${hasLiked ? 'liked' : ''}" title="${!currentUser ? (translations.messages.login_to_like) : ''}">
+                     <button id="like-button" class="like-button ${hasLiked ? 'liked' : ''}" title="${!currentUser ? translations.messages.login_to_like : ''}">
                          ❤️ <span class="like-count">${likes.length}</span>
                      </button>
                  </div>
@@ -165,114 +196,108 @@ function initializePageContent(translations, lang) {
 
             <div class="comments-section">
                 <h2><span data-translate="labels.comments">${translations.labels.comments}</span> <span id="commentCount">(${comments.length})</span></h2>
-                <div id="commentsList">${commentsListHTML || `<p>${translations.messages.no_comments}</p>`}</div>
+                <div id="commentsList">${commentsListHTML}</div> 
                 ${commentFormHTML}
             </div>
         `;
 
-        // Injection HTML dans la page
+        // Injection HTML
         recipeContainer.html(recipeHTML);
 
-        // --- Initialisation des gestionnaires d'événements ---
+        // Initialisation handlers 
         setupLikeButton(recipeId, currentUser, translations);
         setupCommentForm(recipeId, currentUser, translations);
 
-    });
-} // Fin initializePageContent
+    }); 
+} 
 
 /**
  * Attache la logique au bouton "Like".
  */
 function setupLikeButton(recipeId, currentUser, translations) {
-    // Attachement de l'événement click (évite doublons avec .off().on())
     $("#like-button").off('click').on('click', function() {
-        // Vérif connexion
-        if (!currentUser) { 
-            showMessage(translations.messages.login_to_like, 'error'); 
-            return; 
+        if (!currentUser) {
+            showMessage(translations.messages.login_to_like, 'error');
+            return;
         }
-
         const $button = $(this);
-        $button.prop('disabled', true); // Désactive bouton
-
-        // Appel AJAX vers like_recipe.php
+        $button.prop('disabled', true);
         $.ajax({
-            url: 'like_recipe.php', 
-            method: 'POST', 
-            data: { id: recipeId }, 
-            dataType: 'json',
+            url: 'like_recipe.php', method: 'POST', data: { id: recipeId }, dataType: 'json',
             success: function(response) {
-                if (response.success) { // Met à jour UI si succès
+                if (response.success) {
                     $button.toggleClass('liked', response.action === 'liked');
                     $button.find('.like-count').text(response.likeCount);
-                } 
+                }
             },
-            complete: function() { $button.prop('disabled', false); } // Réactive bouton
+            complete: function() { $button.prop('disabled', false); }
         });
     });
-} // Fin setupLikeButton
+} 
 
 /**
  * Attache la logique à la soumission du formulaire de commentaire.
- * Gère la récupération des données et l'envoi via FormData (pour l'image).
  */
 function setupCommentForm(recipeId, currentUser, translations) {
-    // Attachement de l'événement submit (évite doublons avec .off().on())
     $("#commentForm").off('submit').on('submit', function(e) {
-        e.preventDefault(); // Empêche rechargement
-        // Vérif connexion
-        if (!currentUser) { showMessage(translations.messages.login_to_comment, 'error'); return; }
-        // Récup données formulaire
+        e.preventDefault(); // Eviter d'envoyer le commentaire vide
+        if (!currentUser) {
+            showMessage(translations.messages.login_to_comment, 'error');
+            return;
+        }
         const commentText = $("#commentInput").val().trim();
         const imageFile = $("#imageFileInput")[0].files[0];
         const imageUrl = $("#imageUrlInput").val().trim();
-        // Vérif commentaire non vide
-        if (!commentText) { showMessage(translations.messages.enter_comment, 'error'); return; }
 
-        // Création FormData
-        const formData = new FormData();
+        if (!commentText) { // Vérifie juste si le texte est là
+            showMessage(translations.messages.enter_comment, 'error');
+            return;
+        }
+
+        const formData = new FormData(); // FormData est bien ici, car sauvegarde image potentielle
         formData.append("id", recipeId);
         formData.append("comment", commentText);
+
         if (imageFile) { formData.append("image", imageFile); }
         else if (imageUrl) { formData.append("imageURL", imageUrl); }
 
-        // Feedback bouton submit
         const $submitButton = $(this).find('button[type="submit"]');
-        const originalButtonText = $submitButton.html();
-        $submitButton.prop('disabled', true).html(translations.buttons.posting_comment);
+        const originalButtonText = $submitButton.html(); 
+        $submitButton.prop('disabled', true).html(translations.buttons.posting_comment); 
 
-        // Appel AJAX vers comment.php
         $.ajax({
-            url: "comment.php", type: "POST", data: formData,
-            processData: false, contentType: false, dataType: "json",
+            url: "comment.php", 
+            type: "POST", 
+            data: formData,
+            processData: false, // Pour ne pas convertir l'image en string
+            contentType: false, // Afin de denifir le Content-Type image automatiquement
+            dataType: "json",
             success: function(response) {
                 if (response.success) {
-                    // Construit et ajoute nouveau commentaire au DOM
                     const newCommentHTML = `
                         <div class="comment" style="display: none;">
                             <strong>${response.author}:</strong> <span>${response.content}</span>
-                            ${response.imageurl ? `<div class="comment-image"><img src="${response.imageurl}" alt="Image commentaire" onerror="this.style.display='none'"></div>` : ''}
+                            ${response.imageurl ? `<div class="comment-image"><img src="${response.imageurl}" alt="Image commentaire" onerror="this.style.display='none';"></div>` : ''}
                             <small>${response.date || new Date().toLocaleString()}</small>
                         </div>
                     `;
                     const $newComment = $(newCommentHTML);
-                    if ($("#commentsList").find('.comment').length === 0 && $("#commentsList").find('p').length > 0) { $("#commentsList").empty(); } // Enlève "pas de comm"
                     $("#commentsList").append($newComment);
                     $newComment.fadeIn();
                     // Vide formulaire
                     $("#commentInput").val(""); $("#imageUrlInput").val(""); $("#imageFileInput").val("");
                     // Met à jour compteur
                     const $commentCountSpan = $("#commentCount");
-                    const currentCountMatch = $commentCountSpan.text().match(/\d+/);
-                    const currentCount = currentCountMatch ? parseInt(currentCountMatch[0], 10) : 0;
+                    const currentCount = parseInt($commentCountSpan.text().replace(/\D/g,'')) || 0; // Extrait nombre plus simple
+                    // Incremente le nombre de commentaires sur la page, sans recharger
                     $commentCountSpan.text(`(${currentCount + 1})`);
-                    // Message succès
+
                     showMessage(translations.messages.comment_posted, 'success');
                 }
             },
-            complete: function() { $submitButton.prop('disabled', false).html(originalButtonText); } // Réactive bouton
+            complete: function() { $submitButton.prop('disabled', false).html(originalButtonText); }
         });
     });
-} // Fin setupCommentForm
+} 
 
 </script>

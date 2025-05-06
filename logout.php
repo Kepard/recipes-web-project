@@ -1,7 +1,7 @@
 <?php
-session_start(); // Start the session
-session_unset(); // Clear all session variables
-session_destroy(); // Destroy the session
-header("Location: index.php"); // Redirect to the homepage
+session_start(); // Demarrer la session (pas forcement necessaire)
+session_unset(); // Nettoyer toutes les variables de la session
+session_destroy(); // Detruire la session
+header("Location: index.php"); // Rediriger sur la page d'acceuil
 exit;
 ?>

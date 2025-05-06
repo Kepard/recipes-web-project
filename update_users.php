@@ -12,7 +12,7 @@ $targetUsername = $_POST['username'] ?? ''; // L'utilisateur dont le profil est 
 $loggedInUsername = $_SESSION['username'] ?? null; // L'utilisateur connecté
 $loggedInRole = $_SESSION['role'] ?? null; // Le rôle de l'utilisateur connecté
 
-// --- Vérification des Permissions ---
+// Vérification des Permissions
 $isAdmin = ($loggedInRole === 'Administrateur');
 $isSelfAction = ($loggedInUsername === $targetUsername);
 $allowedToProceed = false;
@@ -27,7 +27,7 @@ switch ($action) {
             $allowedToProceed = true;
         } else {
              header('HTTP/1.1 403 Forbidden');
-             die(json_encode(['success' => false]));
+             die();
         }
         break;
 
@@ -54,12 +54,12 @@ switch ($action) {
 // Si les permissions sont accordées, exécuter l'action
 if ($allowedToProceed) {
 
-    // --- Exécution de l'action ---
+    // Exécution de l'action
     $updateSuccess = false;
     switch ($action) {
         case 'update_role':
             $roleToSet = $_POST['role'] ?? '';
-            // Validation simple du rôle (pourrait être une liste définie)
+            // Validation simple du rôle 
             $validRoles = ["Administrateur", "Traducteur", "Chef", "DemandeChef", "DemandeTraducteur", "Cuisinier"];
             if (in_array($roleToSet, $validRoles)) {
                 $users[$targetUsername]['role'] = $roleToSet;

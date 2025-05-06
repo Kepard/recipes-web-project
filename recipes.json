@@ -3,7 +3,7 @@
         "id": 1,
         "name": "Crock Pot Roast",
         "nameFR": "Roti \u00e0 la cocotte",
-        "Author": "admin",
+        "Author": "F.Vernier",
         "Without": [
             "NoGluten",
             "NoMilk"
@@ -98,13 +98,6 @@
                 "imageurl": null
             },
             {
-                "id": 3,
-                "date": "2025-03-26 21:24:54",
-                "author": "trad",
-                "content": "testeeee",
-                "imageurl": null
-            },
-            {
                 "id": 5,
                 "date": "2025-03-27 21:41:10",
                 "author": "kevzer",
@@ -118,7 +111,7 @@
         "id": 2,
         "name": "Roasted Asparagus",
         "nameFR": "Asperges roties",
-        "Author": "",
+        "Author": "F.Vernier",
         "Without": [
             "NoGluten",
             "NoMilk",
@@ -193,13 +186,6 @@
         ],
         "comments": [
             {
-                "id": 4,
-                "date": "2025-03-26 22:33:25",
-                "author": "admin",
-                "content": "dsa",
-                "imageurl": null
-            },
-            {
                 "id": 2,
                 "date": "2025-05-02 11:50:53",
                 "author": "trad",
@@ -213,7 +199,7 @@
         "id": 3,
         "name": "Curried Lentils and Rice",
         "nameFR": "Lentilles et Riz au curry",
-        "Author": "",
+        "Author": "F.Vernier",
         "Without": [
             "NoGluten",
             "NoMilk",
@@ -285,7 +271,7 @@
         "id": 4,
         "name": "Big Night Pizza",
         "nameFR": "La pizza des grands soirs",
-        "Author": "",
+        "Author": "F.Vernier",
         "Without": [
             "Vegetarian"
         ],
@@ -417,7 +403,7 @@
         "id": 5,
         "name": "Cranberry and Apple Stuffed Acorn Squash Recipe",
         "nameFR": "Courge poivr\u00e9e farcies aux cranberries et aux pommes",
-        "Author": "",
+        "Author": "F.Vernier",
         "Without": [
             "NoGluten",
             "Vegetarian"
@@ -482,13 +468,13 @@
             "kevzer"
         ],
         "comments": [],
-        "validated": 1
+        "validated": 0
     },
     {
         "id": 6,
         "name": "Mic's Yorkshire Puds",
         "nameFR": "Yorkshire pudding  de Mickey",
-        "Author": "",
+        "Author": "F.Vernier",
         "Without": [
             "Vegetarian"
         ],
@@ -540,15 +526,17 @@
         ],
         "imageURL": "http:\/\/upload.wikimedia.org\/wikipedia\/commons\/f\/f9\/Yorkshire_Pudding.jpg",
         "originalURL": "https:\/\/fr.wikipedia.org\/wiki\/Yorkshire_pudding",
-        "likes": [],
+        "likes": [
+            "Bogdan"
+        ],
         "comments": [],
-        "validated": 1
+        "validated": 0
     },
     {
         "id": 7,
         "name": "Old-Fashioned Oatmeal Cookies",
         "nameFR": "",
-        "Author": "",
+        "Author": "F.Vernier",
         "Without": [],
         "ingredients": [
             {
@@ -650,16 +638,9 @@
                 "author": "chef",
                 "content": "Bien!",
                 "imageurl": null
-            },
-            {
-                "id": 2,
-                "date": "2025-05-05 20:21:41",
-                "author": "Vernier",
-                "content": "Je valide",
-                "imageurl": "https:\/\/img.freepik.com\/vecteurs-libre\/icone-facebook-like_1017-8081.jpg?semt=ais_hybrid&w=740"
             }
         ],
-        "validated": 1
+        "validated": 0
     },
     {
         "id": 8,
@@ -756,39 +737,113 @@
                 "imageurl": "uploads\/67ec4ab725e1c_989-447-max.png"
             }
         ],
-        "validated": 1
+        "validated": 0
     },
     {
         "id": 9,
         "name": "Pelmeni",
-        "nameFR": "Pelmenie",
+        "nameFR": "PelmeniTest",
         "Author": "chef",
         "Without": [
-            "NoMilk",
-            "Vegetarian"
+            "NoMilk"
         ],
         "ingredients": [
             {
-                "quantity": "1 ",
+                "quantity": "1",
                 "name": "Meat",
-                "type": "Meat"
+                "type": "Viande"
             },
             {
-                "quantity": "1",
-                "name": "Salt",
-                "type": "Addjustements"
+                "quantity": "2",
+                "name": "bull",
+                "type": "bull"
+            },
+            {
+                "quantity": "3",
+                "name": "TEST",
+                "type": "TEST"
+            },
+            {
+                "quantity": "",
+                "name": "",
+                "type": ""
+            },
+            {
+                "quantity": "",
+                "name": "",
+                "type": ""
+            },
+            {
+                "quantity": "",
+                "name": "",
+                "type": ""
+            },
+            {
+                "quantity": "",
+                "name": "",
+                "type": ""
+            },
+            {
+                "quantity": "",
+                "name": "",
+                "type": ""
+            },
+            {
+                "quantity": "",
+                "name": "",
+                "type": ""
+            },
+            {
+                "quantity": "",
+                "name": "",
+                "type": ""
             }
         ],
         "ingredientsFR": [
             {
                 "quantity": "1",
-                "name": "Viande",
-                "type": "Viande"
+                "name": "viande",
+                "type": "meat"
             },
             {
-                "quantity": "1",
-                "name": "Sel",
-                "type": "Condiments"
+                "quantity": "2",
+                "name": "boeuf",
+                "type": "boeuf"
+            },
+            {
+                "quantity": "",
+                "name": "",
+                "type": ""
+            },
+            {
+                "quantity": "",
+                "name": "",
+                "type": ""
+            },
+            {
+                "quantity": "",
+                "name": "",
+                "type": ""
+            },
+            {
+                "quantity": "",
+                "name": "",
+                "type": ""
+            },
+            {
+                "quantity": "",
+                "name": "",
+                "type": ""
+            },
+            {
+                "quantity": "",
+                "name": "",
+                "type": ""
+            },
+            {
+                "quantity": "",
+                "name": "",
+                "type": ""
             },
             {
                 "quantity": "",
@@ -797,19 +852,43 @@
             }
         ],
         "steps": [
-            "Cook",
-            "Salt"
+            "Cuisiner",
+            "Manger",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
         ],
         "stepsFR": [
-            "Cuire",
-            "Saler"
+            "Cook and cool",
+            "Manger",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
         ],
         "timers": [
-            "15",
-            "5"
+            "5",
+            "5",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
         ],
         "imageURL": "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/d\/df\/Pelmeni_Russian.jpg\/640px-Pelmeni_Russian.jpg",
-        "originalURL": "https:\/\/russieautrement.com\/nouvelles\/recettes-de-cuisine\/les-pelmenis-ou-raviolis-russes\/",
+        "originalURL": "https:\/\/russieautrement.com\/nouvelles\/recettes-de-cuisine\/les-pelmenis-ou-raviolis-russes",
         "likes": [],
         "comments": [
             {
@@ -820,7 +899,7 @@
                 "imageurl": null
             }
         ],
-        "validated": 1
+        "validated": 0
     },
     {
         "id": 10,
@@ -1670,9 +1749,18 @@
         "imageURL": "https:\/\/img1.russianfood.com\/dycontent\/images_upl\/467\/big_466730.jpg",
         "originalURL": "#",
         "likes": [
-            "admin"
+            "admin",
+            "trad"
         ],
-        "comments": [],
+        "comments": [
+            {
+                "id": 1,
+                "date": "2025-05-06 15:42:07",
+                "author": "trad",
+                "content": "Mon plat d'enfance !",
+                "imageurl": "https:\/\/img-global.cpcdn.com\/recipes\/35365f59b16ff3a0\/680x482cq70\/zharienyie-pirozhki-%D0%BE%D1%81%D0%BD%D0%BE%D0%B2%D0%BD%D0%B5-%D1%84%D0%BE%D1%82%D0%BE-%D1%80%D0%B5%D1%86%D0%B5%D0%BF%D1%82%D0%B0.jpg"
+            }
+        ],
         "validated": 1
     },
     {
@@ -1812,43 +1900,5 @@
         ],
         "comments": [],
         "validated": 1
-    },
-    {
-        "id": 20,
-        "name": "Khinkal",
-        "nameFR": "Hinkal",
-        "Author": "chef",
-        "Without": [
-            "NoGluten",
-            "NoMilk"
-        ],
-        "ingredients": [
-            {
-                "quantity": "1",
-                "name": "Meat",
-                "type": "Meat"
-            }
-        ],
-        "ingredientsFR": [
-            {
-                "quantity": "1",
-                "name": "Viande",
-                "type": "Viande"
-            }
-        ],
-        "steps": [
-            "Bake"
-        ],
-        "stepsFR": [
-            "Cuire"
-        ],
-        "timers": [
-            "15"
-        ],
-        "imageURL": "https:\/\/e1.edimdoma.ru\/data\/photos\/0026\/3442\/263442-ed4_wide.jpg?1628760955",
-        "originalURL": "",
-        "likes": [],
-        "comments": [],
-        "validated": 0
     }
 ]

@@ -2,27 +2,26 @@
 session_start();
 
 if (!isset($_SESSION['username'])) {
-    echo json_encode(["success" => false, "message" => "Vous devez être connecté pour commenter."]);
+    echo json_encode(["success" => false]);
     exit;
 }
 
-$recipeId = $_POST['id'] ?? null;
-$commentText = trim($_POST['comment'] ?? '');
-$imageURL = $_POST['imageURL'] ?? null;
+$recipeId = $_POST['id'];
+$commentText = $_POST['comment'];
+$imageURL = $_POST['imageURL'];
 
-// Handle file upload
+// Dans le cas ou l'utilisateur souhaite uploader un fichier
 if (!empty($_FILES['image']['name'])) {
     $uploadDir = 'uploads/';
     $fileName = uniqid() . '_' . basename($_FILES['image']['name']);
     $uploadFile = $uploadDir . $fileName;
-    $fileType = strtolower(pathinfo($uploadFile, PATHINFO_EXTENSION));
+    $fileType = pathinfo($uploadFile, PATHINFO_EXTENSION);
 
-    $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
-    if (in_array($fileType, $allowedTypes)) {
-        if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile)) {
-            $imageURL = $uploadFile;
-        }
+    // Noter l'url locale du ficher dans la variable imageURL
+    if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile)) {
+        $imageURL = $uploadFile;
     }
+    
 }
 
 if (empty($commentText)) {
@@ -34,7 +33,7 @@ $recipesFile = 'recipes.json';
 $recipes = json_decode(file_get_contents($recipesFile), true);
 
 foreach ($recipes as &$recipe) {
-    if ($recipe['id'] == $recipeId) { // Loose comparison to handle string vs numeric
+    if ($recipe['id'] == $recipeId) {
         $newComment = [
             'id' => count($recipe['comments']) + 1,
             'date' => date('Y-m-d H:i:s'),

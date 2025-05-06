@@ -1,37 +1,32 @@
 <?php
 session_start();
 
-// Check if user is logged in
+// Verifier que l'utilisateur est connecte
 if (!isset($_SESSION['username'])) {
     echo json_encode(['success' => false]);
     exit;
 }
 
-// Get recipe ID from POST data
+// Recuperer l'ID de la recette depuis le POST
 $recipeId = $_POST['id'];
 
-// Load recipes
+// Charger les recettes
 $recipesFile = 'recipes.json';
 $recipes = json_decode(file_get_contents($recipesFile), true);
 
-// Find the recipe
+// Trouver la recette grace a son id
 foreach ($recipes as &$recipe) {
-    if (isset($recipe['id']) && $recipe['id'] == $recipeId) {        
-        // Initialize likes array if it doesn't exist
-        if (!isset($recipe['likes'])) {
-            $recipe['likes'] = [];
-        }
-        
-        // Check if user already liked this recipe
+    if ($recipe['id'] == $recipeId) {        
+        // Verifier si l'utilisateur a deja liker la recette
         $username = $_SESSION['username'];
         $userIndex = array_search($username, $recipe['likes']);
         
         if ($userIndex === false) {
-            // Add like
+            // Ajouter un like
             $recipe['likes'][] = $username;
             $action = 'liked';
         } else {
-            // Remove like
+            // Retirer un like
             array_splice($recipe['likes'], $userIndex, 1);
             $action = 'unliked';
         }
@@ -40,8 +35,10 @@ foreach ($recipes as &$recipe) {
     }
 }
 
+// Sauvegarder
 file_put_contents($recipesFile, json_encode($recipes, JSON_PRETTY_PRINT));
 
+// Envoyer la reponse de success au AJAX
 echo json_encode([
     'success' => true,
     'action' => $action,

@@ -10,9 +10,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <!-- Bibliothèque jQuery -->
+    <!-- Bibliothèque jQuery (source google api) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <!-- Favicon -->
+    <!-- Favicon Croissant -->
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
 </head>
 <body>
@@ -71,7 +71,7 @@
             <!-- Barre de navigation pour utilisateurs connectés -->
             <div class="logged-in-nav">
                 <a href="profile.php" class="button button-primary profile-button" data-translate="buttons.profile">Mon Profil</a>
-                <!-- Formulaire pour la déconnexion (méthode POST recommandée) -->
+                <!-- Formulaire pour la déconnexion -->
                 <form id="logout-form" action="logout.php" method="POST">
                     <button type="submit" id="logout" class="button button-secondary" data-translate="buttons.logout">Déconnexion</button>
                 </form>
@@ -117,19 +117,21 @@ let datafile; // Stockera toutes les traductions de data.json
 let currentLang = localStorage.getItem("lang") || "fr"; // Langue actuelle (FR par défaut)
 let currentTranslations; // Stockera les traductions pour la langue actuelle
 
-/**
- * Récupère une valeur de traduction nichée (ex: "messages.login_success").
- */
+
+// Récupère une valeur de traduction (ex: "messages.login_success").
+// tranlations = L'objet de base où chercher (ex: currentTranslations)
+// keyString - La chaîne représentant le chemin vers la valeur (ex: "a.b.c")
+
 function getNestedTranslation(translations, keyString) {
-    if (!translations || !keyString) return null;
-    const keys = keyString.split('.');
-    let result = translations;
+    if (!translations || !keyString) return null; // Si il manque des arguments, annuler
+    const keys = keyString.split('.'); // On divise la string dans un tableau de cles
+    let result = translations; 
     try {
         for (const key of keys) {
             result = result[key];
             if (result === undefined) return null; // Clé non trouvée
         }
-        return result ; // Retourne seulement si c'est une chaîne
+        return result ; 
     } catch (e) {
         console.warn(`Erreur accès clé traduction: ${keyString}`, e);
         return null;
@@ -151,15 +153,15 @@ function translatePage(translations) {
 
         if (translation !== null) {
             // Applique la traduction selon le type d'élément
-            if ($(this).is('input[type="text"], input[type="password"], input[type="search"], textarea')) {
+            if ($(this).is('input,  textarea')) {
                 $(this).attr('placeholder', translation); // Pour les placeholders
             } else if ($(this).is('button, a, span, label, h1, h2, h3, h4, h5, h6, p, strong, th, option')) {
-                 $(this).html(translation); // Utilise .html() pour permettre les entités HTML (ex: ❤️)
+                 $(this).html(translation); // Utilise .html() pour permettre les entités HTML comme le symbole ❤️
             } else {
                  $(this).text(translation); // Pour les autres éléments simples
             }
         } else {
-             // Avertissement si une clé n'est pas trouvée dans data.json
+             // Avertissement si une clé n'est pas trouvée dans data.json (debug)
              console.warn(`Traduction non trouvée pour la clé: ${key}`);
         }
     });
@@ -168,35 +170,37 @@ function translatePage(translations) {
 /**
  * Affiche un message temporaire à l'utilisateur (succès, erreur, info).
  */
-function showMessage(message, type = 'info') {
-    // Tente de traduire le message s'il correspond à une clé dans messages.*
-    const messageText = getNestedTranslation(currentTranslations?.messages, message) || message;
+function showMessage(messageKeyOrText, type = 'info') {
+    // Définit une valeur par défaut SÛRE si l'entrée est invalide
+    // Resolution d'un bug
+    const inputText = (messageKeyOrText === null || messageKeyOrText === undefined) ? '' : String(messageKeyOrText);
 
+    let messageText = inputText; // Utilise l'entrée brute (qui ne peut plus être null/undefined grâce à l'étape 1)
+    
     // Crée l'élément HTML du message
     const messageElement = `<div class="message ${type}">${messageText}</div>`;
-    const $messageContainer = $('#message-container'); // Conteneur cible
+    const $messageContainer = $('#message-container');
 
     // Ajoute le message au conteneur
     $messageContainer.append(messageElement);
-    const $newMessage = $messageContainer.children().last(); // Référence au message ajouté
+    const $newMessage = $messageContainer.children().last();
 
     // Fait disparaître et supprime le message après un délai
     setTimeout(() => {
         $newMessage.fadeOut(500, function() {
             $(this).remove();
         });
-    }, 3500); // Délai d'affichage (3.5 secondes)
+    }, 3500);
 }
 
 
-/**
- * Sélectionne et affiche une astuce de cuisine aléatoire.
- * @param {object} translations - L'objet des traductions pour la langue actuelle.
- */
+// Sélectionne et affiche une astuce de cuisine aléatoire.
+//  translations = L'objet des traductions pour la langue actuelle.
+ 
 function displayRandomTip(translations) {
     const tipContainer = $('#tip-of-the-day');
     const tipsArray = translations.tips; // Accède au tableau des astuces
-    const tipPrefix = translations.labels.tip_prefix || 'Tip:'; // Préfixe traduit ou défaut
+    const tipPrefix = translations.labels.tip_prefix ; // Préfixe traduit 
     // Choisit un index aléatoire
     const randomIndex = Math.floor(Math.random() * tipsArray.length);
     // Récupère l'astuce aléatoire
@@ -208,30 +212,29 @@ function displayRandomTip(translations) {
 
 // Code exécuté une fois la page entièrement chargé
 $(document).ready(function () {
-    // --- Initialisation ---
-    // Charge les traductions depuis data.json
+    // Charge les traductions depuis data.json avec la fonction JQuery
     $.getJSON("data.json", function (data) {
         datafile = data; // Stocke toutes les langues dans la variable globale
         let translations = datafile[currentLang]; // Sélectionne la langue actuelle
 
-        // 1. Traduit les éléments statiques présents au chargement
+        // Traduit les éléments statiques présents au chargement
         translatePage(translations);
 
         // AFFICHE L'ASTUCE DU JOUR INITIALE
         displayRandomTip(translations);
 
-        // 2. Appelle la fonction d'initialisation spécifique à la page actuelle
+        //   Appelle la fonction d'initialisation spécifique à la page actuelle
         //    (doit être définie dans le <script> de la page PHP comme index.php, admin.php...)
         if (typeof initializePageContent === 'function') {
             initializePageContent(translations, currentLang);
-        } else {
+        }   // else {
             // Avertissement si la fonction n'est pas définie pour cette page
-            console.warn("La fonction initializePageContent() n'est pas définie pour cette page.");
-        }
+            // console.warn("La fonction initializePageContent() n'est pas définie pour cette page.");
+        //   }
 
     });
 
-    // --- Gestionnaires d'Événements Globaux ---
+    // Gestionnaires d'Événements Globaux
 
     // Changement de Langue
     $("#changeLang").click(function () {
@@ -351,7 +354,7 @@ $(document).ready(function () {
                         showMessage(response.message, 'success');
                         setTimeout(() => {
                             window.location.reload(); // Recharge pour mettre à jour l'état de connexion
-                        }, 1500); // Délai de 1.5s
+                        }, 1500); // Délai de 1.5s pour simuler un chargement (mais seulement simule)
                     }
                     // Pas d'action spécifique pour signup ici (géré par #validate-signup)
                 } else {

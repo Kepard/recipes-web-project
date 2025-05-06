@@ -1,20 +1,20 @@
 <?php
 session_start();
 
-// Check if user is logged in and is an administrator
+// Verifier la connection et les droits admin
 if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'Administrateur') {
     header('HTTP/1.1 403 Forbidden');
     die();
 }
 
-// Get recipe ID from URL
+// Recuperer l'id depuis le GET
 $recipeId = $_GET['id'];
 
-// Load recipes
+// Charger les recettes
 $recipesFile = 'recipes.json';
 $recipes = json_decode(file_get_contents($recipesFile), true);
 
-// Find and remove the recipe
+// Trouver et supprimer la recette
 foreach ($recipes as $key => $recipe) {
     if (isset($recipe['id']) && $recipe['id'] == $recipeId) {
         unset($recipes[$key]);
@@ -22,10 +22,10 @@ foreach ($recipes as $key => $recipe) {
     }
 }
 
-// Reindex array (optional, removes gaps in array keys)
+// Reindexer pour eviter de creer des gaps
 $recipes = array_values($recipes);
 
-
+// Sauvegarder dans le JSON
 file_put_contents($recipesFile, json_encode($recipes, JSON_PRETTY_PRINT));
 
 // Envoyer un message de success au AJAX

@@ -1,275 +1,240 @@
 <?php
-// Demarrer une nouvelle session si ce n'est pas encore fait
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+/**
+ * Page de modification de recette 
+ */
+
+
+// Demarrer la session si ce n'est pas deja fait
+if (session_status() === PHP_SESSION_NONE) { 
+    session_start(); 
 }
 
-// Recuperer l'id avec la requete GET
+// Recuperer l'ID de la recette depuis GET
 $recipeId = (int) $_GET['id'];
 
-// Verifier que l'utilisateur est connecte
-if (!isset($_SESSION['username'])) {
-    header("Location: index.php"); // Redirect if not logged in
-    exit;
+// Si l'utilisateur n'est pas connecte -> refuser l'access
+if (!isset($_SESSION['username'])) { 
+    header("Location: index.php"); 
+    exit; 
 }
+
+// Recuperer les variables de la session
 $currentUser = $_SESSION['username'];
 $currentRole = $_SESSION['role'];
 
-
-// Charger les recettes depuis le json
+// Recuperer les recettes depuis le fichier JSON
 $recipesFile = 'recipes.json';
-$recipes = [];
 $recipeToModify = null;
-$recipeKey = null; // Pour stocker l'index de la recette
+$recipeKey = null;
+
 $recipes = json_decode(file_get_contents($recipesFile), true);
 
-// Trouver la recette à modifier en utilisant l'ID numérique et stocker sa clé
+// Trouver l'index de la recette correspondante
 foreach ($recipes as $key => $recipe) {
-    if (isset($recipe['id']) && $recipe['id'] == $recipeId) {
-        $recipeToModify = $recipe;
-        $recipeKey = $key; // Store the key
+    if ($recipe['id'] == $recipeId){
+        $recipeToModify = $recipe; 
+        $recipeKey = $key; 
         break;
-        }
+    }
 }
 
-
-// Si la recette n'est pas trouvee ou invalide
-if (!$recipeToModify || $recipeId === null) {
-     $_SESSION['flash_message'] = ['type' => 'error', 'text' => 'Recipe not found or invalid ID.'];
-     header("Location: index.php");
-     exit;
-}
-
-// --- Permission Check ---
 $isAuthor = isset($recipeToModify['Author']) && $recipeToModify['Author'] === $currentUser;
 $isAdmin = $currentRole === 'Administrateur';
 
-if (!$isAdmin && !$isAuthor) {
-     $_SESSION['flash_message'] = ['type' => 'error', 'text' => 'You do not have permission to modify this recipe.'];
-     header("Location: recipe.php?id=" . $recipeId); 
-     exit;
+if (!$isAdmin && !$isAuthor) { 
+    header('HTTP/1.1 403 Forbidden');
+    die(); 
 }
 
 
-
+// Traitement POST 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    // Valider et nettoyer l'input
-    $name = trim(htmlspecialchars($_POST['name'] ?? ''));
-    $nameFR = trim(htmlspecialchars($_POST['nameFR'] ?? ''));
+    $name = $_POST['name'] ?? '';
+    $nameFR = $_POST['nameFR'] ?? '';
     $without = $_POST['without'] ?? [];
+
     $ingredients = $_POST['ingredients'] ?? [];
     $ingredientsFR = $_POST['ingredientsFR'] ?? [];
     $steps = $_POST['steps'] ?? [];
     $stepsFR = $_POST['stepsFR'] ?? [];
     $timers = $_POST['timers'] ?? [];
-    $imageURL = filter_var(trim($_POST['imageURL'] ?? ''), FILTER_SANITIZE_URL);
-    $originalURL = filter_var(trim($_POST['originalURL'] ?? ''), FILTER_SANITIZE_URL);
 
-    // Mettre a jour les donnees de la recette
+
+    $imageURL = $_POST['imageURL'] ?? '';
+    $originalURL = $_POST['originalURL'] ?? '';
+
+    // Mise à jour recette
     $recipes[$recipeKey] = [
-        "id" => $recipeId, // ID original
-        "name" => $name,
+        "id" => $recipeId, 
+        "name" => $name, 
         "nameFR" => $nameFR,
-        "Author" => $recipeToModify['Author'], // Garder l'auteur 
+        "Author" => $recipeToModify['Author'], // Garder l'auteur initial
         "Without" => $without,
-        "ingredients" => $ingredients,
+        "ingredients" => $ingredients, 
         "ingredientsFR" => $ingredientsFR,
-        "steps" => $steps,
-        "stepsFR" => $stepsFR,
+        "steps" => $steps, 
+        "stepsFR" => $stepsFR, 
         "timers" => $timers,
-        "imageURL" => $imageURL,
+        "imageURL" => $imageURL, 
         "originalURL" => $originalURL,
-        "likes" => $recipeToModify['likes'] ?? [], // Garder les likes
-        "comments" => $recipeToModify['comments'] ?? [], // Garder les commentaires
-        "validated" => ($isAdmin) ? 1 : 0 // Validation a 0 par defaut apres toute modification, en attente de validation par l'admin
+        "likes" => $recipeToModify['likes'] ?? [],  // Garder les likes
+        "comments" => $recipeToModify['comments'] ?? [], // Garder les commentaires 
+        "validated" => ($isAdmin) ? 1 : 0 // Mettre la validation a 0 pour toute modification sauf si c'est l'administrateur qui modifie (approuvee par defaut)
     ];
 
+    // Sauvegarde et redirection
     file_put_contents($recipesFile, json_encode($recipes, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-
     header("Location: recipe.php?id=" . $recipeId);
+    exit;
 }
 
 
-/**
- * Génère le HTML pour les champs dynamiques (ingrédients, étapes, minuteurs)
- * pré-remplis avec les données existantes ou un champ vide si aucune donnée.
- * Les placeholders sont définis directement en PHP (français par défaut).
- */
-function generateDynamicFields($data, $type, $lang = '') {
-    $fields = '';
-    $namePrefix = $type . ($lang ? 'FR' : ''); 
-
-    if (!empty($data)) {
-        foreach ($data as $index => $item) {
-        // Ajoute l'attribut data-sync-type basé sur le $type ('ingredients', 'steps', 'timers')
-        $syncType = ($type === 'ingredients' || $type === 'steps') ? strtolower(rtrim($type, 's')) : 'timer'; // Simplifie 'ingredients'->'ingredient', 'steps'->'step', 'timers'->'timer'
-        $removeButton = '<button type="button" class="remove-field button button-danger" data-sync-type="' . $syncType . '">×</button>';            $fieldContent = '';
-
-            if ($type === 'ingredients') {
-                 $quantity = htmlspecialchars($item['quantity'] ?? '');
-                 $name = htmlspecialchars($item['name'] ?? '');
-                 $ingredientType = htmlspecialchars($item['type'] ?? ''); 
-                 $placeholderQty = ($lang === 'FR' ? 'Quantité' : 'Quantity');
-                 $placeholderName = ($lang === 'FR' ? 'Nom ingrédient' : 'Ingredient Name');
-                 $placeholderType = ($lang === 'FR' ? 'Type' : 'Type');
-
-                 $fieldContent = '
-                    <div class="ingredient">
-                        <input type="text" name="' . $namePrefix . '[' . $index . '][quantity]" value="' . $quantity . '" placeholder="'.$placeholderQty.'">
-                        <input type="text" name="' . $namePrefix . '[' . $index . '][name]" value="' . $name . '" placeholder="'.$placeholderName.'">
-                        <input type="text" name="' . $namePrefix . '[' . $index . '][type]" value="' . $ingredientType . '" placeholder="'.$placeholderType.'">
-                    </div>';
-            } elseif ($type === 'steps') {
-                $stepText = htmlspecialchars($item ?? '');
-                $placeholder = ($lang === 'FR' ? 'Étape ' : 'Step ') . ($index + 1);
-                $fieldContent = '<textarea name="' . $namePrefix . '[' . $index . ']" placeholder="' . $placeholder . '">' . $stepText . '</textarea>';
-            } elseif ($type === 'timers') {
-                $timerValue = htmlspecialchars($item ?? '');
-                $placeholder = ($lang === 'FR' ? 'Minuteur Étape ' : 'Timer Step ') . ($index + 1);
-                $fieldContent = '<input type="number" name="' . $namePrefix . '[' . $index . ']" value="' . $timerValue . '" placeholder="' . $placeholder . '" min="0">';
-            }
-
-            if (!empty($fieldContent)) {
-                 $fields .= '<div class="dynamic-field">' . $fieldContent . $removeButton . '</div>';
-            }
-        }
-    }
-
-    // --- Génération d'un champ vide si aucune donnée ---
-     if (empty($fields)) {
-         $removeButton = '<button type="button" class="remove-field button button-danger">×</button>';
-         $fieldContent = '';
-         $index = 0; 
-         if ($type === 'ingredients') {
-             $placeholderQty = ($lang === 'FR' ? 'Quantité' : 'Quantity');
-             $placeholderName = ($lang === 'FR' ? 'Nom ingrédient' : 'Ingredient Name');
-             $placeholderType = ($lang === 'FR' ? 'Type' : 'Type');
-             $fieldContent = '
-                <div class="ingredient">
-                    <input type="text" name="' . $namePrefix . '[0][quantity]" placeholder="'.$placeholderQty.'">
-                    <input type="text" name="' . $namePrefix . '[0][name]" placeholder="'.$placeholderName.'">
-                    <input type="text" name="' . $namePrefix . '[0][type]" placeholder="'.$placeholderType.'">
-                </div>';
-         } elseif ($type === 'steps') {
-             $placeholder = ($lang === 'FR' ? 'Étape 1' : 'Step 1');
-             $fieldContent = '<textarea name="' . $namePrefix . '[0]" placeholder="' . $placeholder . '"></textarea>';
-         } elseif ($type === 'timers') {
-             $placeholder = ($lang === 'FR' ? 'Minuteur Étape 1' : 'Timer Step 1');
-             $fieldContent = '<input type="number" name="' . $namePrefix . '[0]" placeholder="' . $placeholder . '" min="0">';
-         }
-          if (!empty($fieldContent)) {
-             $fields .= '<div class="dynamic-field">' . $fieldContent . $removeButton . '</div>';
-          }
-     }
 
 
-    return $fields;
-}
-
-
-// --- Construction du HTML du formulaire ---
-// Utilisation de generateDynamicFields pour les sections dynamiques.
-// Labels et boutons sont directement en français/anglais selon le besoin immédiat.
-
+// Construction directe du HTML du formulaire sur PHP 
 $content = '
 <div class="modify-recipe-container">
-    <h1>Modify Recipe: ' . htmlspecialchars($recipeToModify['name']) . '</h1>
+    <h1 data-translate="labels.modify_recipe">Modifier la Recette : ' . htmlspecialchars($recipeToModify['name'], ENT_QUOTES, 'UTF-8') . '</h1>
+    <p> Modifiez les champs existants. Laissez les champs vides pour les supprimer. </p>
+
     <form method="POST" action="modify_recipe.php?id=' . $recipeId . '">
 
-        <label for="name">Recipe Name (English): *</label>
-        <input type="text" id="name" name="name" value="' . htmlspecialchars($recipeToModify['name'] ?? '') . '" required>
+        <label for="name" data-translate="labels.recipe_name_en_req">Nom Recette (Anglais) : *</label>
+        <input type="text" id="name" name="name" value="' . htmlspecialchars($recipeToModify['name'] ?? '', ENT_QUOTES, 'UTF-8') . '" required>
 
-        <label for="nameFR">Recipe Name (French):</label>
-        <input type="text" id="nameFR" name="nameFR" value="' . htmlspecialchars($recipeToModify['nameFR'] ?? '') . '">
+        <label for="nameFR" data-translate="labels.recipe_name_fr">Nom Recette (Français) :</label>
+        <input type="text" id="nameFR" name="nameFR" value="' . htmlspecialchars($recipeToModify['nameFR'] ?? '', ENT_QUOTES, 'UTF-8') . '">
 
         <div class="checkbox-group">
-            <label>Dietary Restrictions:</label>';
-            $allRestrictions = ['NoGluten', 'NoMilk', 'Vegetarian', 'Vegan']; 
+            <label data-translate="labels.dietary_restrictions">Restrictions alimentaires :</label>';
+            $allRestrictions = ['NoGluten', 'NoMilk', 'Vegetarian', 'Vegan'];
             $currentRestrictions = $recipeToModify['Without'] ?? [];
             foreach ($allRestrictions as $restriction) {
                 $checked = in_array($restriction, $currentRestrictions) ? 'checked' : '';
+                // Utilise data-translate pour les labels des checkboxes
                 $content .= '
                 <div>
-                    <input type="checkbox" id="' . strtolower($restriction) . '" name="without[]" value="' . $restriction . '" ' . $checked . '>
-                    <label for="' . strtolower($restriction) . '">' . $restriction . '</label> 
+                    <input type="checkbox" id="' . $restriction . '" name="without[]" value="' . $restriction . '" ' . $checked . '>
+                    <label for="' . $restriction . '" data-translate="labels.' . $restriction . '">' . $restriction . '</label>
                 </div>';
             }
 $content .= '
         </div>
 
-         <div class="dynamic-fields-section">
-            <label>Ingredients (English): *</label>
-            <div id="ingredients-container">' .
-                generateDynamicFields($recipeToModify['ingredients'] ?? [], 'ingredients') . '
+        <div class="dynamic-fields-section">
+            <label data-translate="labels.ingredients_en_req">Ingrédients (Anglais) : *</label>
+            <div id="ingredients-container">';
+            // Boucle pour générer un nombre FIXE de champs ingrédients EN
+            for ($i = 0; $i < 10; $i++) {
+                // Récupère la valeur existante pour cet index
+                $ingredient = $recipeToModify['ingredients'][$i];
+                $quantity = htmlspecialchars($ingredient['quantity'] ?? '', ENT_QUOTES, 'UTF-8');
+                $name_val = htmlspecialchars($ingredient['name'] ?? '', ENT_QUOTES, 'UTF-8'); // Éviter conflit avec name= field name
+                $ingredientTypeVal = htmlspecialchars($ingredient['type'] ?? '', ENT_QUOTES, 'UTF-8');
+                $content .= '
+                <div class="dynamic-field"> 
+                    <div class="ingredient">
+                        <input type="text" name="ingredients[' . $i . '][quantity]" value="' . $quantity . '">
+                        <input type="text" name="ingredients[' . $i . '][name]" value="' . $name_val . '">
+                        <input type="text" name="ingredients[' . $i . '][type]" value="' . $ingredientTypeVal . '">
+                    </div>
+                </div>';
+            }
+$content .= '
             </div>
-            <button type="button" id="add-ingredient" class="button button-secondary">Add Ingredient</button>
         </div>
 
         <div class="dynamic-fields-section">
-            <label>Ingredients (French):</label>
-            <div id="ingredients-fr-container">' .
-                generateDynamicFields($recipeToModify['ingredientsFR'] ?? [], 'ingredients', 'FR') . '
+            <label data-translate="labels.ingredients_fr">Ingrédients (Français) :</label>
+            <div id="ingredients-fr-container">';
+             // Boucle pour générer un nombre FIXE de champs ingrédients FR
+             for ($i = 0; $i < 10; $i++) {
+                 $ingredientFR = $recipeToModify['ingredientsFR'][$i];
+                 $quantityFR = htmlspecialchars($ingredientFR['quantity'] ?? '', ENT_QUOTES, 'UTF-8');
+                 $nameFR_val = htmlspecialchars($ingredientFR['name'] ?? '', ENT_QUOTES, 'UTF-8');
+                 $ingredientTypeValFR = htmlspecialchars($ingredientFR['type'] ?? '', ENT_QUOTES, 'UTF-8');
+                  $content .= '
+                 <div class="dynamic-field">
+                     <div class="ingredient">
+                         <input type="text" name="ingredientsFR[' . $i . '][quantity]" value="' . $quantityFR . '">
+                         <input type="text" name="ingredientsFR[' . $i . '][name]" value="' . $nameFR_val . '">
+                         <input type="text" name="ingredientsFR[' . $i . '][type]" value="' . $ingredientTypeValFR . '">
+                     </div>
+                 </div>';
+            }
+$content .= '
             </div>
-            <button type="button" id="add-ingredient-fr" class="button button-secondary">Add Ingredient (French)</button>
-        </div>
-
-         <div class="dynamic-fields-section">
-            <label>Steps (English): *</label>
-            <div id="steps-container">' .
-                generateDynamicFields($recipeToModify['steps'] ?? [], 'steps') . '
-            </div>
-            <button type="button" id="add-step" class="button button-secondary">Add Step</button>
         </div>
 
         <div class="dynamic-fields-section">
-             <label>Steps (French):</label>
-             <div id="steps-fr-container">' .
-                 generateDynamicFields($recipeToModify['stepsFR'] ?? [], 'steps', 'FR') . '
+            <label data-translate="labels.steps_en_req">Étapes (Anglais) : *</label>
+            <div id="steps-container">';
+             // Boucle pour générer un nombre FIXE de champs étapes EN
+             for ($i = 0; $i < 10; $i++) {
+                 $stepText = htmlspecialchars($recipeToModify['steps'][$i] ?? '', ENT_QUOTES, 'UTF-8');
+                 $content .= '
+                 <div class="dynamic-field">
+                     <textarea name="steps[' . $i . ']"' . ($i + 1) . '">' . $stepText . '</textarea>
+                 </div>';
+            }
+$content .= '
+            </div>
+        </div>
+
+        <div class="dynamic-fields-section">
+             <label data-translate="labels.steps_fr">Étapes (Français) :</label>
+             <div id="steps-fr-container">';
+             // Boucle pour générer un nombre FIXE de champs étapes FR
+             for ($i = 0; $i < 10; $i++) {
+                $stepTextFR = htmlspecialchars($recipeToModify['stepsFR'][$i] ?? '', ENT_QUOTES, 'UTF-8');
+                $content .= '
+                <div class="dynamic-field">
+                    <textarea name="stepsFR[' . $i . ']"' . ($i + 1) . '">' . $stepTextFR . '</textarea>
+                </div>';
+             }
+$content .= '
              </div>
-             <button type="button" id="add-step-fr" class="button button-secondary">Add Step (French)</button>
         </div>
 
-         <div class="dynamic-fields-section">
-            <label>Timers (in minutes, one per step): *</label>
-            <div id="timers-container">' .
-                generateDynamicFields($recipeToModify['timers'] ?? [], 'timers') . '
+        <div class="dynamic-fields-section">
+            <label data-translate="labels.timers_req">Minuteurs (en minutes, un par étape) : *</label>
+            <div id="timers-container">';
+             // Boucle pour générer un nombre FIXE de champs minuteurs
+             for ($i = 0; $i < 10; $i++) {  
+                 $timerValue = htmlspecialchars($recipeToModify['timers'][$i] ?? '', ENT_QUOTES, 'UTF-8');
+                  $content .= '
+                 <div class="dynamic-field">
+                     <input type="number" name="timers[' . $i . ']" value="' . $timerValue . '" min="0">
+                 </div>';
+            }
+$content .= '
             </div>
-            <button type="button" id="add-timer" class="button button-secondary">Add Timer</button>
         </div>
 
+        <label for="imageURL" data-translate="labels.image_url">URL Image :</label>
+        <input type="url" id="imageURL" name="imageURL" value="' . htmlspecialchars($recipeToModify['imageURL'] ?? '', ENT_QUOTES, 'UTF-8') . '">
 
-        <label for="imageURL">Image URL:</label>
-        <input type="url" id="imageURL" name="imageURL" value="' . htmlspecialchars($recipeToModify['imageURL'] ?? '') . '">
+        <label for="originalURL" data-translate="labels.original_url">URL Recette Originale :</label>
+        <input type="url" id="originalURL" name="originalURL" value="' . htmlspecialchars($recipeToModify['originalURL'] ?? '', ENT_QUOTES, 'UTF-8') . '">
 
-        <label for="originalURL">Original Recipe URL:</label>
-        <input type="url" id="originalURL" name="originalURL" value="' . htmlspecialchars($recipeToModify['originalURL'] ?? '') . '">
+         <p><small data-translate="labels.required_fields_note">* Champs requis</small></p>
 
-         <p><small>* Required fields</small></p>
-
-        <button type="submit" class="button button-primary" style="width: 100%; margin-top: 20px;">Save Changes</button>
+        <button type="submit" class="button button-primary" style="width: 100%; margin-top: 20px;" data-translate="buttons.save_changes">Sauvegarder Modifications</button>
     </form>
 </div>
 ';
 
-$title = "Modify Recipe";
+// Titre de la page
+$title = "Modifier Recette";
+// Inclusion de l'en-tête
 include 'header.php';
 ?>
 
-<!-- Inclusion du script JS partagé pour les champs dynamiques -->
-<script src="dynamic_fields.js"></script>
 
 <script>
 $(document).ready(function() {
-    $('form').submit(function() {
-        // Validation simple: nombre d'étapes doit correspondre au nombre de minuteurs
-         const stepCount = $('#steps-container .dynamic-field').length;
-         const timerCount = $('#timers-container .dynamic-field').length;
-         if (stepCount !== timerCount) {
-             alert(`Number of steps (${stepCount}) must match number of timers (${timerCount}). Add 0 for steps without a timer.`);
-             return false; // Empêche la soumission
-         }
-        return true; // Autorise la soumission
-    });
+
+        // Pas besoin de JS ici car les traductions sont geres par header.php
+
 });
 </script>

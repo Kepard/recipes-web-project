@@ -8,9 +8,9 @@
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
-    // Récupère infos utilisateur connecté (ou null si non connecté)
+    // Récupère infos utilisateur connecté et le role
     $username = $_SESSION['username'] ?? '';
-    $role = $_SESSION['role'] ?? ''; // Récupère aussi le rôle
+    $role = $_SESSION['role'] ?? ''; 
 
     // Contenu HTML de base de la page (barre recherche + conteneur grille recettes)
     $content = '
@@ -43,7 +43,7 @@ function initializePageContent(translations, lang) {
     // Stocke les traductions pour usage global dans ce script
     currentTranslations = translations;
     const gridContainer = $("#recipe-grid"); // Conteneur pour les cartes recettes
-    const loadingMessage = $("#loading-message"); // Message "Chargement..."
+    const loadingMessage = $("#loading-message"); // Message "Chargement..." (qu'on va retirer par la suite)
 
     // Vide la grille et affiche le message de chargement
     gridContainer.empty().append(loadingMessage);
@@ -52,6 +52,7 @@ function initializePageContent(translations, lang) {
     $.getJSON("recipes.json?v=" + Date.now(), function (recipes) {
 
         // console.log("Recipes loaded successfully.");
+        // Debug
 
         allRecipes = recipes; // Stocke les recettes dans la variable globale pour eviter de appeler getJSON a chaque fois
 
@@ -90,7 +91,6 @@ function displayRecipes(recipesToDisplay, lang) {
     validatedRecipes.forEach(recipe => {
         // Choix du nom selon la langue
         const recipeName = lang === "fr" && recipe.nameFR ? recipe.nameFR : recipe.name;
-        // Sécurité : vérifie que likes/comments sont des tableaux
         const likesArray = recipe.likes;
         const commentsArray = recipe.comments;
 
@@ -102,19 +102,19 @@ function displayRecipes(recipesToDisplay, lang) {
         let totalTime = recipe.timers.reduce((sum, timer) => sum + (parseInt(timer, 10) || 0), 0);
         
 
-        // Affichage des restrictions (texte simple ici, pourrait être les icônes)
+        // Affichage des restrictions 
         const restrictions = recipe.Without.length > 0
             ? recipe.Without.join(", ") // Liste séparée par virgules
-            : (currentTranslations.labels.none); // Texte "None" traduit si vide
+            : currentTranslations.labels.none; // Texte "None" traduit si vide
 
-        // Construction de la carte HTML
+        // Construction de la carte HTML en utilisant des template literals
         const card = `
             <div class="recipe-card">
                 <a href="recipe.php?id=${recipe.id}"> 
-                    <img src="${recipe.imageURL || 'placeholder.png'}" alt="${recipeName}" onerror="this.onerror=null;this.src='placeholder.png';">
+                    <img src="${recipe.imageURL || 'placeholder.png'}" alt="${recipeName}" onerror="this.src='placeholder.png';">
                     <div class="content">
                         <h2>${recipeName}</h2>
-                        <p><strong>${currentTranslations.labels.author || "Author"}:</strong> ${recipe.Author || currentTranslations.labels.unknown}</p>
+                        <p><strong>${currentTranslations.labels.author}:</strong> ${recipe.Author || currentTranslations.labels.unknown}</p>
                         <p><strong>${currentTranslations.labels.dietary_restrictions}:</strong> ${restrictions}</p>
                         <p><strong>${currentTranslations.labels.total_time}:</strong> ${totalTime} ${currentTranslations.labels.minutes}</p>
                     </div>
@@ -152,9 +152,9 @@ function setupSearch() {
  * Filtre `allRecipes` et appelle `displayRecipes` avec les résultats.
  */
 function performSearch() {
-    // Récupère le terme de recherche, le met en minuscule et enlève les espaces superflus
+    // Récupère le terme de recherche, le met en minuscule et enlève les espaces superflus avec trim
     const searchTerm = $('#search-input').val().toLowerCase().trim();
-    // Récupère la langue actuelle pour l'affichage des résultats
+    // Récupère la langue actuelle pour l'affichage des résultats, sinon francais par defaut
     const currentLang = localStorage.getItem("lang") || "fr";
 
     // Si la recherche est vide, affiche toutes les recettes validées
@@ -200,13 +200,10 @@ function performSearch() {
     displayRecipes(filteredRecipes, currentLang);
 }
 
-/**
- * Met en place les écouteurs d'événements pour les boutons "Like" sur les cartes.
- * Utilise la délégation d'événements car les cartes sont ajoutées dynamiquement.
- */
+// Met en place les écouteurs d'événements pour les boutons "Like" sur les cartes.
+ 
 function setupLikeButtons() {
-    // Attache l'événement 'click' au conteneur '#recipe-grid', mais ne réagit
-    // que si l'élément cliqué a la classe '.like-button'.
+    // Attache l'événement 'click' au conteneur '#recipe-grid', mais ne réagit que si la personne a cliqué a la classe '.like-button'.
     $('#recipe-grid').off('click', '.like-button').on('click', '.like-button', function() {
         // Récupère l'ID de la recette depuis l'attribut data-recipe-id du bouton
         const recipeId = $(this).data('recipe-id');
